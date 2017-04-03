@@ -57,6 +57,13 @@
 	<property name="WORK_FILE_EXT"			value="json"></property>
 	<property name="WORK_FILE_EXT_DESC"		value="TA Office Hours"></property>
 
+	  <!-- TAB PANE CONTROLS -->
+	  <property name = "COURSE_DETAILS_TAB" value = "Course Details"></property>
+	  <property name = "TA_DATA_TAB" value = "TA Data"> </property>
+	  <property name = "RECITATION_DATA_TAB" value = "Recitation Data"></property>
+	  <property name = "SCHEDULE_DATA_TAB" value = "Schedule Data"></property>
+	  <property name = "PROJECT_DATA_TAB" value = "Project Data"></property>
+
         <!-- WORKSPACE CONTROLS STUFF -->        
         <property name="TAS_HEADER_TEXT"                value="Teaching Assistants"></property>
         <property name="NAME_COLUMN_TEXT"               value="Name"></property>
