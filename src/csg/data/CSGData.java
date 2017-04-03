@@ -5,6 +5,7 @@
  */
 package csg.data;
 
+import csg.CourseSiteGeneratorApp;
 import djf.components.AppDataComponent;
 
 /**
@@ -12,8 +13,15 @@ import djf.components.AppDataComponent;
  * @author dsli
  */
 public class CSGData implements AppDataComponent {
+    
+    CourseSiteGeneratorApp app;
+    
     @Override
     public void resetData() {
         
+    }
+    
+    public CSGData(CourseSiteGeneratorApp initApp) {
+        app = initApp;
     }
 }

@@ -74,7 +74,7 @@ public class TAWorkspace extends AppWorkspaceComponent {
     HashMap<String, Label> officeHoursGridTACellLabels;
 
     /**
-     * The contstructor initializes the user interface, except for
+     * The constructor initializes the user interface, except for
      * the full office hours grid, since it doesn't yet know what
      * the hours will be until a file is loaded or a new one is created.
      */

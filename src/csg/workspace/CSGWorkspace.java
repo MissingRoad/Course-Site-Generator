@@ -12,6 +12,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import properties_manager.PropertiesManager;
 import csg.CSGProp;
+import javafx.scene.layout.BorderPane;
 /**
  *
  * @author dsli
@@ -43,8 +44,9 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         // WE'LL NEED THIS TO GET LANGUAGE PROPERTIES FOR OUR UI
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         t = new TabPane();
+        //Create the tabs for the TabPane
         courseDataTab = new Tab();
-        courseDataTab.setText(CSGProp.COURSE_DETAILS_TAB.toString()); //Problem, doesn't seem to recognize enum
+        courseDataTab.setText(CSGProp.COURSE_DETAILS_TAB.toString());
         taDataTab = new Tab();
         taDataTab.setText(CSGProp.TA_DATA_TAB.toString());
         recitationDataTab = new Tab();
@@ -53,6 +55,12 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         scheduleDataTab.setText(CSGProp.SCHEDULE_DATA_TAB.toString());
         projectDataTab = new Tab();
         projectDataTab.setText(CSGProp.PROJECT_DATA_TAB.toString());
+        
+        //Now add the Tabs
+        t.getTabs().addAll(courseDataTab, taDataTab, recitationDataTab, scheduleDataTab, projectDataTab);
+        
+        workspace = new BorderPane();
+        ((BorderPane)workspace).setCenter(t);
     }
     
     public String buildCellKey(int col, int row) {
