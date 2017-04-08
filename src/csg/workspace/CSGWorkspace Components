@@ -108,6 +108,8 @@
     TextField timeTextField;
     Label scheduleItemTitleLabel;
     TextField scheduleItemTimeTextField;
+    Label topicLabel;
+    TextField topicTextField;
     Label linkLabel;
     TextField linkTextField;
     Label criteriaLabel;
@@ -149,5 +151,6 @@
     Label teamLabel;
     ComboBox teamBox;
     Label roleLabel;
+    TextField roleTextField;
     Button addUpdateStudentsButton;
     Button clearStudentsButton;

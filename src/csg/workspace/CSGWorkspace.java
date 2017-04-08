@@ -155,7 +155,9 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     Label timeLabel;
     TextField timeTextField;
     Label scheduleItemTitleLabel;
-    TextField scheduleItemTimeTextField;
+    TextField scheduleItemTitleTextField;
+    Label topicLabel;
+    TextField topicTextField;
     Label linkLabel;
     TextField linkTextField;
     Label criteriaLabel;
@@ -197,6 +199,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     Label teamLabel;
     ComboBox teamBox;
     Label roleLabel;
+    TextField roleTextField;
     Button addUpdateStudentsButton;
     Button clearStudentsButton;
     
@@ -398,10 +401,139 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         /*scheduleDataTab = new Tab();
         scheduleDataTab.setText(CSGProp.SCHEDULE_DATA_TAB.toString());*/
         
+        //Assembling the VBox to be displayed in the Tab
+        scheduleDataVBox = new VBox();
+        scheduleLabel = new Label();
+        startEndGridPane = new GridPane();
+        calendarBoundariesLabel = new Label();
+        startingMondayLabel = new Label();
+        startingMondayPicker = new DatePicker();
+        endingFridayLabel = new Label();
+        endingFridayPicker = new DatePicker();
+        //Constructing the top box ("Calendar Boundaries")
+        startEndGridPane.add(calendarBoundariesLabel, 0, 0);
+        startEndGridPane.add(startingMondayLabel, 0, 1);
+        startEndGridPane.add(startingMondayPicker, 1, 1);
+        startEndGridPane.add(endingFridayLabel, 2, 1);
+        startEndGridPane.add(endingFridayPicker, 3, 1);
+        //The bottom box ("Schedule Items")
+        scheduleItemsVBox = new VBox();
+        topScheduleItemsBox = new HBox();
+        scheduleItemsLabel = new Label();
+        deleteScheduleItemButton = new Button();
+        topScheduleItemsBox.getChildren().addAll(scheduleItemsLabel, deleteScheduleItemButton);
+        scheduleItems = new TableView();
+        addEditSchedulePane = new GridPane();
+        typeLabel = new Label();
+        typeBox = new ComboBox();
+        dateLabel = new Label();
+        datePicker = new DatePicker();
+        timeLabel = new Label();
+        timeTextField = new TextField();
+        scheduleItemTitleLabel = new Label();
+        scheduleItemTitleTextField = new TextField();
+        topicLabel = new Label();
+        topicTextField = new TextField();
+        linkLabel = new Label();
+        linkTextField = new TextField();
+        criteriaLabel = new Label();
+        criteriaTextField = new TextField();
+        addUpdateScheduleItemButton = new Button();
+        clearScheduleItemButton = new Button();
+        //add the components to addEditSchedulePane
+        addEditSchedulePane.add(typeLabel, 0, 1);
+        addEditSchedulePane.add(typeBox, 1, 1);
+        addEditSchedulePane.add(dateLabel, 0, 2);
+        addEditSchedulePane.add(datePicker, 1, 2);
+        addEditSchedulePane.add(timeLabel, 0, 3);
+        addEditSchedulePane.add(timeTextField, 1, 3);
+        addEditSchedulePane.add(scheduleItemTitleLabel, 0, 4);
+        addEditSchedulePane.add(scheduleItemTitleTextField, 1, 4);
+        addEditSchedulePane.add(topicLabel, 0, 5); //
+        addEditSchedulePane.add(topicTextField, 1, 5);
+        addEditSchedulePane.add(linkLabel, 0, 6);
+        addEditSchedulePane.add(linkTextField, 1, 6);
+        addEditSchedulePane.add(criteriaLabel, 0, 7);
+        addEditSchedulePane.add(criteriaTextField, 1, 7);
+        addEditSchedulePane.add(addUpdateScheduleItemButton, 0, 8);
+        addEditSchedulePane.add(clearScheduleItemButton, 1, 8);
+        //Assemble the bottom box...
+        scheduleItemsVBox.getChildren().addAll(topScheduleItemsBox, scheduleItems, addEditSchedulePane);
+        
+        //Now assemble the entire scheduleDataVBox
+        scheduleDataVBox.getChildren().addAll(startEndGridPane, scheduleItemsVBox);
+        
+        scheduleDataTab.setContent(scheduleDataVBox);
+        
         /*projectDataTab = new Tab();
         projectDataTab.setText(CSGProp.PROJECT_DATA_TAB.toString());*/
+        projectsLabel = new Label();
+        projectDataVBox = new VBox();
+        projectTeamsVBox = new VBox();
+        projectTeamsTopHBox = new HBox();
+        teamsLabel = new Label();
+        deleteProjectButton = new Button();
+        projectTeamsTopHBox.getChildren().addAll(teamsLabel, deleteProjectButton);
+        projectTeams = new TableView();
+        addEditProjectGridPane = new GridPane();
+        addEditProjectLabel = new Label();
+        teamNameLabel = new Label();
+        teamNameTextField = new TextField();
+        teamColorLabel = new Label();
+        teamColorPicker = new ColorPicker();
+        teamTextColorLabel = new Label();
+        teamTextColorPicker = new ColorPicker();
+        teamLinkLabel = new Label();
+        teamLinkTextField = new TextField();
+        addEditTeamButton = new Button("Test text, remove this");
+        clearTeamButton = new Button("Replace with XML Text");
+        addEditProjectGridPane.add(addEditProjectLabel, 0, 0);
+        addEditProjectGridPane.add(teamNameLabel, 0, 1);
+        addEditProjectGridPane.add(teamNameTextField, 1, 1);
+        addEditProjectGridPane.add(teamColorLabel, 0, 2);
+        addEditProjectGridPane.add(teamColorPicker, 1, 2);
+        addEditProjectGridPane.add(teamTextColorLabel, 2, 2);
+        addEditProjectGridPane.add(teamTextColorPicker, 3, 2);
+        addEditProjectGridPane.add(teamLinkLabel, 0, 3);
+        addEditProjectGridPane.add(teamLinkTextField, 1, 3);
+        addEditProjectGridPane.add(addEditTeamButton, 0, 4);
+        addEditProjectGridPane.add(clearTeamButton, 1, 4);
+        projectTeamsVBox.getChildren().addAll(projectTeamsTopHBox, projectTeams, addEditProjectGridPane);
         
+        projectTeamStudentsVBox = new VBox();
+        projectTeamStudentsTopBox = new HBox();
+        studentsLabel = new Label();
+        deleteStudentsButton = new Button();
+        projectTeamStudentsTopBox.getChildren().addAll(studentsLabel, deleteStudentsButton);
         
+        teamMembers = new TableView();
+        
+        addEditStudentsLabel = new Label();
+        
+        addEditStudentsPane = new GridPane();
+        firstNameLabel = new Label();
+        firstNameTextField = new TextField();
+        lastNameLabel = new Label();
+        lastNameTextField = new TextField();
+        teamLabel = new Label();
+        teamBox = new ComboBox();
+        roleLabel = new Label();
+        roleTextField = new TextField();
+        addUpdateStudentsButton = new Button("addUpdateStudentsButton");
+        clearStudentsButton = new Button("ClearStudentsButton");
+        addEditStudentsPane.add(firstNameLabel, 0, 0);
+        addEditStudentsPane.add(firstNameTextField, 1, 0);
+        addEditStudentsPane.add(lastNameLabel, 0, 1);
+        addEditStudentsPane.add(lastNameTextField, 1, 1);
+        addEditStudentsPane.add(teamLabel, 0, 2);
+        addEditStudentsPane.add(teamBox, 1, 2);
+        addEditStudentsPane.add(roleLabel, 0, 3);
+        addEditStudentsPane.add(roleTextField, 1, 3);
+        addEditStudentsPane.add(addUpdateStudentsButton, 0, 4);
+        addEditStudentsPane.add(clearStudentsButton, 1, 4);
+        projectTeamStudentsVBox.getChildren().addAll(projectTeamStudentsTopBox, teamMembers, addEditStudentsLabel, addEditStudentsPane);
+        projectDataVBox.getChildren().addAll(projectTeamsVBox, projectTeamStudentsVBox);
+        projectDataTab.setContent(projectDataVBox);
         //Now add the Tabs
         t.getTabs().addAll(courseDataTab, taDataTab, recitationDataTab, scheduleDataTab, projectDataTab);
         
