@@ -98,6 +98,10 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     HBox taDataTableViewTopPane;
     TableView taInformation;
     HBox taDataTextFieldPane;
+    TextField taNameTextField;
+    TextField taEmailTextField;
+    Button addTAButton;
+    Button clearTAButton;
     VBox taDataGridPaneVBox;
     HBox taOfficeHoursTopBox;
     Label officeHoursLabel;
@@ -317,9 +321,80 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         /*taDataTab = new Tab();
         taDataTab.setText(CSGProp.TA_DATA_TAB.toString());*/
         
+        //First, declare the whole pane
+        taDataTabHBox = new HBox();
+        //Assembling the left VBox
+        taDataTATableViewVBox = new VBox();
+        taDataTableViewTopPane = new HBox();
+        teachingAssistantsLabel = new Label();
+        deleteTAButton = new Button();
+        taDataTableViewTopPane.getChildren().addAll(teachingAssistantsLabel, deleteTAButton);
+        taInformation = new TableView();
+        taDataTextFieldPane = new HBox();
+        taNameTextField = new TextField();
+        taEmailTextField = new TextField();
+        addTAButton = new Button();
+        clearTAButton = new Button();
+        taDataTextFieldPane.getChildren().addAll(taNameTextField, taEmailTextField, addTAButton, clearTAButton);
+        taDataTATableViewVBox.getChildren().addAll(taDataTableViewTopPane, taInformation, taDataTextFieldPane);
+        
+        //Assembling the right VBox
+        taDataGridPaneVBox = new VBox();
+        taOfficeHoursTopBox = new HBox();
+        officeHoursLabel = new Label();
+        officeHoursStartLabel = new Label();
+        officeHoursStartBox = new ComboBox();
+        officeHoursEndLabel = new Label();
+        officeHoursEndBox = new ComboBox();
+        taOfficeHoursTopBox.getChildren().addAll(officeHoursLabel, officeHoursStartLabel, officeHoursStartBox, officeHoursEndLabel, officeHoursEndBox);
+        taDataOfficeHoursGridPane = new GridPane();
+        taDataGridPaneVBox.getChildren().addAll(taOfficeHoursTopBox, taDataOfficeHoursGridPane);
+        
+        //Assembling the whole taDataTab
+        taDataTabHBox.getChildren().addAll(taDataTATableViewVBox, taDataGridPaneVBox);
+        taDataTab.setContent(taDataTabHBox);
+        
         /*recitationDataTab = new Tab();
         recitationDataTab.setText(CSGProp.RECITATION_DATA_TAB.toString());*/
+        recitationDataVBox = new VBox();
+        recitationTopBox = new HBox();
+        recitationsLabel = new Label();
+        deleteRecitationButton = new Button();
+        recitationTopBox.getChildren().addAll(recitationsLabel, deleteRecitationButton);
+        recitationData = new TableView();
+        addEditGridPane = new GridPane();
+        sectionLabel = new Label();
+        sectionTextField = new TextField();
+        instructorLabel = new Label();
+        instructorTextField = new TextField();
+        dayTimeLabel = new Label();
+        dayTimeTextField = new TextField();
+        locationLabel = new Label();
+        locationTextField = new TextField();
+        supervisingTa1Label = new Label();
+        supervisingTa1Box = new ComboBox();
+        supervisingTa2Label = new Label();
+        supervisingTa2Box = new ComboBox();
+        addUpdateButton = new Button();
+        clearButton = new Button();
+        addEditGridPane.add(sectionLabel, 0, 0);
+        addEditGridPane.add(sectionTextField, 1, 0);
+        addEditGridPane.add(instructorLabel, 0, 1);
+        addEditGridPane.add(instructorTextField, 1, 1);
+        addEditGridPane.add(dayTimeLabel, 0, 2);
+        addEditGridPane.add(dayTimeTextField, 1, 2);
+        addEditGridPane.add(locationLabel, 0, 3);
+        addEditGridPane.add(locationTextField, 1, 3);
+        addEditGridPane.add(supervisingTa1Label, 0, 4);
+        addEditGridPane.add(supervisingTa1Box, 1, 4);
+        addEditGridPane.add(supervisingTa2Label, 0, 5);
+        addEditGridPane.add(supervisingTa2Box, 1, 5);
+        addEditGridPane.add(addUpdateButton, 0, 6);
+        addEditGridPane.add(clearButton, 1, 6);
         
+        recitationDataVBox.getChildren().addAll(recitationTopBox, recitationData, addEditGridPane);
+        
+        recitationDataTab.setContent(recitationDataVBox);
         /*scheduleDataTab = new Tab();
         scheduleDataTab.setText(CSGProp.SCHEDULE_DATA_TAB.toString());*/
         

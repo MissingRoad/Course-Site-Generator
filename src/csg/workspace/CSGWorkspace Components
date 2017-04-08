@@ -50,6 +50,10 @@
     HBox taDataTableViewTopPane;
     TableView taInformation;
     HBox taDataTextFieldPane;
+    TextField taNameTextField;
+    TextField taEmailTextField;
+    Button addTAButton;
+    Button clearTAButton;
     VBox taDataGridPaneVBox;
     HBox taOfficeHoursTopBox;
     Label officeHoursLabel;
