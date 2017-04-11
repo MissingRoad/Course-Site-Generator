@@ -217,15 +217,23 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         t = new TabPane();
         //Create the tabs for the TabPane
         courseDataTab = new Tab();
-        courseDataTab.setText(CSGProp.COURSE_DETAILS_TAB.toString());
+        //courseDataTab.textProperty().set(CSGProp.COURSE_DETAILS_TAB.toString());
+        courseDataTab.setText(props.getProperty(CSGProp.COURSE_DETAILS_TAB.toString()));
         taDataTab = new Tab();
-        taDataTab.setText(CSGProp.TA_DATA_TAB.toString());
+        taDataTab.setText(props.getProperty(CSGProp.TA_DATA_TAB.toString()));
         recitationDataTab = new Tab();
-        recitationDataTab.setText(CSGProp.RECITATION_DATA_TAB.toString());
+        recitationDataTab.setText(props.getProperty(CSGProp.RECITATION_DATA_TAB.toString()));
         scheduleDataTab = new Tab();
-        scheduleDataTab.setText(CSGProp.SCHEDULE_DATA_TAB.toString());
+        scheduleDataTab.setText(props.getProperty(CSGProp.SCHEDULE_DATA_TAB.toString()));
         projectDataTab = new Tab();
-        projectDataTab.setText(CSGProp.PROJECT_DATA_TAB.toString());
+        projectDataTab.setText(props.getProperty(CSGProp.PROJECT_DATA_TAB.toString()));
+        
+        //Make sure we can't close the Tabs
+        courseDataTab.setClosable(false);
+        taDataTab.setClosable(false);
+        recitationDataTab.setClosable(false);
+        scheduleDataTab.setClosable(false);
+        projectDataTab.setClosable(false);
         courseDataTabVBox = new VBox();
         
         //Stuff for the top VBox, Course Information
@@ -235,21 +243,22 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         semesterComboBox = new ComboBox();
         yearComboBox = new ComboBox();
         
-        courseInfoLabel = new Label();
-        subjectLabel = new Label();
-        numberLabel = new Label();
-        semesterLabel = new Label();
+        courseInfoLabel = new Label(props.getProperty(CSGProp.COURSE_INFO_LABEL).toString());
+        subjectLabel = new Label(props.getProperty(CSGProp.COURSE_SUBJECT_LABEL).toString());
+        numberLabel = new Label(props.getProperty(CSGProp.COURSE_NUMBER_LABEL).toString());
+        semesterLabel = new Label(props.getProperty(CSGProp.COURSE_SEMESTER_LABEL).toString());
         yearLabel = new Label();
-        titleLabel = new Label();
-        instructorNameLabel = new Label();
-        instructorHomeLabel = new Label();
-        exportDirLabel = new Label();
+        titleLabel = new Label(props.getProperty(CSGProp.COURSE_TITLE_LABEL).toString());
+        instructorNameLabel = new Label(props.getProperty(CSGProp.COURSE_INSTRUCTOR_NAME_LABEL).toString());
+        instructorHomeLabel = new Label(props.getProperty(CSGProp.COURSE_INSTRUCTOR_HOME_LABEL).toString());
+        exportDirLabel = new Label(props.getProperty(CSGProp.COURSE_EXPORT_DIR_LABEL).toString());
         
         titleTextField = new TextField();
         instructorNameTextField = new TextField();
+        instructorNameTextField.setPromptText(props.getProperty(CSGProp.NAME_PROMPT_TEXT).toString());
         instructorHomeTextField = new TextField();
         exportDirTextView = new Label();
-        changeExportDirButton = new Button();
+        changeExportDirButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
         
         //Add components to topCourseDataBox
         topCourseDataBox.add(courseInfoLabel, 0, 0);
@@ -274,12 +283,13 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         
         //Middle box content, the Site Template
         courseDataMiddleBox = new VBox();
-        siteTemplateLabel = new Label();
-        siteTemplateDescriptionLabel = new Label();
+        siteTemplateLabel = new Label(props.getProperty(CSGProp.COURSE_SITE_TEMPLATE_LABEL));
+        siteTemplateDescriptionLabel = new Label(props.getProperty(CSGProp.COURSE_SITE_TEMPLATE_NOTE_LABEL).toString());
         templateDir = new Label();
         selectTemplateDirButton = new Button();
-        sitePagesLabel = new Label();
+        sitePagesLabel = new Label(props.getProperty(CSGProp.COURSE_SITE_PAGES_LABEL).toString());
         sitePages = new TableView();
+        //Fix the TableView
         //checkBox declaration here?
         
         //add everything to the courseDataMiddleBox
@@ -287,19 +297,19 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         
         //pageStyleDataBox, the Page Style component of the Course Details Pane
         pageStyleDataBox = new GridPane();
-        pageStyleLabel = new Label();
-        bannerSchoolLabel = new Label();
-        leftFooterLabel = new Label();
-        rightFooterLabel = new Label();
-        stylesheetLabel = new Label();
+        pageStyleLabel = new Label(props.getProperty(CSGProp.COURSE_PAGE_STYLE_LABEL).toString());
+        bannerSchoolLabel = new Label(props.getProperty(CSGProp.COURSE_BANNER_SCHOOL_IMAGE_LABEL).toString());
+        leftFooterLabel = new Label(props.getProperty(CSGProp.COURSE_LEFT_FOOTER_LABEL).toString());
+        rightFooterLabel = new Label(props.getProperty(CSGProp.COURSE_RIGHT_FOOTER_LABEL).toString());
+        stylesheetLabel = new Label(props.getProperty(CSGProp.COURSE_STYLESHEET_LABEL).toString());
         bannerSchoolImage = new ImageView();
         leftFooterImage = new ImageView();
         rightFooterImage = new ImageView();
-        changeBannerSchoolImageButton = new Button();
-        changeLeftFooterImageButton = new Button();
-        changeRightFooterImageButton = new Button();
+        changeBannerSchoolImageButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
+        changeLeftFooterImageButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
+        changeRightFooterImageButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
         stylesheetSelect = new ComboBox();
-        stylesheetNote = new Label();
+        stylesheetNote = new Label(props.getProperty(CSGProp.COURSE_STYLESHEET_NOTE_LABEL).toString());
         
         pageStyleDataBox.add(pageStyleLabel, 0, 0);
         pageStyleDataBox.add(bannerSchoolLabel, 0, 1);
@@ -329,15 +339,15 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         //Assembling the left VBox
         taDataTATableViewVBox = new VBox();
         taDataTableViewTopPane = new HBox();
-        teachingAssistantsLabel = new Label();
-        deleteTAButton = new Button();
+        teachingAssistantsLabel = new Label(props.getProperty(CSGProp.TEACHING_ASSISTANTS_LABEL).toString());
+        deleteTAButton = new Button(props.getProperty(CSGProp.DELETE_SYMBOL).toString());
         taDataTableViewTopPane.getChildren().addAll(teachingAssistantsLabel, deleteTAButton);
         taInformation = new TableView();
         taDataTextFieldPane = new HBox();
         taNameTextField = new TextField();
         taEmailTextField = new TextField();
-        addTAButton = new Button();
-        clearTAButton = new Button();
+        addTAButton = new Button(props.getProperty(CSGProp.ADD_BUTTON_LABEL).toString());
+        clearTAButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL).toString());
         taDataTextFieldPane.getChildren().addAll(taNameTextField, taEmailTextField, addTAButton, clearTAButton);
         taDataTATableViewVBox.getChildren().addAll(taDataTableViewTopPane, taInformation, taDataTextFieldPane);
         
