@@ -12,6 +12,11 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import properties_manager.PropertiesManager;
 import csg.CSGProp;
+import csg.data.CSGData;
+import csg.data.TAData;
+import java.util.ArrayList;
+import java.util.HashMap;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
@@ -25,12 +30,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+//import tam.data.TAData;
+import tam.style.TAStyle;
+
 /**
  *
  * @author dsli
  */
 public class CSGWorkspace extends AppWorkspaceComponent {
+
     // THIS PROVIDES US WITH ACCESS TO THE APP COMPONENTS
     CourseSiteGeneratorApp app;
 
@@ -44,7 +54,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     Tab recitationDataTab;
     Tab scheduleDataTab;
     Tab projectDataTab;
-    
+
     //Components for courseDataTab
     VBox courseDataTabVBox;
     GridPane topCourseDataBox;
@@ -52,7 +62,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     ComboBox numberComboBox;
     ComboBox semesterComboBox;
     ComboBox yearComboBox;
-    
+
     Label courseInfoLabel;
     Label subjectLabel;
     Label numberLabel;
@@ -67,7 +77,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     TextField instructorHomeTextField;
     Label exportDirTextView;
     Button changeExportDirButton;
-    
+
     VBox courseDataMiddleBox;
     Label siteTemplateLabel;
     Label siteTemplateDescriptionLabel;
@@ -81,7 +91,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     TableColumn fileNameColumn;
     TableColumn scriptColumn;
     //checkBox declaration here?
-    
+
     GridPane pageStyleDataBox;
     Label pageStyleLabel;
     Label bannerSchoolLabel;
@@ -96,7 +106,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     Button changeRightFooterImageButton;
     ComboBox stylesheetSelect;
     Label stylesheetNote;
-    
+
     //Components for taDataTab
     HBox taDataTabHBox;
     VBox taDataTATableViewVBox;
@@ -117,7 +127,16 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     Label officeHoursEndLabel;
     ComboBox officeHoursEndBox;
     GridPane taDataOfficeHoursGridPane; //will need a few methods to construct this
-    
+    //Components for the above GridPane
+    HashMap<String, Pane> taDataOfficeHoursGridTimeHeaderPanes;
+    HashMap<String, Label> taDataOfficeHoursGridTimeHeaderLabels;
+    HashMap<String, Pane> taDataOfficeHoursGridDayHeaderPanes;
+    HashMap<String, Label> taDataOfficeHoursGridDayHeaderLabels;
+    HashMap<String, Pane> taDataOfficeHoursGridTimeCellPanes;
+    HashMap<String, Label> taDataOfficeHoursGridTimeCellLabels;
+    HashMap<String, Pane> taDataOfficeHoursGridTACellPanes;
+    HashMap<String, Label> taDataOfficeHoursGridTACellLabels;
+
     //Components for recitationDataTab
     VBox recitationDataVBox;
     HBox recitationTopBox;
@@ -139,7 +158,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     ComboBox supervisingTa2Box;
     Button addUpdateButton;
     Button clearButton;
-    
+
     //Components for scheduleDataTab
     VBox scheduleDataVBox;
     Label scheduleLabel;
@@ -171,7 +190,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     TextField criteriaTextField;
     Button addUpdateScheduleItemButton;
     Button clearScheduleItemButton;
-    
+
     //Components for projectDataTab
     Label projectsLabel;
     VBox projectDataVBox;
@@ -209,11 +228,11 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     TextField roleTextField;
     Button addUpdateStudentsButton;
     Button clearStudentsButton;
-    
+
     /**
-     * The constructor initializes the user interface, except for
-     * the full office hours grid, since it doesn't yet know what
-     * the hours will be until a file is loaded or a new one is created.
+     * The constructor initializes the user interface, except for the full
+     * office hours grid, since it doesn't yet know what the hours will be until
+     * a file is loaded or a new one is created.
      */
     public CSGWorkspace(CourseSiteGeneratorApp initApp) {
         // KEEP THIS FOR LATER
@@ -234,7 +253,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         scheduleDataTab.setText(props.getProperty(CSGProp.SCHEDULE_DATA_TAB.toString()));
         projectDataTab = new Tab();
         projectDataTab.setText(props.getProperty(CSGProp.PROJECT_DATA_TAB.toString()));
-        
+
         //Make sure we can't close the Tabs
         courseDataTab.setClosable(false);
         taDataTab.setClosable(false);
@@ -242,14 +261,14 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         scheduleDataTab.setClosable(false);
         projectDataTab.setClosable(false);
         courseDataTabVBox = new VBox();
-        
+
         //Stuff for the top VBox, Course Information
         topCourseDataBox = new GridPane();
         subjectComboBox = new ComboBox();
         numberComboBox = new ComboBox();
         semesterComboBox = new ComboBox();
         yearComboBox = new ComboBox();
-        
+
         courseInfoLabel = new Label(props.getProperty(CSGProp.COURSE_INFO_LABEL).toString());
         subjectLabel = new Label(props.getProperty(CSGProp.COURSE_SUBJECT_LABEL).toString());
         numberLabel = new Label(props.getProperty(CSGProp.COURSE_NUMBER_LABEL).toString());
@@ -259,14 +278,14 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         instructorNameLabel = new Label(props.getProperty(CSGProp.COURSE_INSTRUCTOR_NAME_LABEL).toString());
         instructorHomeLabel = new Label(props.getProperty(CSGProp.COURSE_INSTRUCTOR_HOME_LABEL).toString());
         exportDirLabel = new Label(props.getProperty(CSGProp.COURSE_EXPORT_DIR_LABEL).toString());
-        
+
         titleTextField = new TextField();
         instructorNameTextField = new TextField();
         instructorNameTextField.setPromptText(props.getProperty(CSGProp.NAME_PROMPT_TEXT).toString());
         instructorHomeTextField = new TextField();
         exportDirTextView = new Label();
         changeExportDirButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
-        
+
         //Add components to topCourseDataBox
         topCourseDataBox.add(courseInfoLabel, 0, 0);
         topCourseDataBox.add(subjectLabel, 0, 1);
@@ -286,8 +305,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         topCourseDataBox.add(exportDirLabel, 0, 6);
         topCourseDataBox.add(exportDirTextView, 1, 6);
         topCourseDataBox.add(changeExportDirButton, 2, 6);
-        
-        
+
         //Middle box content, the Site Template
         courseDataMiddleBox = new VBox();
         siteTemplateLabel = new Label(props.getProperty(CSGProp.COURSE_SITE_TEMPLATE_LABEL));
@@ -302,16 +320,16 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         String filenameLabelText = props.getProperty(CSGProp.COURSE_SITE_PAGES_FILE_NAME_LABEL.toString());
         String scriptLabelText = props.getProperty(CSGProp.COURSE_SITE_PAGES_SCRIPT_LABEL.toString());
         useColumn = new TableColumn(useLabelText);
-        
+
         navbarTitleColumn = new TableColumn(navbarTitleLabelText);
         fileNameColumn = new TableColumn(filenameLabelText);
         scriptColumn = new TableColumn(scriptLabelText);
         //insert setCellValueFactory methods here when you develop the data component
         sitePages.getColumns().add(useColumn);
-        
+
         //add everything to the courseDataMiddleBox
         courseDataMiddleBox.getChildren().addAll(siteTemplateLabel, siteTemplateDescriptionLabel, templateDir, selectTemplateDirButton, sitePagesLabel, sitePages);
-        
+
         //pageStyleDataBox, the Page Style component of the Course Details Pane
         pageStyleDataBox = new GridPane();
         pageStyleLabel = new Label(props.getProperty(CSGProp.COURSE_PAGE_STYLE_LABEL).toString());
@@ -327,7 +345,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         changeRightFooterImageButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
         stylesheetSelect = new ComboBox();
         stylesheetNote = new Label(props.getProperty(CSGProp.COURSE_STYLESHEET_NOTE_LABEL).toString());
-        
+
         pageStyleDataBox.add(pageStyleLabel, 0, 0);
         pageStyleDataBox.add(bannerSchoolLabel, 0, 1);
         pageStyleDataBox.add(bannerSchoolImage, 1, 1);
@@ -341,16 +359,15 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         pageStyleDataBox.add(stylesheetLabel, 0, 4);
         pageStyleDataBox.add(stylesheetSelect, 1, 4);
         pageStyleDataBox.add(stylesheetNote, 0, 5);
-        
+
         //add everything to the VBox
         courseDataTabVBox.getChildren().add(topCourseDataBox);
         courseDataTabVBox.getChildren().add(courseDataMiddleBox);
         courseDataTabVBox.getChildren().add(pageStyleDataBox);
         courseDataTab.setContent(courseDataTabVBox);
-        
+
         /*taDataTab = new Tab();
         taDataTab.setText(CSGProp.TA_DATA_TAB.toString());*/
-        
         //First, declare the whole pane
         taDataTabHBox = new HBox();
         //Assembling the left VBox
@@ -367,7 +384,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         clearTAButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL).toString());
         taDataTextFieldPane.getChildren().addAll(taNameTextField, taEmailTextField, addTAButton, clearTAButton);
         taDataTATableViewVBox.getChildren().addAll(taDataTableViewTopPane, taInformation, taDataTextFieldPane);
-        
+
         //Assembling the right VBox
         taDataGridPaneVBox = new VBox();
         taOfficeHoursTopBox = new HBox();
@@ -379,12 +396,20 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         taOfficeHoursTopBox.getChildren().addAll(officeHoursLabel, officeHoursStartLabel, officeHoursStartBox, officeHoursEndLabel, officeHoursEndBox);
         taDataOfficeHoursGridPane = new GridPane();
         //Code here for actually assembling the GridPane
+        taDataOfficeHoursGridTimeHeaderPanes = new HashMap();
+        taDataOfficeHoursGridTimeHeaderLabels = new HashMap();
+        taDataOfficeHoursGridDayHeaderPanes = new HashMap();
+        taDataOfficeHoursGridDayHeaderLabels = new HashMap();
+        taDataOfficeHoursGridTimeCellPanes = new HashMap();
+        taDataOfficeHoursGridTimeCellLabels = new HashMap();
+        taDataOfficeHoursGridTACellPanes = new HashMap();
+        taDataOfficeHoursGridTACellLabels = new HashMap();
         taDataGridPaneVBox.getChildren().addAll(taOfficeHoursTopBox, taDataOfficeHoursGridPane);
-        
+
         //Assembling the whole taDataTab
         taDataTabHBox.getChildren().addAll(taDataTATableViewVBox, taDataGridPaneVBox);
         taDataTab.setContent(taDataTabHBox);
-        
+
         /*recitationDataTab = new Tab();
         recitationDataTab.setText(CSGProp.RECITATION_DATA_TAB.toString());*/
         recitationDataVBox = new VBox();
@@ -394,7 +419,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         recitationTopBox.getChildren().addAll(recitationsLabel, deleteRecitationButton);
         recitationData = new TableView();
         //Setting up the TableView
-        
+
         addEditGridPane = new GridPane();
         sectionLabel = new Label(props.getProperty(CSGProp.REC_SECTION_LABEL.toString()));
         sectionTextField = new TextField();
@@ -424,13 +449,13 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         addEditGridPane.add(supervisingTa2Box, 1, 5);
         addEditGridPane.add(addUpdateButton, 0, 6);
         addEditGridPane.add(clearButton, 1, 6);
-        
+
         recitationDataVBox.getChildren().addAll(recitationTopBox, recitationData, addEditGridPane);
-        
+
         recitationDataTab.setContent(recitationDataVBox);
         /*scheduleDataTab = new Tab();
         scheduleDataTab.setText(CSGProp.SCHEDULE_DATA_TAB.toString());*/
-        
+
         //Assembling the VBox to be displayed in the Tab
         scheduleDataVBox = new VBox();
         scheduleLabel = new Label();
@@ -489,12 +514,12 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         addEditSchedulePane.add(clearScheduleItemButton, 1, 8);
         //Assemble the bottom box...
         scheduleItemsVBox.getChildren().addAll(topScheduleItemsBox, scheduleItems, addEditSchedulePane);
-        
+
         //Now assemble the entire scheduleDataVBox
         scheduleDataVBox.getChildren().addAll(startEndGridPane, scheduleItemsVBox);
-        
+
         scheduleDataTab.setContent(scheduleDataVBox);
-        
+
         /*projectDataTab = new Tab();
         projectDataTab.setText(CSGProp.PROJECT_DATA_TAB.toString());*/
         projectsLabel = new Label();
@@ -529,17 +554,17 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         addEditProjectGridPane.add(addEditTeamButton, 0, 4);
         addEditProjectGridPane.add(clearTeamButton, 1, 4);
         projectTeamsVBox.getChildren().addAll(projectTeamsTopHBox, projectTeams, addEditProjectGridPane);
-        
+
         projectTeamStudentsVBox = new VBox();
         projectTeamStudentsTopBox = new HBox();
         studentsLabel = new Label(props.getProperty(CSGProp.TEAM_STUDENTS_LABEL.toString()));
         deleteStudentsButton = new Button(props.getProperty(CSGProp.DELETE_SYMBOL.toString()));
         projectTeamStudentsTopBox.getChildren().addAll(studentsLabel, deleteStudentsButton);
-        
+
         teamMembers = new TableView();
-        
+
         addEditStudentsLabel = new Label(props.getProperty(CSGProp.ADD_EDIT_LABEL.toString()));
-        
+
         addEditStudentsPane = new GridPane();
         firstNameLabel = new Label(props.getProperty(CSGProp.STUDENT_FIRST_NAME_LABEL.toString()));
         firstNameTextField = new TextField();
@@ -566,11 +591,38 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         projectDataTab.setContent(projectDataVBox);
         //Now add the Tabs
         t.getTabs().addAll(courseDataTab, taDataTab, recitationDataTab, scheduleDataTab, projectDataTab);
-        
+
         workspace = new BorderPane();
-        ((BorderPane)workspace).setCenter(t);
+        ((BorderPane) workspace).setCenter(t);
+    }
+
+    public GridPane getTADataOfficeHoursGridPane() {
+        return taDataOfficeHoursGridPane;
     }
     
+    public HashMap<String, Pane> getTADataOfficeHoursGridTACellPanes() {
+        return taDataOfficeHoursGridTACellPanes;
+    }
+    
+    public TextField getTANameTextField() {
+        return taNameTextField;
+    }
+
+    public TextField getTAEmailTextField() {
+        return taEmailTextField;
+    }
+    
+    public TableView getTAInformationTable() {
+        return taInformation;
+    }
+
+    public ComboBox getOfficeHour(boolean start) {
+        if (start) {
+            return officeHoursStartBox;
+        }
+        return officeHoursEndBox;
+    }
+
     public String buildCellKey(int col, int row) {
         return "" + col + "_" + row;
     }
@@ -592,11 +644,114 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
     @Override
     public void resetWorkspace() {
-        
+        // CLEAR OUT THE GRID PANE
+        taDataOfficeHoursGridPane.getChildren().clear();
+
+        // AND THEN ALL THE GRID PANES AND LABELS
+        taDataOfficeHoursGridTimeHeaderPanes.clear();
+        taDataOfficeHoursGridTimeHeaderLabels.clear();
+        taDataOfficeHoursGridDayHeaderPanes.clear();
+        taDataOfficeHoursGridDayHeaderLabels.clear();
+        taDataOfficeHoursGridTimeCellPanes.clear();
+        taDataOfficeHoursGridTimeCellLabels.clear();
+        taDataOfficeHoursGridTACellPanes.clear();
+        taDataOfficeHoursGridTACellLabels.clear();
     }
-    
+
     @Override
     public void reloadWorkspace(AppDataComponent dataComponent) {
-        
+        TAData taData = (TAData) dataComponent;
+        reloadOfficeHoursGrid(taData);
     }
+
+    public void reloadOfficeHoursGrid(TAData dataComponent) {
+        ArrayList<String> gridHeaders = dataComponent.getGridHeaders();
+
+        // ADD THE TIME HEADERS
+        for (int i = 0; i < 2; i++) {
+            addCellToGrid(dataComponent, taDataOfficeHoursGridTimeHeaderPanes, taDataOfficeHoursGridTimeHeaderLabels, i, 0);
+            dataComponent.getCellTextProperty(i, 0).set(gridHeaders.get(i));
+        }
+
+        // THEN THE DAY OF WEEK HEADERS
+        for (int i = 2; i < 7; i++) {
+            addCellToGrid(dataComponent, taDataOfficeHoursGridDayHeaderPanes, taDataOfficeHoursGridDayHeaderLabels, i, 0);
+            dataComponent.getCellTextProperty(i, 0).set(gridHeaders.get(i));
+        }
+
+        // THEN THE TIME AND TA CELLS
+        int row = 1;
+        for (int i = dataComponent.getStartHour(); i < dataComponent.getEndHour(); i++) {
+            // START TIME COLUMN
+            int col = 0;
+            addCellToGrid(dataComponent, taDataOfficeHoursGridTimeCellPanes, taDataOfficeHoursGridTimeCellLabels, col, row);
+            dataComponent.getCellTextProperty(col, row).set(buildCellText(i, "00"));
+            addCellToGrid(dataComponent, taDataOfficeHoursGridTimeCellPanes, taDataOfficeHoursGridTimeCellLabels, col, row + 1);
+            dataComponent.getCellTextProperty(col, row + 1).set(buildCellText(i, "30"));
+
+            // END TIME COLUMN
+            col++;
+            int endHour = i;
+            addCellToGrid(dataComponent, taDataOfficeHoursGridTimeCellPanes, taDataOfficeHoursGridTimeCellLabels, col, row);
+            dataComponent.getCellTextProperty(col, row).set(buildCellText(endHour, "30"));
+            addCellToGrid(dataComponent, taDataOfficeHoursGridTimeCellPanes, taDataOfficeHoursGridTimeCellLabels, col, row + 1);
+            dataComponent.getCellTextProperty(col, row + 1).set(buildCellText(endHour + 1, "00"));
+            col++;
+
+            // AND NOW ALL THE TA TOGGLE CELLS
+            while (col < 7) {
+                addCellToGrid(dataComponent, taDataOfficeHoursGridTACellPanes, taDataOfficeHoursGridTACellLabels, col, row);
+                addCellToGrid(dataComponent, taDataOfficeHoursGridTACellPanes, taDataOfficeHoursGridTACellLabels, col, row + 1);
+                col++;
+            }
+            row += 2;
+        }
+
+        // CONTROLS FOR TOGGLING TA OFFICE HOURS
+        for (Pane p : taDataOfficeHoursGridTACellPanes.values()) {
+            p.setFocusTraversable(true);
+            p.setOnKeyPressed(e -> {
+                controller.handleKeyPress(e.getCode());
+            });
+            p.setOnMouseClicked(e -> {
+                controller.handleCellToggle((Pane) e.getSource());
+            });
+            p.setOnMouseExited(e -> {
+                controller.handleGridCellMouseExited((Pane) e.getSource());
+            });
+            p.setOnMouseEntered(e -> {
+                controller.handleGridCellMouseEntered((Pane) e.getSource());
+            });
+        }
+
+        // AND MAKE SURE ALL THE COMPONENTS HAVE THE PROPER STYLE
+        TAStyle taStyle = (TAStyle) app.getStyleComponent();
+        taStyle.initOfficeHoursGridStyle();
+    }
+
+    public void addCellToGrid(TAData dataComponent, HashMap<String, Pane> panes, HashMap<String, Label> labels, int col, int row) {
+        // MAKE THE LABEL IN A PANE
+        Label cellLabel = new Label("");
+        HBox cellPane = new HBox();
+        cellPane.setAlignment(Pos.CENTER);
+        cellPane.getChildren().add(cellLabel);
+
+        // BUILD A KEY TO EASILY UNIQUELY IDENTIFY THE CELL
+        String cellKey = dataComponent.getCellKey(col, row);
+        cellPane.setId(cellKey);
+        cellLabel.setId(cellKey);
+
+        // NOW PUT THE CELL IN THE WORKSPACE GRID
+        taDataOfficeHoursGridPane.add(cellPane, col, row);
+
+        // AND ALSO KEEP IN IN CASE WE NEED TO STYLIZE IT
+        panes.put(cellKey, cellPane);
+        labels.put(cellKey, cellLabel);
+
+        // AND FINALLY, GIVE THE TEXT PROPERTY TO THE DATA MANAGER
+        // SO IT CAN MANAGE ALL CHANGES
+        dataComponent.setCellProperty(col, row, cellLabel.textProperty());
+    }
+    
+    
 }
