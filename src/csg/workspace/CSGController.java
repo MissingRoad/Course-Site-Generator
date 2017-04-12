@@ -20,11 +20,11 @@ import javafx.scene.layout.Pane;
 import jtps.jTPS;
 import jtps.jTPS_Transaction;
 import properties_manager.PropertiesManager;
-import csg.data.TAData;
+//import csg.data.TAData;
+import csg.CSGProp;
 import static tam.style.TAStyle.CLASS_HIGHLIGHTED_GRID_CELL;
 import static tam.style.TAStyle.CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN;
 import static tam.style.TAStyle.CLASS_OFFICE_HOURS_GRID_TA_CELL_PANE;
-import csg.workspace.CSGWorkspace;
 
 
 /**
@@ -32,7 +32,7 @@ import csg.workspace.CSGWorkspace;
  * @author dsli
  */
 public class CSGController {
-    //static jTPS jTPS = new jTPS();
+    static jTPS jTPS = new jTPS();
     CourseSiteGeneratorApp app;
     public void handleAddTA() {
         // WE'LL NEED THE WORKSPACE TO RETRIEVE THE USER INPUT VALUES
@@ -65,7 +65,7 @@ public class CSGController {
         }
         else if (!Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$").matcher(email).matches()){
 	    AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
-	    dialog.show(props.getProperty(TA_EMAIL_INVALID_TITLE), props.getProperty(TA_EMAIL_INVALID_MESSAGE));
+	    dialog.show(props.getProperty(CSGProp.TA_EMAIL_INVALID_TITLE.toString()), props.getProperty(CSGProp.TA_EMAIL_INVALID_MESSAGE.toString()));
         }
         // EVERYTHING IS FINE, ADD A NEW TA
         else {
@@ -126,7 +126,7 @@ public class CSGController {
     
     void handleGridCellMouseExited(Pane pane) {
         String cellKey = pane.getId();
-        TAData data = (TAData)app.getDataComponent();
+        CSGData data = (CSGData)app.getDataComponent();
         int column = Integer.parseInt(cellKey.substring(0, cellKey.indexOf("_")));
         int row = Integer.parseInt(cellKey.substring(cellKey.indexOf("_") + 1));
         CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
@@ -136,13 +136,13 @@ public class CSGController {
         mousedOverPane.getStyleClass().add(CLASS_OFFICE_HOURS_GRID_TA_CELL_PANE);
 
         // THE MOUSED OVER COLUMN HEADER
-        Pane headerPane = workspace.getOfficeHoursGridDayHeaderPanes().get(data.getCellKey(column, 0));
+        Pane headerPane = workspace.getTADataOfficeHoursGridDayHeaderPanes().get(data.getCellKey(column, 0));
         headerPane.getStyleClass().remove(CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN);
 
         // THE MOUSED OVER ROW HEADERS
-        headerPane = workspace.getOfficeHoursGridTimeCellPanes().get(data.getCellKey(0, row));
+        headerPane = workspace.getTADataOfficeHoursGridTimeCellPanes().get(data.getCellKey(0, row));
         headerPane.getStyleClass().remove(CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN);
-        headerPane = workspace.getOfficeHoursGridTimeCellPanes().get(data.getCellKey(1, row));
+        headerPane = workspace.getTADataOfficeHoursGridTimeCellPanes().get(data.getCellKey(1, row));
         headerPane.getStyleClass().remove(CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN);
         
         // AND NOW UPDATE ALL THE CELLS IN THE SAME ROW TO THE LEFT
@@ -164,7 +164,7 @@ public class CSGController {
 
     void handleGridCellMouseEntered(Pane pane) {
         String cellKey = pane.getId();
-        TAData data = (TAData)app.getDataComponent();
+        CSGData data = (CSGData)app.getDataComponent();
         int column = Integer.parseInt(cellKey.substring(0, cellKey.indexOf("_")));
         int row = Integer.parseInt(cellKey.substring(cellKey.indexOf("_") + 1));
         CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
@@ -175,13 +175,13 @@ public class CSGController {
         mousedOverPane.getStyleClass().add(CLASS_HIGHLIGHTED_GRID_CELL);
         
         // THE MOUSED OVER COLUMN HEADER
-        Pane headerPane = workspace.getOfficeHoursGridDayHeaderPanes().get(data.getCellKey(column, 0));
+        Pane headerPane = workspace.getTADataOfficeHoursGridDayHeaderPanes().get(data.getCellKey(column, 0));
         headerPane.getStyleClass().add(CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN);
         
         // THE MOUSED OVER ROW HEADERS
-        headerPane = workspace.getOfficeHoursGridTimeCellPanes().get(data.getCellKey(0, row));
+        headerPane = workspace.getTADataOfficeHoursGridTimeCellPanes().get(data.getCellKey(0, row));
         headerPane.getStyleClass().add(CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN);
-        headerPane = workspace.getOfficeHoursGridTimeCellPanes().get(data.getCellKey(1, row));
+        headerPane = workspace.getTADataOfficeHoursGridTimeCellPanes().get(data.getCellKey(1, row));
         headerPane.getStyleClass().add(CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN);
         
         // AND NOW UPDATE ALL THE CELLS IN THE SAME ROW TO THE LEFT
@@ -216,7 +216,7 @@ public class CSGController {
             // GET THE TA
             TeachingAssistant ta = (TeachingAssistant)selectedItem;
             String taName = ta.getName();
-            TAData data = (TAData)app.getDataComponent();
+            CSGData data = (CSGData)app.getDataComponent();
             String cellKey = pane.getId();
             
             // AND TOGGLE THE OFFICE HOURS IN THE CLICKED CELL

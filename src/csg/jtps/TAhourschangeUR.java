@@ -12,7 +12,7 @@ import javafx.scene.control.ComboBox;
 import jtps.jTPS_Transaction;
 import properties_manager.PropertiesManager;
 import csg.CourseSiteGeneratorApp;
-import csg.data.TAData;
+//import csg.data.TAData;
 import csg.file.TimeSlot;
 
 /**
@@ -30,7 +30,7 @@ public class TAhourschangeUR implements jTPS_Transaction{
     
     public TAhourschangeUR(CourseSiteGeneratorApp app){
         this.app = app;
-        TAData data = (TAData)app.getDataComponent();
+        CSGData data = (CSGData)app.getDataComponent();
         CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         ComboBox comboBox1 = workspace.getOfficeHour(true);
@@ -45,13 +45,13 @@ public class TAhourschangeUR implements jTPS_Transaction{
     @Override
     public void doTransaction() {
         ((CSGWorkspace)app.getWorkspaceComponent()).getTADataOfficeHoursGridPane().getChildren().clear();
-        ((TAData)app.getDataComponent()).changeTime(newStartTime, newEndTime, officeHours);
+        ((CSGData)app.getDataComponent()).changeTime(newStartTime, newEndTime, officeHours);
     }
 
     @Override
     public void undoTransaction() {
         ((CSGWorkspace)app.getWorkspaceComponent()).getTADataOfficeHoursGridPane().getChildren().clear();
-        ((TAData)app.getDataComponent()).changeTime(startTime, endTime, officeHours);
+        ((CSGData)app.getDataComponent()).changeTime(startTime, endTime, officeHours);
     }
     
 }

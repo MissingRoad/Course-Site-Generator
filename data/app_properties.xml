@@ -18,12 +18,25 @@
         <property name="LOAD_ICON"	    value="Load.png"></property>
         <property name="SAVE_ICON"	    value="Save.png"></property>
         <property name="EXIT_ICON"          value="Exit.png"></property> 
+	   <property name = "SAVE_AS_ICON"	value = "SaveAs.png"></property>
+	  <property name="ABOUT_ICON"	value = "About.png"> </property>
+	  <property name="UNDO_ICON"	value = "Undo.png"> </property>
+	  <property name="REDO_ICON"	value = "Redo.png"> </property>
+	  <property name="EXPORT_ICON"	value = "Export.png"> </property>
+
         
         <!-- TOOLTIPS FOR BUTTONS -->
         <property name="NEW_TOOLTIP"		value="Create a new CSG File"></property>
         <property name="LOAD_TOOLTIP"		value="Load an existing CSG File"></property>
         <property name="SAVE_TOOLTIP"		value="Save the current CSG File"></property>
         <property name="EXIT_TOOLTIP"		value="Exit the Application"></property>
+	   <property name = "SAVE_AS_TOOLTIP"	value = "Save the current CSG File to a specified directory"></property>
+	  <property name="EXPORT_TOOLTIP"	value = "Export the current CSG FIle to a specified directory"> </property>
+	  <property name="ABOUT_TOOLTIP"	value = "About"> </property>
+	  <property name="UNDO_TOOLTIP"	value = "Undo"> </property>
+	  <property name="REDO_TOOLTIP"	value = "Redo"> </property>
+
+
         
         <!-- ERROR MESSAGES -->
         <property name="CLOSE_BUTTON_TEXT"              value="Close"></property>

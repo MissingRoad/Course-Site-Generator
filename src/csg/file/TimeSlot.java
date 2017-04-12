@@ -1,9 +1,9 @@
 package csg.file;
 
+import csg.data.CSGData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.beans.property.StringProperty;
-import csg.data.TAData;
 
 /**
  * This class stores infor for a single TA-Day/Time mapping
@@ -48,7 +48,7 @@ public class TimeSlot {
      * input since it reflects how office hours are stored in the 
      * JSON file.
      */
-    public static ArrayList<TimeSlot> buildOfficeHoursList(TAData data) {
+    public static ArrayList<TimeSlot> buildOfficeHoursList(CSGData data) {
         // BUILD AND RETURN THIS LIST
         ArrayList<TimeSlot> officeHoursList = new ArrayList();
         ArrayList<String> gridHeaders = data.getGridHeaders();

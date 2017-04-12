@@ -5,15 +5,15 @@
  */
 package csg.jtps;
 
+import csg.CourseSiteGeneratorApp;
+import csg.data.CSGData;
+import csg.workspace.CSGWorkspace;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
 import jtps.jTPS_Transaction;
-import tam.TAManagerApp;
 import tam.data.TAData;
-import tam.workspace.TAWorkspace;
 
 /**
  *
@@ -21,19 +21,19 @@ import tam.workspace.TAWorkspace;
  */
 public class TAdeletUR implements jTPS_Transaction{
     
-    private TAManagerApp app;
-    private TAData data;
+    private CourseSiteGeneratorApp app;
+    private CSGData data;
     private ArrayList<StringProperty> cellProps = new ArrayList<StringProperty>();
     private String TAname;
     private String TAemail;
     
-    public TAdeletUR(TAManagerApp app, String TAname){
+    public TAdeletUR(CourseSiteGeneratorApp app, String TAname){
         this.app = app;
-        data = (TAData)app.getDataComponent();
+        data = (CSGData)app.getDataComponent();
         this.TAname = TAname;
         TAemail = data.getTA(TAname).getEmail();
-        TAWorkspace workspace = (TAWorkspace)app.getWorkspaceComponent();
-        HashMap<String, Label> labels = workspace.getOfficeHoursGridTACellLabels();
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        HashMap<String, Label> labels = workspace.getTADataOfficeHoursGridTACellLabels();
         for (Label label : labels.values()) {
             if (label.getText().equals(TAname)
             || (label.getText().contains(TAname + "\n"))

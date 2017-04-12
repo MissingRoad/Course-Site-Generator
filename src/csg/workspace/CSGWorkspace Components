@@ -63,6 +63,15 @@
     ComboBox officeHoursEndBox;
     GridPane taDataOfficeHoursGridPane; //will need a few methods to construct this
     
+    HashMap<String, Pane> taDataOfficeHoursGridTimeHeaderPanes;
+    HashMap<String, Label> taDataOfficeHoursGridTimeHeaderLabels;
+    HashMap<String, Pane> taDataOfficeHoursGridDayHeaderPanes;
+    HashMap<String, Label> taDataOfficeHoursGridDayHeaderLabels;
+    HashMap<String, Pane> taDataOfficeHoursGridTimeCellPanes;
+    HashMap<String, Label> taDataOfficeHoursGridTimeCellLabels;
+    HashMap<String, Pane> taDataOfficeHoursGridTACellPanes;
+    HashMap<String, Label> taDataOfficeHoursGridTACellLabels;
+
     //Components for recitationDataTab
     VBox recitationDataVBox;
     HBox recitationTopBox;

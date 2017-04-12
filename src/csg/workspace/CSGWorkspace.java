@@ -13,7 +13,9 @@ import javafx.scene.control.TabPane;
 import properties_manager.PropertiesManager;
 import csg.CSGProp;
 import csg.data.CSGData;
-import csg.data.TAData;
+import csg.style.CSGStyle;
+//import csg.data.CSGData;
+//import csg.data.TAData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.geometry.Pos;
@@ -33,7 +35,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 //import tam.data.TAData;
-import tam.style.TAStyle;
 
 /**
  *
@@ -396,14 +397,14 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         taOfficeHoursTopBox.getChildren().addAll(officeHoursLabel, officeHoursStartLabel, officeHoursStartBox, officeHoursEndLabel, officeHoursEndBox);
         taDataOfficeHoursGridPane = new GridPane();
         //Code here for actually assembling the GridPane
-        taDataOfficeHoursGridTimeHeaderPanes = new HashMap();
-        taDataOfficeHoursGridTimeHeaderLabels = new HashMap();
-        taDataOfficeHoursGridDayHeaderPanes = new HashMap();
-        taDataOfficeHoursGridDayHeaderLabels = new HashMap();
-        taDataOfficeHoursGridTimeCellPanes = new HashMap();
-        taDataOfficeHoursGridTimeCellLabels = new HashMap();
-        taDataOfficeHoursGridTACellPanes = new HashMap();
-        taDataOfficeHoursGridTACellLabels = new HashMap();
+        taDataOfficeHoursGridTimeHeaderPanes = new HashMap<String, Pane>();
+        taDataOfficeHoursGridTimeHeaderLabels = new HashMap<String, Label>();
+        taDataOfficeHoursGridDayHeaderPanes = new HashMap<String, Pane>();
+        taDataOfficeHoursGridDayHeaderLabels = new HashMap<String, Label>();
+        taDataOfficeHoursGridTimeCellPanes = new HashMap<String, Pane>();
+        taDataOfficeHoursGridTimeCellLabels = new HashMap<String, Label>();
+        taDataOfficeHoursGridTACellPanes = new HashMap<String, Pane>();
+        taDataOfficeHoursGridTACellLabels = new HashMap<String, Label>();
         taDataGridPaneVBox.getChildren().addAll(taOfficeHoursTopBox, taDataOfficeHoursGridPane);
 
         //Assembling the whole taDataTab
@@ -595,13 +596,45 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         workspace = new BorderPane();
         ((BorderPane) workspace).setCenter(t);
     }
+    
+    public HBox getTADataTextFieldPane() {
+        return taDataTextFieldPane;
+    }
 
     public GridPane getTADataOfficeHoursGridPane() {
         return taDataOfficeHoursGridPane;
     }
     
+    public HashMap<String, Pane> getTADataOfficeHoursGridTimeHeaderPanes() {
+        return taDataOfficeHoursGridTimeHeaderPanes;
+    }
+    
+    public HashMap<String, Label> getTADataOfficeHoursGridTimeHeaderLabels() {
+        return taDataOfficeHoursGridTimeHeaderLabels;
+    }
+    
+    public HashMap<String, Pane> getTADataOfficeHoursGridDayHeaderPanes() {
+        return taDataOfficeHoursGridDayHeaderPanes;
+    }
+    
+    public HashMap<String, Label> getTADataOfficeHoursGridDayHeaderLabels() {
+        return taDataOfficeHoursGridDayHeaderLabels;
+    }
+    
+    public HashMap<String, Pane> getTADataOfficeHoursGridTimeCellPanes() {
+        return taDataOfficeHoursGridTimeCellPanes;
+    }
+    
+    public HashMap<String, Label> getTADataOfficeHoursGridTimeCellLabels() {
+        return taDataOfficeHoursGridTimeCellLabels;
+    }
+    
     public HashMap<String, Pane> getTADataOfficeHoursGridTACellPanes() {
         return taDataOfficeHoursGridTACellPanes;
+    }
+    
+    public HashMap<String, Label> getTADataOfficeHoursGridTACellLabels() {
+        return taDataOfficeHoursGridTACellLabels;
     }
     
     public TextField getTANameTextField() {
@@ -614,6 +647,23 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     
     public TableView getTAInformationTable() {
         return taInformation;
+    }
+    
+    public String getCellKey(Pane testPane) {
+        for (String key : taDataOfficeHoursGridTACellLabels.keySet()) {
+            if (taDataOfficeHoursGridTACellPanes.get(key) == testPane) {
+                return key;
+            }
+        }
+        return null;
+    }
+
+    public Label getTACellLabel(String cellKey) {
+        return taDataOfficeHoursGridTACellLabels.get(cellKey);
+    }
+
+    public Pane getTACellPane(String cellPane) {
+        return taDataOfficeHoursGridTACellPanes.get(cellPane);
     }
 
     public ComboBox getOfficeHour(boolean start) {
@@ -660,11 +710,11 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
     @Override
     public void reloadWorkspace(AppDataComponent dataComponent) {
-        TAData taData = (TAData) dataComponent;
-        reloadOfficeHoursGrid(taData);
+        CSGData csgData = (CSGData) dataComponent;
+        reloadOfficeHoursGrid(csgData);
     }
 
-    public void reloadOfficeHoursGrid(TAData dataComponent) {
+    public void reloadOfficeHoursGrid(CSGData dataComponent) {
         ArrayList<String> gridHeaders = dataComponent.getGridHeaders();
 
         // ADD THE TIME HEADERS
@@ -725,11 +775,11 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         }
 
         // AND MAKE SURE ALL THE COMPONENTS HAVE THE PROPER STYLE
-        TAStyle taStyle = (TAStyle) app.getStyleComponent();
-        taStyle.initOfficeHoursGridStyle();
+        /*CSGStyle csgStyle = (CSGStyle) app.getStyleComponent();
+        csgStyle.initOfficeHoursGridStyle();*/
     }
 
-    public void addCellToGrid(TAData dataComponent, HashMap<String, Pane> panes, HashMap<String, Label> labels, int col, int row) {
+    public void addCellToGrid(CSGData dataComponent, HashMap<String, Pane> panes, HashMap<String, Label> labels, int col, int row) {
         // MAKE THE LABEL IN A PANE
         Label cellLabel = new Label("");
         HBox cellPane = new HBox();

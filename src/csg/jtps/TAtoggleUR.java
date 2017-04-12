@@ -5,8 +5,9 @@
  */
 package csg.jtps;
 
+import csg.data.CSGData;
 import jtps.jTPS_Transaction;
-import tam.data.TAData;
+//import csg.data.TAData;
 
 /**
  *
@@ -16,9 +17,9 @@ public class TAtoggleUR implements jTPS_Transaction{
     
     private String TAname;
     private String cellKey;
-    private TAData data;
+    private CSGData data;
     
-    public TAtoggleUR(String TAname, String cellKey, TAData data){
+    public TAtoggleUR(String TAname, String cellKey, CSGData data){
         this.TAname = TAname;
         this.cellKey = cellKey;
         this.data = data;

@@ -8,7 +8,7 @@ package csg.jtps;
 import javafx.scene.control.TableView;
 import jtps.jTPS_Transaction;
 import csg.CourseSiteGeneratorApp;
-import csg.data.TAData;
+import csg.data.CSGData;
 import csg.data.TeachingAssistant;
 import csg.workspace.CSGWorkspace;
 
@@ -22,12 +22,12 @@ public class TAReplaceUR implements jTPS_Transaction{
     private String newName;
     private String newEmail;
     private CourseSiteGeneratorApp app;
-    private TAData data;
+    private CSGData data;
     
     public TAReplaceUR(CourseSiteGeneratorApp app){
         this.app = app;
         CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
-        data = (TAData)app.getDataComponent();
+        data = (CSGData)app.getDataComponent();
         newName = workspace.getTANameTextField().getText();
         newEmail = workspace.getTAEmailTextField().getText();
         TableView taTable = workspace.getTAInformationTable();

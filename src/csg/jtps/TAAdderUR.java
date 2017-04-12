@@ -5,12 +5,10 @@
  */
 package csg.jtps;
 
-import java.util.regex.Pattern;
+import csg.CourseSiteGeneratorApp;
+import csg.data.CSGData;
+import csg.workspace.CSGWorkspace;
 import jtps.jTPS_Transaction;
-import tam.TAManagerApp;
-import tam.data.TAData;
-import tam.workspace.TAController;
-import tam.workspace.TAWorkspace;
 
 /**
  *
@@ -20,24 +18,24 @@ public class TAAdderUR implements jTPS_Transaction{
     
     private String TAName;
     private String TAEmail;
-    private TAManagerApp app;
-    private TAWorkspace workspace;
+    private CourseSiteGeneratorApp app;
+    private CSGWorkspace workspace;
     
-    public TAAdderUR(TAManagerApp app){
+    public TAAdderUR(CourseSiteGeneratorApp app){
         this.app = app;
-        workspace = (TAWorkspace)app.getWorkspaceComponent();
-        TAName = workspace.getNameTextField().getText();
-        TAEmail = workspace.getEmailTextField().getText();
+        workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        TAName = workspace.getTANameTextField().getText();
+        TAEmail = workspace.getTAEmailTextField().getText();
     }
 
     @Override
     public void doTransaction() {
-        ((TAData)app.getDataComponent()).addTA(TAName, TAEmail);
+        ((CSGData)app.getDataComponent()).addTA(TAName, TAEmail);
     }
 
     @Override
     public void undoTransaction() {
-        ((TAData)app.getDataComponent()).removeTA(TAName);
+        ((CSGData)app.getDataComponent()).removeTA(TAName);
     }
     
 }
