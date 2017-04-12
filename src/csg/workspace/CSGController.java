@@ -24,6 +24,12 @@ import properties_manager.PropertiesManager;
 import csg.CSGProp;
 import csg.jtps.TAReplaceUR;
 import csg.jtps.TAdeletUR;
+import csg.jtps.TAhourschangeUR;
+import djf.ui.AppYesNoCancelDialogSingleton;
+import java.util.ArrayList;
+import javafx.scene.control.ComboBox;
+import csg.data.CSGData;
+import csg.file.TimeSlot;
 import static tam.style.TAStyle.CLASS_HIGHLIGHTED_GRID_CELL;
 import static tam.style.TAStyle.CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN;
 import static tam.style.TAStyle.CLASS_OFFICE_HOURS_GRID_TA_CELL_PANE;
@@ -272,6 +278,57 @@ public class CSGController {
     }
     public void Redo(){
         jTPS.doTransaction();
+        markWorkAsEdited();
+    }
+    
+    public void changeTime(){
+        CSGData data = (CSGData)app.getDataComponent();
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        ComboBox comboBox1 = workspace.getOfficeHour(true);
+        ComboBox comboBox2 = workspace.getOfficeHour(false);
+        int startTime = data.getStartHour();
+        int endTime = data.getEndHour();
+        int newStartTime = comboBox1.getSelectionModel().getSelectedIndex();
+        int newEndTime = comboBox2.getSelectionModel().getSelectedIndex();
+        if(newStartTime > endTime || newEndTime < startTime){
+            comboBox1.getSelectionModel().select(startTime);
+            comboBox2.getSelectionModel().select(endTime);
+            AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+            dialog.show(props.getProperty(CSGProp.START_OVER_END_TITLE.toString()), props.getProperty(CSGProp.START_OVER_END_MESSAGE.toString()));
+            return;
+        }
+        ArrayList<TimeSlot> officeHours = TimeSlot.buildOfficeHoursList(data);
+        if(officeHours.isEmpty()){
+            workspace.getTADataOfficeHoursGridPane().getChildren().clear();
+            data.initHours("" + newStartTime, "" + newEndTime);
+        }
+        String firsttime = officeHours.get(0).getTime();
+        int firsthour = Integer.parseInt(firsttime.substring(0, firsttime.indexOf('_')));
+        if(firsttime.contains("pm"))
+            firsthour += 12;
+        if(firsttime.contains("12"))
+            firsthour -= 12;
+        String lasttime = officeHours.get(officeHours.size() - 1).getTime();
+        int lasthour = Integer.parseInt(lasttime.substring(0, lasttime.indexOf('_')));
+        if(lasttime.contains("pm"))
+            lasthour += 12;
+        if(lasttime.contains("12"))
+            lasthour -= 12;
+        if(firsthour < newStartTime || lasthour + 1 > newEndTime){
+            AppYesNoCancelDialogSingleton yesNoDialog = AppYesNoCancelDialogSingleton.getSingleton();
+            yesNoDialog.show(props.getProperty(CSGProp.OFFICE_HOURS_REMOVED_TITLE.toString()), props.getProperty(CSGProp.OFFICE_HOURS_REMOVED_MESSAGE).toString());
+            String selection = yesNoDialog.getSelection();
+            if (!selection.equals(AppYesNoCancelDialogSingleton.YES)){
+                comboBox1.getSelectionModel().select(startTime);
+                comboBox2.getSelectionModel().select(endTime);
+                return;
+            }
+        }
+        
+        jTPS_Transaction changeTimeUR = new TAhourschangeUR(app);
+        jTPS.addTransaction(changeTimeUR);
+        
         markWorkAsEdited();
     }
 }

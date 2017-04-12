@@ -38,6 +38,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import csg.data.CSGData;
 import csg.data.TeachingAssistant;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.input.KeyCode;
 //import tam.data.TAData;
@@ -476,6 +478,29 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         
         // NOW LET'S SETUP THE EVENT HANDLING - for the TA DATA TAB ONLY
         controller = new CSGController(app);
+        
+        //ComboBox Events
+        officeHoursStartBox.setPrefHeight(42);
+        officeHoursStartBox.setPrefWidth(150);
+        officeHoursStartBox.getSelectionModel().select(data.getStartHour());
+        officeHoursStartBox.valueProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue ov, String t, String t1) {
+                if(t != null && t1 != null)
+                    if(officeHoursStartBox.getSelectionModel().getSelectedIndex() != data.getStartHour())
+                        controller.changeTime();
+            }
+        });
+        
+        officeHoursEndBox.setPrefHeight(42);
+        officeHoursEndBox.setPrefWidth(150);
+        officeHoursEndBox.getSelectionModel().select(data.getEndHour());
+        officeHoursEndBox.valueProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue ov, String t, String t1) {
+                if(t != null && t1 != null)
+                    if(officeHoursEndBox.getSelectionModel().getSelectedIndex() != data.getEndHour())
+                        controller.changeTime();
+            }    
+        });
 
         // CONTROLS FOR ADDING TAs
         taNameTextField.setOnAction(e -> {
