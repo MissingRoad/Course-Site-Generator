@@ -22,6 +22,8 @@ import jtps.jTPS_Transaction;
 import properties_manager.PropertiesManager;
 //import csg.data.TAData;
 import csg.CSGProp;
+import csg.jtps.TAReplaceUR;
+import csg.jtps.TAdeletUR;
 import static tam.style.TAStyle.CLASS_HIGHLIGHTED_GRID_CELL;
 import static tam.style.TAStyle.CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN;
 import static tam.style.TAStyle.CLASS_OFFICE_HOURS_GRID_TA_CELL_PANE;
@@ -34,6 +36,15 @@ import static tam.style.TAStyle.CLASS_OFFICE_HOURS_GRID_TA_CELL_PANE;
 public class CSGController {
     static jTPS jTPS = new jTPS();
     CourseSiteGeneratorApp app;
+    
+    /**
+     * Constructor, note that the app must already be constructed.
+     */
+    public CSGController(CourseSiteGeneratorApp initApp) {
+        // KEEP THIS FOR LATER
+        app = initApp;
+    }
+    
     public void handleAddTA() {
         // WE'LL NEED THE WORKSPACE TO RETRIEVE THE USER INPUT VALUES
         CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
@@ -114,8 +125,8 @@ public class CSGController {
                 String taName = ta.getName();
                 CSGData data = (CSGData)app.getDataComponent();
                 
-                //jTPS_Transaction deletUR = new TAdeletUR(app, taName);
-                //jTPS.addTransaction(deletUR);
+                jTPS_Transaction deletUR = new TAdeletUR(app, taName);
+                jTPS.addTransaction(deletUR);
                 
                 // AND BE SURE TO REMOVE ALL THE TA'S OFFICE HOURS
                 // WE'VE CHANGED STUFF
@@ -226,5 +237,41 @@ public class CSGController {
             // WE'VE CHANGED STUFF
             markWorkAsEdited();
         }
+    }
+    
+    public void changeExistTA(){
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        TableView taTable = workspace.getTAInformationTable();
+        Object selectedItem = taTable.getSelectionModel().getSelectedItem();
+        CSGData data = (CSGData)app.getDataComponent();
+        TeachingAssistant ta = (TeachingAssistant)selectedItem;
+        String name = ta.getName();
+        String newName = workspace.getTANameTextField().getText();
+        String newEmail = workspace.getTAEmailTextField().getText();
+        jTPS_Transaction replaceTAUR = new TAReplaceUR(app);
+        jTPS.addTransaction(replaceTAUR);
+        markWorkAsEdited();
+    }
+    
+    public void loadTAtotext(){
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        TableView taTable = workspace.getTAInformationTable();
+        Object selectedItem = taTable.getSelectionModel().getSelectedItem();
+        if(selectedItem != null){
+            TeachingAssistant ta = (TeachingAssistant)selectedItem;
+            String name = ta.getName();
+            String email = ta.getEmail();
+            workspace.getTANameTextField().setText(name);
+            workspace.getTAEmailTextField().setText(email);
+        }
+    }
+    
+    public void Undo(){
+        jTPS.undoTransaction();
+        markWorkAsEdited();
+    }
+    public void Redo(){
+        jTPS.doTransaction();
+        markWorkAsEdited();
     }
 }

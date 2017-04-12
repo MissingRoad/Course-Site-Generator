@@ -53,7 +53,7 @@ public class TAdeletUR implements jTPS_Transaction{
 
     @Override
     public void undoTransaction() {
-        data.addTA(TAname, TAemail);
+        data.addTA(TAname, TAemail, false);
         for(StringProperty cellProp : cellProps){
             String cellText = cellProp.getValue();
             if (cellText.length() == 0){

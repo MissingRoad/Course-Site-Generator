@@ -151,10 +151,44 @@
         <property name="TAS_HEADER_TEXT"                value="Teaching Assistants"></property>
         <property name="NAME_COLUMN_TEXT"               value="Name"></property>
         <property name="EMAIL_COLUMN_TEXT"              value="Email"></property>
+	  <property name = "IS_UNDERGRAD_COLUMN_TEXT"	value = "Undergrad"></property>
         <property name="NAME_PROMPT_TEXT"               value="Name"></property>
         <property name="EMAIL_PROMPT_TEXT"              value="Email"></property>
         <property name="ADD_BUTTON_TEXT"                value="Add TA"></property>
         <property name="OFFICE_HOURS_SUBHEADER"         value="Office Hours Grid"></property>
+        <property name="UPDATE_BUTTON_TEXT"             value="Update TA"></property>
+        <property name="CLEAR_BUTTON_TEXT"              value="CLEAR"></property>
+
+        <property name="OFFICE_HOURS_REMOVED_TITLE"     value="Some office hours would lost?"></property>
+        <property name="OFFICE_HOURS_REMOVED_MESSAGE"   value="Are you sure to remove these office hours?"></property>
+        <property name="START_OVER_END_TITLE"           value="Can not end before start!"></property>
+        <property name="START_OVER_END_MESSAGE"         value="Can not end before start!"></property>
+        
+        <property name="TIME_12AM"                      value="12 am"></property>
+        <property name="TIME_1AM"                      value="1 am"></property>
+        <property name="TIME_2AM"                      value="2 am"></property>
+        <property name="TIME_3AM"                      value="3 am"></property>
+        <property name="TIME_4AM"                      value="4 am"></property>
+        <property name="TIME_5AM"                      value="5 am"></property>
+        <property name="TIME_6AM"                      value="6 am"></property>
+        <property name="TIME_7AM"                      value="7 am"></property>
+        <property name="TIME_8AM"                      value="8 am"></property>
+        <property name="TIME_9AM"                      value="9 am"></property>
+        <property name="TIME_10AM"                      value="10 am"></property>
+        <property name="TIME_11AM"                      value="11 am"></property>
+        <property name="TIME_12PM"                      value="12 pm"></property>
+        <property name="TIME_1PM"                      value="1 pm"></property>
+        <property name="TIME_2PM"                      value="2 pm"></property>
+        <property name="TIME_3PM"                      value="3 pm"></property>
+        <property name="TIME_4PM"                      value="4 pm"></property>
+        <property name="TIME_5PM"                      value="5 pm"></property>
+        <property name="TIME_6PM"                      value="6 pm"></property>
+        <property name="TIME_7PM"                      value="7 pm"></property>
+        <property name="TIME_8PM"                      value="8 pm"></property>
+        <property name="TIME_9PM"                      value="9 pm"></property>
+        <property name="TIME_10PM"                      value="10 pm"></property>
+        <property name="TIME_11PM"                      value="11 pm"></property>
+
 
 
         <!-- PROJECT DATA TAB LABELS -->

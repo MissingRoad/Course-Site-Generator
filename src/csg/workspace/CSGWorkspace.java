@@ -12,14 +12,15 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import properties_manager.PropertiesManager;
 import csg.CSGProp;
-import csg.data.CSGData;
-import csg.style.CSGStyle;
 //import csg.data.CSGData;
 //import csg.data.TAData;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -28,12 +29,17 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import csg.data.CSGData;
+import csg.data.TeachingAssistant;
+import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.input.KeyCode;
 //import tam.data.TAData;
 
 /**
@@ -109,12 +115,16 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     Label stylesheetNote;
 
     //Components for taDataTab
+    boolean addTA;
     HBox taDataTabHBox;
     VBox taDataTATableViewVBox;
     Label teachingAssistantsLabel;
     Button deleteTAButton;
     HBox taDataTableViewTopPane;
     TableView taInformation;
+    TableColumn<TeachingAssistant, CheckBox> taIsUndergradColumn;
+    TableColumn<TeachingAssistant, String> taNameColumn;
+    TableColumn<TeachingAssistant, String> taEmailColumn;
     HBox taDataTextFieldPane;
     TextField taNameTextField;
     TextField taEmailTextField;
@@ -127,6 +137,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     ComboBox officeHoursStartBox;
     Label officeHoursEndLabel;
     ComboBox officeHoursEndBox;
+    ObservableList<String> time_options;
     GridPane taDataOfficeHoursGridPane; //will need a few methods to construct this
     //Components for the above GridPane
     HashMap<String, Pane> taDataOfficeHoursGridTimeHeaderPanes;
@@ -370,6 +381,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         /*taDataTab = new Tab();
         taDataTab.setText(CSGProp.TA_DATA_TAB.toString());*/
         //First, declare the whole pane
+        addTA = true;
         taDataTabHBox = new HBox();
         //Assembling the left VBox
         taDataTATableViewVBox = new VBox();
@@ -377,7 +389,34 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         teachingAssistantsLabel = new Label(props.getProperty(CSGProp.TEACHING_ASSISTANTS_LABEL).toString());
         deleteTAButton = new Button(props.getProperty(CSGProp.DELETE_SYMBOL).toString());
         taDataTableViewTopPane.getChildren().addAll(teachingAssistantsLabel, deleteTAButton);
+        
         taInformation = new TableView();
+        taInformation.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        CSGData data = (CSGData) app.getDataComponent();
+        ObservableList<TeachingAssistant> taTableData = data.getTeachingAssistants();
+        taInformation.setItems(taTableData);
+        // Is undergrad column initialization here
+        String isUndergradColumnText = props.getProperty(CSGProp.IS_UNDERGRAD_COLUMN_TEXT.toString());
+        
+        String nameColumnText = props.getProperty(CSGProp.NAME_COLUMN_TEXT.toString());
+        String emailColumnText = props.getProperty(CSGProp.EMAIL_COLUMN_TEXT.toString());
+        taIsUndergradColumn = new TableColumn(isUndergradColumnText);
+        taNameColumn = new TableColumn(nameColumnText);
+        taEmailColumn = new TableColumn(emailColumnText);
+        taIsUndergradColumn.setCellValueFactory(
+                new PropertyValueFactory<TeachingAssistant, CheckBox>("isUndergrad")
+        );
+        taIsUndergradColumn.setCellFactory(column -> new CheckBoxTableCell());
+        taInformation.setEditable(true);
+        taNameColumn.setCellValueFactory(
+                new PropertyValueFactory<TeachingAssistant, String>("name")
+        );
+        taEmailColumn.setCellValueFactory(
+                new PropertyValueFactory<TeachingAssistant, String>("email")
+        );
+        taInformation.getColumns().add(taIsUndergradColumn);
+        taInformation.getColumns().add(taNameColumn);
+        taInformation.getColumns().add(taEmailColumn);
         taDataTextFieldPane = new HBox();
         taNameTextField = new TextField();
         taEmailTextField = new TextField();
@@ -387,13 +426,41 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         taDataTATableViewVBox.getChildren().addAll(taDataTableViewTopPane, taInformation, taDataTextFieldPane);
 
         //Assembling the right VBox
+        time_options = FXCollections.observableArrayList(
+        props.getProperty(CSGProp.TIME_12AM.toString()),
+        props.getProperty(CSGProp.TIME_1AM.toString()),
+        props.getProperty(CSGProp.TIME_2AM.toString()),
+        props.getProperty(CSGProp.TIME_3AM.toString()),
+        props.getProperty(CSGProp.TIME_4AM.toString()),
+        props.getProperty(CSGProp.TIME_5AM.toString()),
+        props.getProperty(CSGProp.TIME_6AM.toString()),
+        props.getProperty(CSGProp.TIME_7AM.toString()),
+        props.getProperty(CSGProp.TIME_8AM.toString()),
+        props.getProperty(CSGProp.TIME_9AM.toString()),
+        props.getProperty(CSGProp.TIME_10AM.toString()),
+        props.getProperty(CSGProp.TIME_11AM.toString()),
+        props.getProperty(CSGProp.TIME_12PM.toString()),
+        props.getProperty(CSGProp.TIME_1PM.toString()),
+        props.getProperty(CSGProp.TIME_2PM.toString()),
+        props.getProperty(CSGProp.TIME_3PM.toString()),
+        props.getProperty(CSGProp.TIME_4PM.toString()),
+        props.getProperty(CSGProp.TIME_5PM.toString()),
+        props.getProperty(CSGProp.TIME_6PM.toString()),
+        props.getProperty(CSGProp.TIME_7PM.toString()),
+        props.getProperty(CSGProp.TIME_8PM.toString()),
+        props.getProperty(CSGProp.TIME_9PM.toString()),
+        props.getProperty(CSGProp.TIME_10PM.toString()),
+        props.getProperty(CSGProp.TIME_11PM.toString())
+        );
+        
         taDataGridPaneVBox = new VBox();
         taOfficeHoursTopBox = new HBox();
         officeHoursLabel = new Label(props.getProperty(CSGProp.OFFICE_HOURS_LABEL.toString()));
         officeHoursStartLabel = new Label(props.getProperty(CSGProp.OFFICE_HOURS_START_LABEL.toString()));
-        officeHoursStartBox = new ComboBox();
+        officeHoursStartBox = new ComboBox(time_options);
         officeHoursEndLabel = new Label(props.getProperty(CSGProp.OFFICE_HOURS_END_LABEL.toString()));
-        officeHoursEndBox = new ComboBox();
+        officeHoursEndBox = new ComboBox(time_options);
+        
         taOfficeHoursTopBox.getChildren().addAll(officeHoursLabel, officeHoursStartLabel, officeHoursStartBox, officeHoursEndLabel, officeHoursEndBox);
         taDataOfficeHoursGridPane = new GridPane();
         //Code here for actually assembling the GridPane
@@ -406,6 +473,48 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         taDataOfficeHoursGridTACellPanes = new HashMap<String, Pane>();
         taDataOfficeHoursGridTACellLabels = new HashMap<String, Label>();
         taDataGridPaneVBox.getChildren().addAll(taOfficeHoursTopBox, taDataOfficeHoursGridPane);
+        
+        // NOW LET'S SETUP THE EVENT HANDLING - for the TA DATA TAB ONLY
+        controller = new CSGController(app);
+
+        // CONTROLS FOR ADDING TAs
+        taNameTextField.setOnAction(e -> {
+            if(!addTA)
+                controller.changeExistTA();
+            else
+                controller.handleAddTA();
+        });
+        taEmailTextField.setOnAction(e -> {
+            if(!addTA)
+                controller.changeExistTA();
+            else
+                controller.handleAddTA();
+        });
+        addTAButton.setOnAction(e -> {
+            if(!addTA)
+                controller.changeExistTA();
+            else
+                controller.handleAddTA();
+        });
+        clearTAButton.setOnAction(e -> {
+            addTAButton.setText(props.getProperty(CSGProp.ADD_BUTTON_LABEL.toString()));
+            addTA = true;
+            taNameTextField.clear();
+            taEmailTextField.clear();
+            taInformation.getSelectionModel().select(null);
+        });
+
+        taInformation.setFocusTraversable(true);
+        taInformation.setOnKeyPressed(e -> {
+            controller.handleKeyPress(e.getCode());
+        });
+        taInformation.setOnMouseClicked(e -> {
+            addTAButton.setText(props.getProperty(CSGProp.ADD_EDIT_LABEL.toString()));
+            addTA = false;
+            controller.loadTAtotext();
+        });
+        
+        // Workspace handler goes at the end, handler organized by tab
 
         //Assembling the whole taDataTab
         taDataTabHBox.getChildren().addAll(taDataTATableViewVBox, taDataGridPaneVBox);
@@ -595,6 +704,15 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
         workspace = new BorderPane();
         ((BorderPane) workspace).setCenter(t);
+        
+        //Workspace handler here
+        workspace.setOnKeyPressed(e ->{
+            if(e.isControlDown())
+                if(e.getCode() == KeyCode.Z)
+                    controller.Undo();
+                else if(e.getCode() == KeyCode.Y)
+                    controller.Redo();
+        });
     }
     
     public HBox getTADataTextFieldPane() {

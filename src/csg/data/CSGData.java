@@ -30,7 +30,7 @@ public class CSGData implements AppDataComponent {
 
     // NOTE THAT THIS DATA STRUCTURE WILL DIRECTLY STORE THE
     // DATA IN THE ROWS OF THE TABLE VIEW
-    ObservableList<tam.data.TeachingAssistant> teachingAssistants;
+    ObservableList<TeachingAssistant> teachingAssistants;
 
     // THIS WILL STORE ALL THE OFFICE HOURS GRID DATA, WHICH YOU
     // SHOULD NOTE ARE StringProperty OBJECTS THAT ARE CONNECTED
@@ -175,8 +175,8 @@ public class CSGData implements AppDataComponent {
         return getCellKey(col, row);
     }
     
-    public tam.data.TeachingAssistant getTA(String testName) {
-        for (tam.data.TeachingAssistant ta : teachingAssistants) {
+    public TeachingAssistant getTA(String testName) {
+        for (TeachingAssistant ta : teachingAssistants) {
             if (ta.getName().equals(testName)) {
                 return ta;
             }
@@ -236,7 +236,7 @@ public class CSGData implements AppDataComponent {
 
 
     public boolean containsTA(String testName, String testEmail) {
-        for (tam.data.TeachingAssistant ta : teachingAssistants) {
+        for (TeachingAssistant ta : teachingAssistants) {
             if (ta.getName().equals(testName)) {
                 return true;
             }
@@ -249,9 +249,9 @@ public class CSGData implements AppDataComponent {
 
 
 
-    public void addTA(String initName, String initEmail) {
+    public void addTA(String initName, String initEmail, boolean isUndergrad) {
         // MAKE THE TA
-        tam.data.TeachingAssistant ta = new tam.data.TeachingAssistant(initName, initEmail);
+        TeachingAssistant ta = new TeachingAssistant(initName, initEmail, isUndergrad);
 
         // ADD THE TA
         if (!containsTA(initName, initEmail)) {
@@ -263,7 +263,7 @@ public class CSGData implements AppDataComponent {
     }
 
     public void removeTA(String name) {
-        for (tam.data.TeachingAssistant ta : teachingAssistants) {
+        for (TeachingAssistant ta : teachingAssistants) {
             if (name.equals(ta.getName())) {
                 teachingAssistants.remove(ta);
                 return;

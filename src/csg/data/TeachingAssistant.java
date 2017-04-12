@@ -42,6 +42,14 @@ public class TeachingAssistant <E extends Comparable<E>> implements Comparable<E
     public void setEmail(String initEmail) {
         email.set(initEmail);
     }
+    
+    public boolean isUndergrad() {
+        return isUndergrad.get();
+    }
+    
+    public void setIsUndergrad(boolean isUndergrad) {
+        this.isUndergrad.set(isUndergrad);
+    }
 
     @Override
     public int compareTo(E otherTA) {

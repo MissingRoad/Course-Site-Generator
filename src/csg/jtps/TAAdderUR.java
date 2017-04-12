@@ -26,11 +26,12 @@ public class TAAdderUR implements jTPS_Transaction{
         workspace = (CSGWorkspace)app.getWorkspaceComponent();
         TAName = workspace.getTANameTextField().getText();
         TAEmail = workspace.getTAEmailTextField().getText();
+        
     }
 
     @Override
     public void doTransaction() {
-        ((CSGData)app.getDataComponent()).addTA(TAName, TAEmail);
+        ((CSGData)app.getDataComponent()).addTA(TAName, TAEmail, false);
     }
 
     @Override
