@@ -38,6 +38,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import csg.data.CSGData;
 import csg.data.TeachingAssistant;
+import csg.style.CSGStyle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -788,6 +789,14 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         return taEmailTextField;
     }
     
+    public Button getAddTAButton() {
+        return addTAButton;
+    }
+    
+    public Button getClearTAButton() {
+        return clearTAButton;
+    }
+    
     public TableView getTAInformationTable() {
         return taInformation;
     }
@@ -918,8 +927,8 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         }
 
         // AND MAKE SURE ALL THE COMPONENTS HAVE THE PROPER STYLE
-        /*CSGStyle csgStyle = (CSGStyle) app.getStyleComponent();
-        csgStyle.initOfficeHoursGridStyle();*/
+        CSGStyle csgStyle = (CSGStyle) app.getStyleComponent();
+        csgStyle.initOfficeHoursGridStyle();
     }
 
     public void addCellToGrid(CSGData dataComponent, HashMap<String, Pane> panes, HashMap<String, Label> labels, int col, int row) {

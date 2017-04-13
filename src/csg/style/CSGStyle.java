@@ -93,8 +93,8 @@ public class CSGStyle extends AppStyleComponent{
         workspaceComponent.getTADataTextFieldPane().getStyleClass().add(CLASS_ADD_TA_PANE);
         workspaceComponent.getTANameTextField().getStyleClass().add(CLASS_ADD_TA_TEXT_FIELD);
         workspaceComponent.getTAEmailTextField().getStyleClass().add(CLASS_ADD_TA_TEXT_FIELD);
-        //workspaceComponent.getAddButton().getStyleClass().add(CLASS_ADD_TA_BUTTON);
-        //workspaceComponent.getClearButton().getStyleClass().add(CLASS_ADD_TA_BUTTON);
+        workspaceComponent.getAddTAButton().getStyleClass().add(CLASS_ADD_TA_BUTTON);
+        workspaceComponent.getClearTAButton().getStyleClass().add(CLASS_ADD_TA_BUTTON);
 
         // RIGHT SIDE - THE HEADER
         //workspaceComponent.getOfficeHoursSubheaderBox().getStyleClass().add(CLASS_HEADER_PANE);
