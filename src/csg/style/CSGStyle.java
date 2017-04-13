@@ -66,7 +66,7 @@ public class CSGStyle extends AppStyleComponent{
         super.initStylesheet(app);
 
         // INIT THE STYLE FOR THE FILE TOOLBAR
-        app.getGUI().initFileToolbarStyle();
+        app.getGUI().initAppToolbarStyle();
 
         // AND NOW OUR WORKSPACE STYLE
         initTAWorkspaceStyle();
