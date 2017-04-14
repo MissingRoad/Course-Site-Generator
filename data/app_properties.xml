@@ -89,6 +89,7 @@
 	  <property name = "COURSE_SUBJECT_LABEL" value = "Subject: "></property>
 	  <property name = "COURSE_NUMBER_LABEL" value = "Number: "></property>
 	  <property name = "COURSE_SEMESTER_LABEL" value = "Semester: "></property>
+	  <property name = "COURSE_YEAR_LABEL" value = "Year: "></property>
 	  <property name = "COURSE_TITLE_LABEL" value = "Title: "></property>
 	  <property name = "COURSE_INSTRUCTOR_NAME_LABEL" value = "Instructor Name: "></property>
 	  <property name = "COURSE_INSTRUCTOR_HOME_LABEL" value = "Instructor Home: "></property>
@@ -122,7 +123,8 @@
 	  <property name = "OFFICE_HOURS_START_LABEL" value = "Start: "></property>
 	  <property name = "OFFICE_HOURS_END_LABEL" value = "End: "></property>
 
-        <!-- RECITATION DATA TAB LABELS -->        
+        <!-- RECITATION DATA TAB LABELS --> 
+	  <property name = "RECITATIONS_LABEL" value = "Recitaciones:"> </property>              
 
 	  <property name = "REC_SECTION_LABEL" value = "Section"></property>
 	  <property name = "REC_INSTRUCTOR_LABEL" value = "Instructor"></property>
@@ -154,6 +156,7 @@
 	  <property name = "IS_UNDERGRAD_COLUMN_TEXT"	value = "Undergrad"></property>
         <property name="NAME_PROMPT_TEXT"               value="Name"></property>
         <property name="EMAIL_PROMPT_TEXT"              value="Email"></property>
+	   <property name = "HOME_PROMPT_TEXT"		value = "Home"></property>
         <property name="ADD_BUTTON_TEXT"                value="Add TA"></property>
         <property name="OFFICE_HOURS_SUBHEADER"         value="Office Hours Grid"></property>
         <property name="UPDATE_BUTTON_TEXT"             value="Update TA"></property>

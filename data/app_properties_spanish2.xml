@@ -89,6 +89,7 @@
 	  <property name = "COURSE_SUBJECT_LABEL" value = "Sujeto: "></property>
 	  <property name = "COURSE_NUMBER_LABEL" value = "Numero: "></property>
 	  <property name = "COURSE_SEMESTER_LABEL" value = "Semestre: "></property>
+	  <property name = "COURSE_YEAR_LABEL" value = "Ano: "></property>
 	  <property name = "COURSE_TITLE_LABEL" value = "Titulo: "></property>
 	  <property name = "COURSE_INSTRUCTOR_NAME_LABEL" value = "Nombre del Instructor: "></property>
 	  <property name = "COURSE_INSTRUCTOR_HOME_LABEL" value = "Instructor Inicio: "></property>
@@ -122,7 +123,8 @@
 	  <property name = "OFFICE_HOURS_START_LABEL" value = "Comienzo: "></property>
 	  <property name = "OFFICE_HOURS_END_LABEL" value = "Fin: "></property>
 
-        <!-- RECITATION DATA TAB LABELS -->        
+        <!-- RECITATION DATA TAB LABELS --> 
+	  <property name = "RECITATIONS_LABEL" value = "Recitaciones:"> </property>       
 
 	  <property name = "REC_SECTION_LABEL" value = "Seccion"></property>
 	  <property name = "REC_INSTRUCTOR_LABEL" value = "Instructor"></property>
@@ -150,8 +152,10 @@
         <property name="TAS_HEADER_TEXT"                value="Asistentes de Ensananza"></property>
         <property name="NAME_COLUMN_TEXT"               value="Nombre"></property>
         <property name="EMAIL_COLUMN_TEXT"              value="Correo Electronico"></property>
+	  <property name = "IS_UNDERGRAD_COLUMN_TEXT"	value = "Undergrado"></property>
         <property name="NAME_PROMPT_TEXT"               value="Nombre"></property>
         <property name="EMAIL_PROMPT_TEXT"              value="Correo Electronico"></property>
+	   <property name = "HOME_PROMPT_TEXT"		value = "pagina web"></property>
         <property name="ADD_BUTTON_TEXT"                value="Anadir Asistente de Ensananza"></property>
         <property name="OFFICE_HOURS_SUBHEADER"         value="Cuadricula de Horarios de Oficina"></property>
 
@@ -194,16 +198,16 @@
 
         <!-- PROJECT DATA TAB LABELS -->
 
-        <property name="TEAMS_LABEL" value="Teams"></property>
-        <property name="TEAM_NAME_LABEL" value="Name"></property>
+        <property name="TEAMS_LABEL" value="Equipos"></property>
+        <property name="TEAM_NAME_LABEL" value="Nombre"></property>
         <property name="TEAM_COLOR_LABEL" value="Color (hex#)"></property>
-        <property name="TEXT_COLOR_LABEL" value="Text Color (hex#)"></property>
-        <property name="TEAM_LINK_LABEL"  value="Link"></property>
-        <property name="TEAM_STUDENTS_LABEL" value="Students"></property>
-        <property name="STUDENT_FIRST_NAME_LABEL" value="First Name"></property>
-        <property name="STUDENT_LAST_NAME_LABEL"  value="Last Name"></property>
-        <property name="STUDENT_TEAM_LABEL" value="Team"></property>
-        <property name="STUDENT_ROLE_LABEL" value="Role"></property>
+        <property name="TEXT_COLOR_LABEL" value="Color de Texto(hex#)"></property>
+        <property name="TEAM_LINK_LABEL"  value="Enlace"></property>
+        <property name="TEAM_STUDENTS_LABEL" value="Estudiantes"></property>
+        <property name="STUDENT_FIRST_NAME_LABEL" value="Primer Nombre"></property>
+        <property name="STUDENT_LAST_NAME_LABEL"  value="Nombre de Familia"></property>
+        <property name="STUDENT_TEAM_LABEL" value="Equipo"></property>
+        <property name="STUDENT_ROLE_LABEL" value="Posicion"></property>
 
         
         <!-- WORKSPACE ERROR MESSAGES -->
@@ -216,8 +220,8 @@
     </property_list>
     <property_options_list>
         <property_options name="OFFICE_HOURS_TABLE_HEADERS">
-            <option>Start Time</option>
-            <option>End Time</option>
+            <option>Hora de Inicio</option>
+            <option>Hora de finalizacion</option>
         </property_options>
         <property_options name="DAYS_OF_WEEK">
             <option>LUNES</option>

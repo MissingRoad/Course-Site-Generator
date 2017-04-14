@@ -160,6 +160,12 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     Label recitationsLabel;
     Button deleteRecitationButton;
     TableView recitationData;
+    TableColumn recSection;
+    TableColumn recInstructor;
+    TableColumn recDayTime;
+    TableColumn recLocation;
+    TableColumn recTA1;
+    TableColumn recTA2;
     GridPane addEditGridPane;
     Label sectionLabel;
     TextField sectionTextField;
@@ -190,6 +196,10 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     Label scheduleItemsLabel;
     Button deleteScheduleItemButton;
     TableView scheduleItems;
+    TableColumn scheduleItemType;
+    TableColumn scheduleItemDate;
+    TableColumn scheduleItemTitle;
+    TableColumn scheduleItemTopic;
     GridPane addEditSchedulePane;
     Label typeLabel;
     ComboBox typeBox;
@@ -216,6 +226,10 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     Label teamsLabel;
     Button deleteProjectButton;
     TableView projectTeams;
+    TableColumn projectTeamName;
+    TableColumn projectTeamColor;
+    TableColumn projectTeamTextColor;
+    TableColumn projectTeamLink;
     GridPane addEditProjectGridPane;
     Label addEditProjectLabel;
     Label teamNameLabel;
@@ -233,6 +247,10 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     Label studentsLabel;
     Button deleteStudentsButton;
     TableView teamMembers;
+    TableColumn teamMemberFirstName;
+    TableColumn teamMemberLastName;
+    TableColumn teamMemberTeam;
+    TableColumn teamMemberRole;
     Label addEditStudentsLabel;
     GridPane addEditStudentsPane;
     Label firstNameLabel;
@@ -290,7 +308,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         subjectLabel = new Label(props.getProperty(CSGProp.COURSE_SUBJECT_LABEL).toString());
         numberLabel = new Label(props.getProperty(CSGProp.COURSE_NUMBER_LABEL).toString());
         semesterLabel = new Label(props.getProperty(CSGProp.COURSE_SEMESTER_LABEL).toString());
-        yearLabel = new Label();
+        yearLabel = new Label(props.getProperty(CSGProp.COURSE_YEAR_LABEL.toString()));
         titleLabel = new Label(props.getProperty(CSGProp.COURSE_TITLE_LABEL).toString());
         instructorNameLabel = new Label(props.getProperty(CSGProp.COURSE_INSTRUCTOR_NAME_LABEL).toString());
         instructorHomeLabel = new Label(props.getProperty(CSGProp.COURSE_INSTRUCTOR_HOME_LABEL).toString());
@@ -298,8 +316,9 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
         titleTextField = new TextField();
         instructorNameTextField = new TextField();
-        instructorNameTextField.setPromptText(props.getProperty(CSGProp.NAME_PROMPT_TEXT).toString());
+        instructorNameTextField.setPromptText(props.getProperty(CSGProp.NAME_PROMPT_TEXT.toString()));
         instructorHomeTextField = new TextField();
+        instructorHomeTextField.setPromptText(props.getProperty(CSGProp.HOME_PROMPT_TEXT.toString()));
         exportDirTextView = new Label();
         changeExportDirButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
 
@@ -330,9 +349,13 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         siteTemplateLabel = new Label(props.getProperty(CSGProp.COURSE_SITE_TEMPLATE_LABEL));
         siteTemplateDescriptionLabel = new Label(props.getProperty(CSGProp.COURSE_SITE_TEMPLATE_NOTE_LABEL).toString());
         templateDir = new Label();
-        selectTemplateDirButton = new Button();
+        selectTemplateDirButton = new Button(props.getProperty(CSGProp.COURSE_SELECT_TEMPLATE_DIRECTORY_BUTTON_LABEL.toString()));
         sitePagesLabel = new Label(props.getProperty(CSGProp.COURSE_SITE_PAGES_LABEL).toString());
         sitePages = new TableView();
+        //useColumn = new TableColumn();
+        //navbarTitleColumn = new TableColumn();
+        //fileNameColumn = new TableColumn();
+        //scriptColumn = new TableColumn();
         sitePages.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         String useLabelText = props.getProperty(CSGProp.COURSE_SITE_PAGES_USE_LABEL.toString());
         String navbarTitleLabelText = props.getProperty(CSGProp.COURSE_SITE_PAGES_NAVBAR_TITLE_LABEL.toString());
@@ -345,6 +368,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         scriptColumn = new TableColumn(scriptLabelText);
         //insert setCellValueFactory methods here when you develop the data component
         sitePages.getColumns().add(useColumn);
+        sitePages.getColumns().addAll(navbarTitleColumn, fileNameColumn, scriptColumn);
 
         //add everything to the courseDataMiddleBox
         courseDataMiddleBox.getChildren().addAll(siteTemplateLabel, siteTemplateDescriptionLabel, templateDir, selectTemplateDirButton, sitePagesLabel, sitePages);
@@ -561,10 +585,17 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         recitationDataTab.setText(CSGProp.RECITATION_DATA_TAB.toString());*/
         recitationDataVBox = new VBox();
         recitationTopBox = new HBox();
-        recitationsLabel = new Label();
+        recitationsLabel = new Label(props.getProperty(CSGProp.RECITATIONS_LABEL.toString()));
         deleteRecitationButton = new Button(props.getProperty(CSGProp.DELETE_SYMBOL.toString()));
         recitationTopBox.getChildren().addAll(recitationsLabel, deleteRecitationButton);
         recitationData = new TableView();
+        recSection = new TableColumn(props.getProperty(CSGProp.REC_SECTION_LABEL.toString()));
+        recInstructor = new TableColumn(props.getProperty(CSGProp.REC_INSTRUCTOR_LABEL.toString()));
+        recDayTime = new TableColumn(props.getProperty(CSGProp.REC_DAY_TIME_LABEL.toString()));
+        recLocation = new TableColumn(props.getProperty(CSGProp.REC_LOCATION_LABEL.toString()));
+        recTA1 = new TableColumn(props.getProperty(CSGProp.REC_TA2_LABEL.toString()));
+        recTA2 = new TableColumn(props.getProperty(CSGProp.REC_TA2_LABEL.toString()));
+        recitationData.getColumns().addAll(recSection, recInstructor, recDayTime, recLocation, recTA1, recTA2);
         //Setting up the TableView
 
         addEditGridPane = new GridPane();
@@ -626,6 +657,11 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         deleteScheduleItemButton = new Button();
         topScheduleItemsBox.getChildren().addAll(scheduleItemsLabel, deleteScheduleItemButton);
         scheduleItems = new TableView();
+        scheduleItemType = new TableColumn(props.getProperty(CSGProp.SCHEDULE_ITEM_TYPE_LABEL.toString()));
+        scheduleItemDate = new TableColumn(props.getProperty(CSGProp.SCHEDULE_ITEM_DATE_LABEL.toString()));
+        scheduleItemTitle = new TableColumn(props.getProperty(CSGProp.SCHEDULE_ITEM_TITLE_LABEL.toString()));
+        scheduleItemTopic = new TableColumn(props.getProperty(CSGProp.SCHEDULE_ITEM_TOPIC_LABEL.toString()));
+        scheduleItems.getColumns().addAll(scheduleItemType, scheduleItemDate, scheduleItemTitle, scheduleItemTopic);
         addEditSchedulePane = new GridPane();
         typeLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEM_TYPE_LABEL.toString()));
         typeBox = new ComboBox();
@@ -679,14 +715,21 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         deleteProjectButton = new Button(props.getProperty(CSGProp.DELETE_SYMBOL.toString()));
         projectTeamsTopHBox.getChildren().addAll(teamsLabel, deleteProjectButton);
         projectTeams = new TableView();
+        projectTeamName = new TableColumn(props.getProperty(CSGProp.TEAM_NAME_LABEL.toString()));
+        projectTeamColor = new TableColumn(props.getProperty(CSGProp.TEAM_COLOR_LABEL.toString()));
+        projectTeamTextColor = new TableColumn(props.getProperty(CSGProp.TEXT_COLOR_LABEL.toString()));
+        projectTeamLink = new TableColumn(props.getProperty(CSGProp.TEAM_LINK_LABEL.toString()));
+        projectTeams.getColumns().addAll(projectTeamName, projectTeamColor, projectTeamTextColor, projectTeamLink);
         addEditProjectGridPane = new GridPane();
         addEditProjectLabel = new Label(props.getProperty(CSGProp.ADD_EDIT_LABEL.toString()));
         teamNameLabel = new Label(props.getProperty(CSGProp.TEAM_NAME_LABEL.toString()));
         teamNameTextField = new TextField();
         teamColorLabel = new Label(props.getProperty(CSGProp.TEAM_COLOR_LABEL.toString()));
         teamColorPicker = new ColorPicker();
+        teamColorPicker.setPrefHeight(85);
         teamTextColorLabel = new Label(props.getProperty(CSGProp.TEXT_COLOR_LABEL.toString()));
         teamTextColorPicker = new ColorPicker();
+        teamTextColorPicker.setPrefHeight(85);
         teamLinkLabel = new Label(props.getProperty(CSGProp.TEAM_LINK_LABEL.toString()));
         teamLinkTextField = new TextField();
         addEditTeamButton = new Button(props.getProperty(CSGProp.ADD_EDIT_LABEL.toString()));
@@ -698,10 +741,10 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         addEditProjectGridPane.add(teamColorPicker, 1, 2);
         addEditProjectGridPane.add(teamTextColorLabel, 2, 2);
         addEditProjectGridPane.add(teamTextColorPicker, 3, 2);
-        addEditProjectGridPane.add(teamLinkLabel, 0, 3);
-        addEditProjectGridPane.add(teamLinkTextField, 1, 3);
-        addEditProjectGridPane.add(addEditTeamButton, 0, 4);
-        addEditProjectGridPane.add(clearTeamButton, 1, 4);
+        addEditProjectGridPane.add(teamLinkLabel, 2, 1);
+        addEditProjectGridPane.add(teamLinkTextField, 3, 1);
+        addEditProjectGridPane.add(addEditTeamButton, 4, 1);
+        addEditProjectGridPane.add(clearTeamButton, 5, 1);
         projectTeamsVBox.getChildren().addAll(projectTeamsTopHBox, projectTeams, addEditProjectGridPane);
         projectTeamsVBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
 
@@ -712,6 +755,11 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         projectTeamStudentsTopBox.getChildren().addAll(studentsLabel, deleteStudentsButton);
 
         teamMembers = new TableView();
+        teamMemberFirstName = new TableColumn(props.getProperty(CSGProp.STUDENT_FIRST_NAME_LABEL.toString()));
+        teamMemberLastName = new TableColumn(props.getProperty(CSGProp.STUDENT_LAST_NAME_LABEL.toString()));
+        teamMemberTeam = new TableColumn(props.getProperty(CSGProp.STUDENT_TEAM_LABEL.toString()));
+        teamMemberRole = new TableColumn(props.getProperty(CSGProp.STUDENT_ROLE_LABEL.toString()));
+        teamMembers.getColumns().addAll(teamMemberFirstName, teamMemberLastName, teamMemberTeam, teamMemberRole);
 
         addEditStudentsLabel = new Label(props.getProperty(CSGProp.ADD_EDIT_LABEL.toString()));
 
@@ -728,14 +776,14 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         clearStudentsButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL.toString()));
         addEditStudentsPane.add(firstNameLabel, 0, 0);
         addEditStudentsPane.add(firstNameTextField, 1, 0);
-        addEditStudentsPane.add(lastNameLabel, 0, 1);
-        addEditStudentsPane.add(lastNameTextField, 1, 1);
-        addEditStudentsPane.add(teamLabel, 0, 2);
+        addEditStudentsPane.add(lastNameLabel, 2, 0);
+        addEditStudentsPane.add(lastNameTextField, 3, 0);
+        addEditStudentsPane.add(teamLabel, 0, 1);
         addEditStudentsPane.add(teamBox, 1, 2);
-        addEditStudentsPane.add(roleLabel, 0, 3);
-        addEditStudentsPane.add(roleTextField, 1, 3);
-        addEditStudentsPane.add(addUpdateStudentsButton, 0, 4);
-        addEditStudentsPane.add(clearStudentsButton, 1, 4);
+        addEditStudentsPane.add(roleLabel, 2, 2);
+        addEditStudentsPane.add(roleTextField, 3, 2);
+        addEditStudentsPane.add(addUpdateStudentsButton, 4, 2);
+        addEditStudentsPane.add(clearStudentsButton, 5, 2);
         projectTeamStudentsVBox.getChildren().addAll(projectTeamStudentsTopBox, teamMembers, addEditStudentsLabel, addEditStudentsPane);
         projectDataVBox.getChildren().addAll(projectTeamsVBox, projectTeamStudentsVBox);
         projectDataTab.setContent(projectDataVBox);
