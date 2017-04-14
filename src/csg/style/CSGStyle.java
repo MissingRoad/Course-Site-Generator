@@ -13,6 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import csg.data.TeachingAssistant;
 import csg.workspace.CSGWorkspace;
+import javafx.scene.control.TabPane;
 
 /**
  *
@@ -49,6 +50,10 @@ public class CSGStyle extends AppStyleComponent{
     // FOR HIGHLIGHTING CELLS, COLUMNS, AND ROWS
     public static String CLASS_HIGHLIGHTED_GRID_CELL = "highlighted_grid_cell";
     public static String CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN = "highlighted_grid_row_or_column";
+    
+    // Now for highlighting each of the HBox/VBox Panes
+    public static String TAB_BACKGROUND = "tab_background";
+    public static String HBOX_VBOX = "box_pane";
     
     // THIS PROVIDES ACCESS TO OTHER COMPONENTS
     private AppTemplate app;

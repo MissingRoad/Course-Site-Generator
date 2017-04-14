@@ -41,6 +41,7 @@ import csg.data.TeachingAssistant;
 import csg.style.CSGStyle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.input.KeyCode;
 //import tam.data.TAData;
@@ -133,6 +134,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     TextField taEmailTextField;
     Button addTAButton;
     Button clearTAButton;
+    ScrollPane taDataGridScrollPane;
     VBox taDataGridPaneVBox;
     HBox taOfficeHoursTopBox;
     Label officeHoursLabel;
@@ -320,6 +322,8 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         topCourseDataBox.add(exportDirLabel, 0, 6);
         topCourseDataBox.add(exportDirTextView, 1, 6);
         topCourseDataBox.add(changeExportDirButton, 2, 6);
+        
+        topCourseDataBox.setStyle("-fx-background-color: bisque;-fx-border: 5px; -fx-border-color: black;");
 
         //Middle box content, the Site Template
         courseDataMiddleBox = new VBox();
@@ -344,6 +348,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
         //add everything to the courseDataMiddleBox
         courseDataMiddleBox.getChildren().addAll(siteTemplateLabel, siteTemplateDescriptionLabel, templateDir, selectTemplateDirButton, sitePagesLabel, sitePages);
+        courseDataMiddleBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
 
         //pageStyleDataBox, the Page Style component of the Course Details Pane
         pageStyleDataBox = new GridPane();
@@ -374,11 +379,14 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         pageStyleDataBox.add(stylesheetLabel, 0, 4);
         pageStyleDataBox.add(stylesheetSelect, 1, 4);
         pageStyleDataBox.add(stylesheetNote, 0, 5);
+        
+        pageStyleDataBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
 
         //add everything to the VBox
         courseDataTabVBox.getChildren().add(topCourseDataBox);
         courseDataTabVBox.getChildren().add(courseDataMiddleBox);
         courseDataTabVBox.getChildren().add(pageStyleDataBox);
+        courseDataTabVBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
         courseDataTab.setContent(courseDataTabVBox);
 
         /*taDataTab = new Tab();
@@ -427,6 +435,8 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         clearTAButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL).toString());
         taDataTextFieldPane.getChildren().addAll(taNameTextField, taEmailTextField, addTAButton, clearTAButton);
         taDataTATableViewVBox.getChildren().addAll(taDataTableViewTopPane, taInformation, taDataTextFieldPane);
+        
+        taDataTATableViewVBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
 
         //Assembling the right VBox
         time_options = FXCollections.observableArrayList(
@@ -455,7 +465,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         props.getProperty(CSGProp.TIME_10PM.toString()),
         props.getProperty(CSGProp.TIME_11PM.toString())
         );
-        
+        taDataGridScrollPane = new ScrollPane();
         taDataGridPaneVBox = new VBox();
         taOfficeHoursTopBox = new HBox();
         officeHoursLabel = new Label(props.getProperty(CSGProp.OFFICE_HOURS_LABEL.toString()));
@@ -476,6 +486,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         taDataOfficeHoursGridTACellPanes = new HashMap<String, Pane>();
         taDataOfficeHoursGridTACellLabels = new HashMap<String, Label>();
         taDataGridPaneVBox.getChildren().addAll(taOfficeHoursTopBox, taDataOfficeHoursGridPane);
+        taDataGridScrollPane.setContent(taDataGridPaneVBox);
         
         // NOW LET'S SETUP THE EVENT HANDLING - for the TA DATA TAB ONLY
         controller = new CSGController(app);
@@ -543,7 +554,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         // Workspace handler goes at the end, handler organized by tab
 
         //Assembling the whole taDataTab
-        taDataTabHBox.getChildren().addAll(taDataTATableViewVBox, taDataGridPaneVBox);
+        taDataTabHBox.getChildren().addAll(taDataTATableViewVBox, taDataGridScrollPane);
         taDataTab.setContent(taDataTabHBox);
 
         /*recitationDataTab = new Tab();
@@ -587,6 +598,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         addEditGridPane.add(clearButton, 1, 6);
 
         recitationDataVBox.getChildren().addAll(recitationTopBox, recitationData, addEditGridPane);
+        recitationDataVBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
 
         recitationDataTab.setContent(recitationDataVBox);
         /*scheduleDataTab = new Tab();
@@ -650,6 +662,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         addEditSchedulePane.add(clearScheduleItemButton, 1, 8);
         //Assemble the bottom box...
         scheduleItemsVBox.getChildren().addAll(topScheduleItemsBox, scheduleItems, addEditSchedulePane);
+        scheduleItemsVBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
 
         //Now assemble the entire scheduleDataVBox
         scheduleDataVBox.getChildren().addAll(startEndGridPane, scheduleItemsVBox);
@@ -690,6 +703,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         addEditProjectGridPane.add(addEditTeamButton, 0, 4);
         addEditProjectGridPane.add(clearTeamButton, 1, 4);
         projectTeamsVBox.getChildren().addAll(projectTeamsTopHBox, projectTeams, addEditProjectGridPane);
+        projectTeamsVBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
 
         projectTeamStudentsVBox = new VBox();
         projectTeamStudentsTopBox = new HBox();
@@ -727,6 +741,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         projectDataTab.setContent(projectDataVBox);
         //Now add the Tabs
         t.getTabs().addAll(courseDataTab, taDataTab, recitationDataTab, scheduleDataTab, projectDataTab);
+        t.getStyleClass().add("tab_background_color");
 
         workspace = new BorderPane();
         ((BorderPane) workspace).setCenter(t);
@@ -739,6 +754,52 @@ public class CSGWorkspace extends AppWorkspaceComponent {
                 else if(e.getCode() == KeyCode.Y)
                     controller.Redo();
         });
+        
+        workspace.setStyle("-fx-background-color: bisque;");
+    }
+    
+    public TabPane getT() {
+        return t;
+    }
+    
+    public Tab getCourseDataTab() {
+        return courseDataTab;
+    }
+    
+    public Tab getTADataTab() {
+        return taDataTab;
+    }
+    
+    public Tab getRecitationDataTab() {
+        return recitationDataTab;
+    }
+    
+    public Tab getScheduleDataTab() {
+        return scheduleDataTab;
+    }
+    
+    public Tab getProjectDataTab() {
+        return projectDataTab;
+    }
+    
+    public VBox getCourseDataTabVBox() {
+        return courseDataTabVBox;
+    }
+    
+    public HBox getTADataTabHBox() {
+        return taDataTabHBox;
+    }
+    
+    public VBox getRecitationDataVBox() {
+        return recitationDataVBox;
+    }
+    
+    public VBox getScheduleDataVBox() {
+        return scheduleDataVBox;
+    }
+    
+    public VBox getProjectDataVBox() {
+        return projectDataVBox;
     }
     
     public HBox getTADataTextFieldPane() {
