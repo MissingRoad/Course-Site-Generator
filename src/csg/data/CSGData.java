@@ -232,7 +232,12 @@ public class CSGData implements AppDataComponent {
             initOfficeHours(initStartHour, initEndHour);
         }
     }
-
+    
+    //This method is for initializing the boolean value of isUndergrad for each TA
+    public boolean initIsUndergradTA(String isUndergradString) {
+        int isUndergradNum = Integer.parseInt(isUndergradString);
+        return (isUndergradNum == 1 ? true : false);
+    }
 
 
     public boolean containsTA(String testName, String testEmail) {

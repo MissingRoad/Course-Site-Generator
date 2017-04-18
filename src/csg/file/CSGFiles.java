@@ -6,6 +6,7 @@
 package csg.file;
 
 import csg.CourseSiteGeneratorApp;
+import csg.data.CSGData;
 import djf.components.AppDataComponent;
 import djf.components.AppFileComponent;
 import java.io.FileInputStream;
@@ -27,9 +28,9 @@ import javax.json.JsonReader;
 import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
-import tam.data.TAData;
-import tam.data.TeachingAssistant;
-import tam.file.TimeSlot;
+import csg.data.TeachingAssistant;
+import csg.file.TimeSlot;
+import java.io.File;
 
 /**
  *
@@ -37,14 +38,27 @@ import tam.file.TimeSlot;
  */
 public class CSGFiles implements AppFileComponent {
     CourseSiteGeneratorApp app;
+    
+    // THESE ARE USED FOR IDENTIFYING JSON TYPES
+    static final String JSON_START_HOUR = "startHour";
+    static final String JSON_END_HOUR = "endHour";
+    static final String JSON_OFFICE_HOURS = "officeHours";
+    static final String JSON_DAY = "day";
+    static final String JSON_TIME = "time";
+    static final String JSON_NAME = "name";
+    static final String JSON_UNDERGRAD_TAS = "undergrad_tas";
+    static final String JSON_IS_UNDERGRAD_TA = "is_undergrad_ta";
+    static final String JSON_EMAIL = "email";
+    
     public CSGFiles(CourseSiteGeneratorApp initApp) {
         app = initApp;
     }
 
+    //Right now, saveData() and loadData() only save the TA Data component.  We will need to modify the methods to accomodate the whole program eventually
     @Override
     public void loadData(AppDataComponent data, String filePath) throws IOException {
 	// CLEAR THE OLD DATA OUT
-	/*TAData dataManager = (TAData)data;
+	CSGData dataManager = (CSGData)data;
 
 	// LOAD THE JSON FILE WITH ALL THE DATA
 	JsonObject json = loadJSONFile(filePath);
@@ -63,7 +77,9 @@ public class CSGFiles implements AppFileComponent {
             JsonObject jsonTA = jsonTAArray.getJsonObject(i);
             String name = jsonTA.getString(JSON_NAME);
             String email = jsonTA.getString(JSON_EMAIL);
-            dataManager.addTA(name, email);
+            String isUndergradString = jsonTA.getString(JSON_IS_UNDERGRAD_TA);
+            boolean isUndergrad = dataManager.initIsUndergradTA(isUndergradString);
+            dataManager.addTA(name, email, isUndergrad);
         }
 
         // AND THEN ALL THE OFFICE HOURS
@@ -74,7 +90,7 @@ public class CSGFiles implements AppFileComponent {
             String time = jsonOfficeHours.getString(JSON_TIME);
             String name = jsonOfficeHours.getString(JSON_NAME);
             dataManager.addOfficeHoursReservation(day, time, name);
-        }*/
+        }
     }
       
     // HELPER METHOD FOR LOADING DATA FROM A JSON FORMAT
@@ -90,7 +106,7 @@ public class CSGFiles implements AppFileComponent {
     @Override
     public void saveData(AppDataComponent data, String filePath) throws IOException {
 	// GET THE DATA
-	/*TAData dataManager = (TAData)data;
+	CSGData dataManager = (CSGData)data;
 
 	// NOW BUILD THE TA JSON OBJCTS TO SAVE
 	JsonArrayBuilder taArrayBuilder = Json.createArrayBuilder();
@@ -98,7 +114,8 @@ public class CSGFiles implements AppFileComponent {
 	for (TeachingAssistant ta : tas) {	    
 	    JsonObject taJson = Json.createObjectBuilder()
 		    .add(JSON_NAME, ta.getName())
-		    .add(JSON_EMAIL, ta.getEmail()).build();
+		    .add(JSON_EMAIL, ta.getEmail())
+                    .add(JSON_IS_UNDERGRAD_TA, ta.isUndergrad()).build(); // What will this line print for a String?
 	    taArrayBuilder.add(taJson);
 	}
 	JsonArray undergradTAsArray = taArrayBuilder.build();
@@ -139,7 +156,7 @@ public class CSGFiles implements AppFileComponent {
 	String prettyPrinted = sw.toString();
 	PrintWriter pw = new PrintWriter(filePath);
 	pw.write(prettyPrinted);
-	pw.close();*/
+	pw.close();
     }
     
     // IMPORTING/EXPORTING DATA IS USED WHEN WE READ/WRITE DATA IN AN
@@ -152,6 +169,17 @@ public class CSGFiles implements AppFileComponent {
 
     @Override
     public void exportData(AppDataComponent data, String filePath) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        /*File fileToImport = new File(PATH_PUBLIC_HTML);
+         
+        File fileToExport = new File(filePath + "/newImport.html");
+        
+        //What would be the method for copying the file?
+        //fileToImport.renameTo(fileToExport);
+        //FileUtils.copyFile(fileToImport, fileToExport);
+        //FileUtils.copyDirectory(fileToImport, fileToExport);
+        
+        String officeHoursGridDataDirectory = filePath + "/newImport.html/" + "js/OfficeHoursGridData.json";
+        
+        saveData(data, officeHoursGridDataDirectory);*/
     }
 }
