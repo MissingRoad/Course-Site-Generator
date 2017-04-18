@@ -12,6 +12,7 @@ import csg.workspace.CSGWorkspace;
 import djf.components.AppDataComponent;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -54,6 +55,10 @@ public class CSGData implements AppDataComponent {
     // DEFAULT VALUES FOR START AND END HOURS IN MILITARY HOURS
     public static final int MIN_START_HOUR = 0;
     public static final int MAX_END_HOUR = 23;
+    
+    // THESE ARE THE VALUES FOR THE CALENDAR BOUNDARY DATEPICKERS
+    Date startDate;
+    Date endDate;
 
     /**
      * This constructor will setup the required data structures for
@@ -84,6 +89,8 @@ public class CSGData implements AppDataComponent {
         gridHeaders.addAll(timeHeaders);
         gridHeaders.addAll(dowHeaders);
     }
+    
+    
     
     /**
      * Called each time new work is created or loaded, it resets all data
@@ -360,5 +367,9 @@ public class CSGData implements AppDataComponent {
             if(tempint >= startTime && tempint <= endTime)
                 addOfficeHoursReservation(ts.getDay(), ts.getTime(), ts.getName());
         }
+    }
+    
+    public void changeDate(Date startDate, Date endDate) {
+        
     }
 }

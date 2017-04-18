@@ -42,6 +42,16 @@ public class TestSave {
     static final String JSON_UNDERGRAD_TAS = "undergrad_tas";
     static final String JSON_IS_UNDERGRAD_TA = "is_undergrad_ta";
     static final String JSON_EMAIL = "email";
+    // Below, NEW STRING CONSTANTS TO BE ADDED TO THE REAL SAVEDATA() METHOD
+    static final String JSON_START_DATE = "startDate";
+    static final String JSON_END_DATE = "endDate";
+    static final String JSON_SCHEDULE_TYPE = "type";
+    static final String JSON_SCHEDULE_ITEM_DATE = "schedule_item_date";
+    static final String JSON_SCHEDULE_ITEM_TITLE = "schedule_item_title";
+    static final String JSON_SCHEDULE_ITEM_TOPIC = "schedule_item_topic";
+    static final String JSON_PROJECT_TEAM_NAME = "project_team_name";
+    static final String JSON_PROJECT_TEAM_COLOR = "project_team_color";
+    
 
     public void saveData(AppDataComponent data, String filePath) throws IOException {
 	// GET THE DATA
