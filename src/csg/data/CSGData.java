@@ -44,6 +44,18 @@ public class CSGData implements AppDataComponent {
     // LOAD THESE ONCE AND THEN HANG ON TO THEM TO
     // INITIALIZE OUR OFFICE HOURS GRID
     ArrayList<String> gridHeaders;
+    
+    // THIS DATA STRUCTURE WILL STORE THE DATA FOR THE RECITATIONS
+    ObservableList<Recitation> recitations;
+    
+    // THE SCHEDULE ITEMS
+    ObservableList<ScheduleItem> scheduleItems;
+    
+    // THE PROJECT TEAMS
+    ObservableList<ProjectTeam> projectTeams;
+    
+    // AND THE STUDENTS
+    ObservableList<Student> students;
 
     // THESE ARE THE TIME BOUNDS FOR THE OFFICE HOURS GRID. NOTE
     // THAT THESE VALUES CAN BE DIFFERENT FOR DIFFERENT FILES, BUT
@@ -71,8 +83,12 @@ public class CSGData implements AppDataComponent {
         // KEEP THIS FOR LATER
         app = initApp;
 
-        // CONSTRUCT THE LIST OF TAs FOR THE TABLE
+        // CONSTRUCT THE LIST OF TAs FOR THE TABLE, and the other observableLists
         teachingAssistants = FXCollections.observableArrayList();
+        recitations = FXCollections.observableArrayList();
+        scheduleItems = FXCollections.observableArrayList();
+        projectTeams = FXCollections.observableArrayList();
+        students = FXCollections.observableArrayList();
 
         // THESE ARE THE DEFAULT OFFICE HOURS
         startHour = MIN_START_HOUR;
@@ -127,6 +143,22 @@ public class CSGData implements AppDataComponent {
 
     public ObservableList getTeachingAssistants() {
         return teachingAssistants;
+    }
+    
+    public ObservableList getRecitations() {
+        return recitations;
+    }
+    
+    public ObservableList getScheduleItems() {
+        return scheduleItems;
+    }
+    
+    public ObservableList getProjectTeams() {
+        return projectTeams;
+    }
+    
+    public ObservableList getStudents() {
+        return students;
     }
     
     public String getCellKey(int col, int row) {

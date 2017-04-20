@@ -30,9 +30,9 @@ import java.util.ArrayList;
 import javafx.scene.control.ComboBox;
 import csg.data.CSGData;
 import csg.file.TimeSlot;
-import static tam.style.TAStyle.CLASS_HIGHLIGHTED_GRID_CELL;
-import static tam.style.TAStyle.CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN;
-import static tam.style.TAStyle.CLASS_OFFICE_HOURS_GRID_TA_CELL_PANE;
+import static csg.style.CSGStyle.CLASS_HIGHLIGHTED_GRID_CELL;
+import static csg.style.CSGStyle.CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN;
+import static csg.style.CSGStyle.CLASS_OFFICE_HOURS_GRID_TA_CELL_PANE;
 
 
 /**
