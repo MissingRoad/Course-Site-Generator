@@ -17,11 +17,13 @@ public class Student {
     private final StringProperty lastName;
     private final StringProperty teamName;
     private final StringProperty role;
+    private ProjectTeam team;
     
     public Student(String firstName, String lastName, ProjectTeam t, String role) {
         this.firstName = new SimpleStringProperty(firstName);
         this.lastName = new SimpleStringProperty(lastName);
         this.teamName = new SimpleStringProperty(t.getName());
+        this.team = t;
         this.role = new SimpleStringProperty(role);
     }
     

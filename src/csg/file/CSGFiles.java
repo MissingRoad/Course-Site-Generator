@@ -9,6 +9,7 @@ import csg.CourseSiteGeneratorApp;
 import csg.data.CSGData;
 import csg.data.ProjectTeam;
 import csg.data.Recitation;
+import csg.data.ScheduleItem;
 import csg.data.Student;
 import djf.components.AppDataComponent;
 import djf.components.AppFileComponent;
@@ -32,9 +33,10 @@ import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
 import csg.data.TeachingAssistant;
-import csg.file.TimeSlot;
-import java.io.File;
-import java.math.BigDecimal;
+import java.awt.Color;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *
@@ -66,8 +68,14 @@ public class CSGFiles implements AppFileComponent {
     static final String JSON_SCHEDULE_ITEM_TITLE = "schedule_item_title";
     static final String JSON_SCHEDULE_ITEM_TOPIC = "schedule_item_topic";
     static final String JSON_PROJECT_TEAM_NAME = "project_team_name";
-    static final String JSON_PROJECT_TEAM_COLOR = "project_team_color";
-    static final String JSON_PROJECT_TEAM_TEXT_COLOR = "project_team_text_color";
+    static final String JSON_PROJECT_TEAM_RED_COLOR = "project_team_red_color";
+    static final String JSON_PROJECT_TEAM_GREEN_COLOR = "project_team_green_color";
+    static final String JSON_PROJECT_TEAM_BLUE_COLOR = "project_team_blue_color";
+    static final String JSON_PROJECT_TEAM_COLOR_OPACITY = "project_team_color_opacity";
+    static final String JSON_PROJECT_TEAM_TEXT_RED_COLOR = "project_team_text_red_color";
+    static final String JSON_PROJECT_TEAM_TEXT_GREEN_COLOR = "project_team_text_green_color";
+    static final String JSON_PROJECT_TEAM_TEXT_BLUE_COLOR = "project_team_text_blue_color";
+    static final String JSON_PROJECT_TEAM_TEXT_COLOR_OPACITY = "project_team_text_color_opacity";
     static final String JSON_PROJECT_TEAM_LINK = "project_team_link";
     static final String JSON_STUDENT_FIRST_NAME = "first_name";
     static final String JSON_STUDENT_LAST_NAME = "last_name";
@@ -83,9 +91,8 @@ public class CSGFiles implements AppFileComponent {
         app = initApp;
     }
 
-    //Right now, saveData() and loadData() only save the TA Data component.  We will need to modify the methods to accomodate the whole program eventually
     @Override
-    public void loadData(AppDataComponent data, String filePath) throws IOException {
+    public void loadData(AppDataComponent data, String filePath) throws IOException, ParseException {
 	// CLEAR THE OLD DATA OUT
 	CSGData dataManager = (CSGData)data;
 
@@ -119,6 +126,71 @@ public class CSGFiles implements AppFileComponent {
             String time = jsonOfficeHours.getString(JSON_TIME);
             String name = jsonOfficeHours.getString(JSON_NAME);
             dataManager.addOfficeHoursReservation(day, time, name);
+        }
+        
+        //Now the additional components for CSG...
+        //Starting with Recitations
+        JsonArray jsonRecitationsArray = json.getJsonArray(JSON_RECITATIONS);
+        for (int i = 0; i < jsonRecitationsArray.size(); i++) {
+            JsonObject jsonRecitation = jsonRecitationsArray.getJsonObject(i);
+            String section = jsonRecitation.getString(JSON_RECITATION_SECTION);
+            String instructor = jsonRecitation.getString(JSON_RECITATION_INSTRUCTOR);
+            String recDayTime = jsonRecitation.getString(JSON_RECITATION_DAY_TIME);
+            String recitationLocation = jsonRecitation.getString(JSON_RECITATION_LOCATION);
+            String ta1Name = jsonRecitation.getString(JSON_RECITATION_TA1);
+            String ta2Name = jsonRecitation.getString(JSON_RECITATION_TA2);
+            TeachingAssistant ta1 = dataManager.findTeachingAssistant(ta1Name);
+            TeachingAssistant ta2 = dataManager.findTeachingAssistant(ta2Name);
+            dataManager.addRecitation(section, instructor, recDayTime, section, ta1, ta2);
+        }
+        
+        //Schedule Items
+        JsonArray jsonScheduleItemArray = json.getJsonArray(JSON_SCHEDULE_ITEMS);
+        for (int i = 0; i < jsonScheduleItemArray.size(); i++) {
+            JsonObject jsonScheduleItem = jsonScheduleItemArray.getJsonObject(i);
+            String type = jsonScheduleItem.getString(JSON_SCHEDULE_TYPE);
+            String date = jsonScheduleItem.getString(JSON_SCHEDULE_ITEM_DATE);
+            String title = jsonScheduleItem.getString(JSON_SCHEDULE_ITEM_TITLE);
+            String topic = jsonScheduleItem.getString(JSON_SCHEDULE_ITEM_TOPIC);
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd/MM/yyyy/hh:mm:ss");
+            Date scheduleItemDate = sdf.parse(date);
+            dataManager.addScheduleItem(type, scheduleItemDate, title, topic);
+        }
+        
+        //Project Teams
+        JsonArray projectTeamArray = json.getJsonArray(JSON_PROJECT_TEAMS);
+        for (int i = 0; i < projectTeamArray.size(); i++) {
+            JsonObject jsonProjectTeamItem = projectTeamArray.getJsonObject(i);
+            String name = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_NAME);
+            String teamColorRed = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_RED_COLOR);
+            String teamColorGreen = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_GREEN_COLOR);
+            String teamColorBlue = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_BLUE_COLOR);
+            String textColorRed = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_TEXT_RED_COLOR);
+            String textColorGreen = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_TEXT_GREEN_COLOR);
+            String textColorBlue = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_TEXT_BLUE_COLOR);
+            String link = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_LINK);
+            float teamColorRedVal = Float.parseFloat(teamColorRed);
+            float teamColorGreenVal = Float.parseFloat(teamColorGreen);
+            float teamColorBlueVal = Float.parseFloat(teamColorBlue);
+            float textColorRedVal = Float.parseFloat(textColorRed);
+            float textColorGreenVal = Float.parseFloat(textColorGreen);
+            float textColorBlueVal = Float.parseFloat(textColorBlue);
+            Color teamColor = new Color(teamColorRedVal, teamColorGreenVal, teamColorBlueVal);
+            Color textColor = new Color(textColorRedVal, textColorGreenVal, textColorBlueVal);
+            dataManager.addProjectTeam(name, textColor, textColor, link);
+        }
+        
+        // Students - should add each student to their appropriate ProjectTeam
+        JsonArray jsonStudentsArray = json.getJsonArray(JSON_STUDENTS);
+        for (int i = 0; i < jsonStudentsArray.size(); i++) {
+            JsonObject jsonStudent = jsonStudentsArray.getJsonObject(i);
+            String firstName = jsonStudent.getString(JSON_STUDENT_FIRST_NAME);
+            String lastName = jsonStudent.getString(JSON_STUDENT_LAST_NAME);
+            String team = jsonStudent.getString(JSON_STUDENT_TEAM);
+            String role = jsonStudent.getString(JSON_STUDENT_ROLE);
+            ProjectTeam projectTeam = dataManager.findProjectTeam(team);
+            Student s = new Student(firstName, lastName, projectTeam, role);
+            projectTeam.addStudent(s);
         }
     }
       
@@ -176,14 +248,33 @@ public class CSGFiles implements AppFileComponent {
         }
         JsonArray recitationsArray = recitationArrayBuilder.build();
         
+        // Now the Schedule Item Objects
+        JsonArrayBuilder scheduleItemArrayBuilder = Json.createArrayBuilder();
+        ObservableList<ScheduleItem> scheduleItems = dataManager.getScheduleItems();
+        for (ScheduleItem s: scheduleItems) {
+            JsonObject scheduleItem = Json.createObjectBuilder()
+                    .add(JSON_SCHEDULE_TYPE, s.getType())
+                    .add(JSON_SCHEDULE_ITEM_DATE, s.getDate().toString())
+                    .add(JSON_SCHEDULE_ITEM_TOPIC, s.getTopic())
+                    .add(JSON_SCHEDULE_ITEM_TITLE, s.getTitle())
+                    .build();
+            scheduleItemArrayBuilder.add(scheduleItem);
+        }
+        JsonArray scheduleItemsArray = scheduleItemArrayBuilder.build();
+        
         // And now the ProjectTeam JSON Objects
         JsonArrayBuilder projectTeamArrayBuilder = Json.createArrayBuilder();
         ObservableList<ProjectTeam> projectTeams = dataManager.getProjectTeams();
         for (ProjectTeam p: projectTeams) {
             JsonObject projectTeamJson = Json.createObjectBuilder()
                     .add(JSON_PROJECT_TEAM_NAME, p.getName())
-                    .add(JSON_PROJECT_TEAM_COLOR, p.getColor())
-                    .add(JSON_PROJECT_TEAM_TEXT_COLOR, p.getTextColor())
+                    .add(JSON_PROJECT_TEAM_RED_COLOR, p.getColor().getRed())
+                    .add(JSON_PROJECT_TEAM_GREEN_COLOR, p.getColor().getGreen())
+                    .add(JSON_PROJECT_TEAM_BLUE_COLOR, p.getColor().getBlue())
+                    //.add(JSON_PROJECT_TEAM_COLOR_OPACITY, p.getColor().getTransparency())
+                    .add(JSON_PROJECT_TEAM_TEXT_RED_COLOR, p.getTextColor().getRed())
+                    .add(JSON_PROJECT_TEAM_TEXT_GREEN_COLOR, p.getTextColor().getGreen())
+                    .add(JSON_PROJECT_TEAM_TEXT_BLUE_COLOR, p.getTextColor().getBlue())
                     .add(JSON_PROJECT_TEAM_LINK, p.getLink()).build();
             projectTeamArrayBuilder.add(projectTeamJson);
         }
@@ -209,6 +300,7 @@ public class CSGFiles implements AppFileComponent {
                 .add(JSON_UNDERGRAD_TAS, undergradTAsArray)
                 .add(JSON_OFFICE_HOURS, timeSlotsArray)
                 .add(JSON_RECITATIONS, recitationsArray)
+                .add(JSON_SCHEDULE_ITEMS, scheduleItemsArray)
                 .add(JSON_PROJECT_TEAMS, projectTeamsArray)
                 .add(JSON_STUDENTS, studentsArray)
 		.build();

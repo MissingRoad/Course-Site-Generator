@@ -8,6 +8,8 @@ package csg.data;
 import java.awt.Color;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -15,16 +17,32 @@ import javafx.beans.property.StringProperty;
  */
 public class ProjectTeam {
     private final StringProperty name;
-    private final StringProperty color;
-    private final StringProperty textColor;
+    private Color color;
+    private Color textColor;
     // (The above values are HEX String representations of the Color)
     private final StringProperty link;
+    private ObservableList<Student> teamMembers;
     
     public ProjectTeam(String name, Color c, Color t, String link) {
         this.name = new SimpleStringProperty(name);
-        this.color = new SimpleStringProperty(c.toString());
-        this.textColor = new SimpleStringProperty(t.toString());
+        this.color = c;
+        this.textColor = t;
         this.link = new SimpleStringProperty(link);
+        this.teamMembers = FXCollections.observableArrayList();
+    }
+    
+    public void addStudent(Student s) {
+        this.teamMembers.add(s);
+    }
+    
+    public void removeStudent(Student s) {
+        if (this.teamMembers.contains(s)) {
+            this.teamMembers.remove(s);
+        }
+    }
+    
+    public ObservableList<Student> getTeamMembers() {
+        return teamMembers;
     }
     
     public String getName() {
@@ -35,20 +53,20 @@ public class ProjectTeam {
         this.name.set(newName);
     }
     
-    public String getColor() {
-        return this.color.get();
+    public Color getColor() {
+        return this.color;
     }
     
     public void setColor(Color newC) {
-        this.color.set(newC.toString());
+        this.color = newC;
     }
     
-    public String getTextColor() {
-        return this.textColor.get();
+    public Color getTextColor() {
+        return textColor;
     }
     
     public void setTextColor(Color newTextColor) {
-        this.textColor.set(newTextColor.toString());
+        this.textColor = newTextColor;
     }
     
     public String getLink() {

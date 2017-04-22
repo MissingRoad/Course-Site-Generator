@@ -3,6 +3,11 @@
     "startHour":"0",
     "endHour":"23",
     "undergrad_tas":[
+        {
+            "name":"Jacob Evans",
+            "email":"jacob.evans@stonybrook.edu",
+            "is_undergrad_ta":true
+        }
     ],
     "officeHours":[
         {
@@ -1166,11 +1171,29 @@
             "recitation_ta2":"James"
         }
     ],
+    "schedule_items":[
+        {
+            "type":"Holiday",
+            "schedule_item_date":"Fri Mar 17 00:00:00 EDT 2017",
+            "schedule_item_topic":"",
+            "schedule_item_title":"Snow Day"
+        },
+        {
+            "type":"Lecture",
+            "schedule_item_date":"Fri Mar 17 00:00:00 EDT 2017",
+            "schedule_item_topic":"Event Programming",
+            "schedule_item_title":"Lecture 3"
+        }
+    ],
     "project_teams":[
         {
             "project_team_name":"Team 1",
-            "project_team_color":"java.awt.Color[r=0,g=0,b=0]",
-            "project_team_text_color":"java.awt.Color[r=0,g=0,b=255]",
+            "project_team_red_color":0,
+            "project_team_green_color":0,
+            "project_team_blue_color":0,
+            "project_team_text_red_color":0,
+            "project_team_text_green_color":0,
+            "project_team_text_blue_color":255,
             "project_team_link":""
         }
     ],

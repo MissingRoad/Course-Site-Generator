@@ -10,6 +10,7 @@ import csg.CourseSiteGeneratorApp;
 import csg.file.TimeSlot;
 import csg.workspace.CSGWorkspace;
 import djf.components.AppDataComponent;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -291,7 +292,29 @@ public class CSGData implements AppDataComponent {
         return false;
     }
 
-
+    public boolean containsRecitation(String recNum, String instructor) {
+        for (Recitation r: recitations) {
+            if (r.getInstructor().equals(instructor) && r.getSection().equals(recNum))
+                return true;
+        }
+        return false;
+    }
+    
+    public boolean containsScheduleItem(String title, Date d) {
+        for (ScheduleItem s: scheduleItems) {
+            if (s.getTitle().equals(title) &&  s.getDate().equals(d))
+                return true;
+        }
+        return false;
+    }
+    
+    public boolean containsProjectTeam(String name) {
+        for (ProjectTeam p: projectTeams) {
+            if (p.getName().equals(name))
+                return true;
+        }
+        return false;
+    }
 
     public void addTA(String initName, String initEmail, boolean isUndergrad) {
         // MAKE THE TA
@@ -320,7 +343,41 @@ public class CSGData implements AppDataComponent {
         toggleTAOfficeHours(cellKey, taName);
     }
     
-
+    public void addRecitation(String section, String instructor, String dayTime, String location, TeachingAssistant ta1, TeachingAssistant ta2) {
+        Recitation recitation = new Recitation(section, instructor, dayTime, location, ta1, ta2);
+        
+        // ADD THE RECITATION
+        if (!containsRecitation(section, instructor)) {
+            recitations.add(recitation);
+        }
+        
+        // Provision for sorting here...
+    }
+    
+    public void removeRecitation(Recitation r) {
+        String section = r.getSection();
+        String instructor = r.getInstructor();
+        if (containsRecitation(section, instructor)) {
+            recitations.remove(r);
+        }
+    }
+    
+    public void addScheduleItem(String type, Date date, String title, String topic) {
+        ScheduleItem s = new ScheduleItem(type, date, title, topic);
+        
+        if (!containsScheduleItem(title, date)) {
+            scheduleItems.add(s);
+        }
+    }
+    
+    // Add remove for ScheduleItem here
+    
+    public void addProjectTeam(String name, Color c, Color t, String link) {
+        ProjectTeam p = new ProjectTeam(name, c, t, link);
+        
+        if (!containsProjectTeam(name))
+            projectTeams.add(p);
+    }
 
     /**
      * This function toggles the taName in the cell represented
@@ -403,5 +460,22 @@ public class CSGData implements AppDataComponent {
     
     public void changeDate(Date startDate, Date endDate) {
         
+    }
+    
+    public TeachingAssistant findTeachingAssistant(String name) {
+        for (TeachingAssistant ta: teachingAssistants) {
+            if (ta.getName().equals(name)) {
+                return ta;
+            }
+        }
+        return null;
+    }
+    
+    public ProjectTeam findProjectTeam(String teamName) {
+        for (ProjectTeam p: projectTeams) {
+            if (p.getName().equals(teamName))
+                return p;
+        }
+        return null;
     }
 }

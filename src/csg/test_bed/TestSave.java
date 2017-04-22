@@ -101,8 +101,11 @@ public class TestSave {
             }
             row += 2;
         }
+        dataComponent.addTA("Jacob Evans", "jacob.evans@stonybrook.edu", true);
+        
         TeachingAssistant jacobEvans = new TeachingAssistant("Jacob", "Evans", true);
         TeachingAssistant jamesHoffman = new TeachingAssistant("James", "Hoffman", true);
+        
         dataComponent.getRecitations().add(new Recitation("R01", "McKenna", "Monday 5:30 - 6:23 PM", "Old CS 2120", jacobEvans, jamesHoffman));
         GregorianCalendar g = new GregorianCalendar(2017, 2, 17);
         Date testDate = g.getTime();
