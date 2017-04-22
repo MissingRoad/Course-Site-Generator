@@ -34,6 +34,7 @@ import javax.json.stream.JsonGenerator;
 import csg.data.TeachingAssistant;
 import csg.file.TimeSlot;
 import java.io.File;
+import java.math.BigDecimal;
 
 /**
  *
@@ -72,6 +73,11 @@ public class CSGFiles implements AppFileComponent {
     static final String JSON_STUDENT_LAST_NAME = "last_name";
     static final String JSON_STUDENT_TEAM = "team";
     static final String JSON_STUDENT_ROLE = "role";
+    // Data types regarding various types for the various JSON arrays
+    static final String JSON_RECITATIONS = "recitations";
+    static final String JSON_SCHEDULE_ITEMS = "schedule_items";
+    static final String JSON_PROJECT_TEAMS = "project_teams";
+    static final String JSON_STUDENTS = "students";
     
     public CSGFiles(CourseSiteGeneratorApp initApp) {
         app = initApp;
@@ -202,6 +208,9 @@ public class CSGFiles implements AppFileComponent {
 		.add(JSON_END_HOUR, "" + dataManager.getEndHour())
                 .add(JSON_UNDERGRAD_TAS, undergradTAsArray)
                 .add(JSON_OFFICE_HOURS, timeSlotsArray)
+                .add(JSON_RECITATIONS, recitationsArray)
+                .add(JSON_PROJECT_TEAMS, projectTeamsArray)
+                .add(JSON_STUDENTS, studentsArray)
 		.build();
 	
 	// AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING

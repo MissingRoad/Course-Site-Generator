@@ -13,11 +13,16 @@ import csg.data.ScheduleItem;
 import csg.data.Student;
 import csg.data.TeachingAssistant;
 import csg.file.CSGFiles;
+import csg.style.CSGStyle;
+import csg.workspace.CSGWorkspace;
 import djf.settings.AppStartupConstants;
 import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 //import static javafx.application.Application.launch;
 //import javafx.stage.Stage;
 
@@ -26,17 +31,76 @@ import java.util.GregorianCalendar;
  * @author dsli
  */
 public class TestSave {
-    
+
+    CourseSiteGeneratorApp app;
     CSGData dataComponent;
     CSGFiles fileComponent;
+    CSGWorkspace workspaceComponent;
+    CSGStyle styleComponent;
 
     public TestSave() {
-        CourseSiteGeneratorApp app = new CourseSiteGeneratorApp();
-        dataComponent = (CSGData)app.getDataComponent();
-        fileComponent = (CSGFiles)app.getFileComponent();
+        // Modify this.  Construct data and file without needing the AppTemplate/CSGApp
+        app = new CourseSiteGeneratorApp();
+        app.loadProperties("app_properties.xml");
+        testBuildHookComponents();
     }
-    
+
+    public void testBuildHookComponents() {
+        this.dataComponent = new CSGData(app);
+        this.fileComponent = new CSGFiles(app);
+    }
+
     public void testSaveData() {
+        // First, hard code the cell values of "" (assuming an empty gridPane first)
+        /*for (int row = 1; row < dataComponent.getNumRows(); row++) {
+            for (int col = 2; col < 7; col++) {
+                StringProperty testProp = new SimpleStringProperty("");
+                dataComponent.setCellProperty(col, row, testProp);
+            }
+        }*/
+        ArrayList<String> gridHeaders = dataComponent.getGridHeaders();
+        StringProperty testProp = new SimpleStringProperty("");
+        // ADD THE TIME HEADERS
+        for (int i = 0; i < 2; i++) {
+            dataComponent.setCellProperty(i, 0, testProp);
+            dataComponent.getCellTextProperty(i, 0).set(gridHeaders.get(i));
+        }
+
+        // THEN THE DAY OF WEEK HEADERS
+        for (int i = 2; i < 7; i++) {
+
+            dataComponent.setCellProperty(i, 0, testProp);
+            dataComponent.getCellTextProperty(i, 0).set(gridHeaders.get(i));
+        }
+
+        // THEN THE TIME AND TA CELLS
+        int row = 1;
+        for (int i = dataComponent.getStartHour(); i < dataComponent.getEndHour(); i++) {
+            // START TIME COLUMN
+            int col = 0;
+            dataComponent.setCellProperty(col, row, testProp);
+            dataComponent.getCellTextProperty(col, row).set(buildCellText(i, "00"));
+
+            dataComponent.setCellProperty(col, row + 1, testProp);
+            dataComponent.getCellTextProperty(col, row + 1).set(buildCellText(i, "30"));
+
+            // END TIME COLUMN
+            col++;
+            int endHour = i;
+            dataComponent.setCellProperty(col, row, testProp);
+            dataComponent.getCellTextProperty(col, row).set(buildCellText(endHour, "30"));
+            dataComponent.setCellProperty(col, row + 1, testProp);
+            dataComponent.getCellTextProperty(col, row + 1).set(buildCellText(endHour + 1, "00"));
+            col++;
+
+            // AND NOW ALL THE TA TOGGLE CELLS
+            while (col < 7) {
+                dataComponent.setCellProperty(col, row, testProp);
+                dataComponent.setCellProperty(col, row + 1, testProp);
+                col++;
+            }
+            row += 2;
+        }
         TeachingAssistant jacobEvans = new TeachingAssistant("Jacob", "Evans", true);
         TeachingAssistant jamesHoffman = new TeachingAssistant("James", "Hoffman", true);
         dataComponent.getRecitations().add(new Recitation("R01", "McKenna", "Monday 5:30 - 6:23 PM", "Old CS 2120", jacobEvans, jamesHoffman));
@@ -49,12 +113,11 @@ public class TestSave {
         ProjectTeam sampleProjectTeam = new ProjectTeam("Team 1", c1, c2, "");
         dataComponent.getProjectTeams().add(sampleProjectTeam);
         dataComponent.getStudents().add(new Student("David", "Li", sampleProjectTeam, "Lead Developer"));
-        
+
         // Save the hard coded data from above
         try {
-        fileComponent.saveData(dataComponent, AppStartupConstants.PATH_WORK); // What is filePath?
-        }
-        catch (IOException e) {
+            fileComponent.saveData(dataComponent, AppStartupConstants.PATH_WORK + "/sample1.json"); // What is filePath?
+        } catch (IOException e) {
             System.out.println("Bad file saving.");
         }
     }
@@ -193,12 +256,27 @@ public class TestSave {
 	pw.write(prettyPrinted);
 	pw.close();
     }*/
+    public String buildCellText(int militaryHour, String minutes) {
+        // FIRST THE START AND END CELLS
+        int hour = militaryHour;
+        if (hour > 12) {
+            hour -= 12;
+        }
+        String cellText = "" + hour + ":" + minutes;
+        if (militaryHour < 12) {
+            cellText += "am";
+        } else {
+            cellText += "pm";
+        }
+        return cellText;
+    }
 }
 
 class TestSaveDriver {
+
     public static void main(String[] args) {
         TestSave t = new TestSave();
-        
+
         t.testSaveData();
     }
 }
