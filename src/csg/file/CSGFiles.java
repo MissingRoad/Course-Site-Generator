@@ -36,9 +36,11 @@ import csg.data.TeachingAssistant;
 import static djf.settings.AppStartupConstants.PATH_PUBLIC_HTML;
 import java.awt.Color;
 import java.io.File;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -339,17 +341,223 @@ public class CSGFiles implements AppFileComponent {
 
     @Override
     public void exportData(AppDataComponent data, String filePath) throws IOException {
+        CSGData dataManager = (CSGData)data;
         File fileToImport = new File(PATH_PUBLIC_HTML);
          
-        File fileToExport = new File(filePath + "/newImport.html");
+        File fileToExport = new File(filePath + "/newExport.html");
         
         //What would be the method for copying the file?
         //fileToImport.renameTo(fileToExport);
         //FileUtils.copyFile(fileToImport, fileToExport);
-        //FileUtils.copyDirectory(fileToImport, fileToExport);
+        FileUtils.copyDirectory(fileToImport, fileToExport);
         
-        String officeHoursGridDataDirectory = filePath + "/newImport.html/" + "js/OfficeHoursGridData.json";
+        String officeHoursGridDataDirectory = filePath + "/newExport.html/" + "js/OfficeHoursGridData.json";
+        String recitationsBuilderDirectory = filePath + "/newExport.html/" + "js/RecitationsData.json";
+        String scheduleBuilderDirectory = filePath + "/newExport.html/" + "js/ScheduleData.json";
+        String projectTeamsBuilderDirectory = filePath + "/newExport.html/" + "js/TeamsAndStudents.json";
         
-        saveData(data, officeHoursGridDataDirectory);
+        // Saving the file
+        JsonArrayBuilder taArrayBuilder = Json.createArrayBuilder();
+	ObservableList<TeachingAssistant> tas = dataManager.getTeachingAssistants();
+	for (TeachingAssistant ta : tas) {	    
+	    JsonObject taJson = Json.createObjectBuilder()
+		    .add(JSON_NAME, ta.getName())
+		    .add(JSON_EMAIL, ta.getEmail())
+                    .add(JSON_IS_UNDERGRAD_TA, ta.isUndergrad() + "").build(); // What will this line print for a String?
+	    taArrayBuilder.add(taJson);
+	}
+	JsonArray undergradTAsArray = taArrayBuilder.build();
+
+	// NOW BUILD THE TIME SLOT JSON OBJCTS TO SAVE
+	JsonArrayBuilder timeSlotArrayBuilder = Json.createArrayBuilder();
+	ArrayList<TimeSlot> officeHours = TimeSlot.buildOfficeHoursList(dataManager);
+	for (TimeSlot ts : officeHours) {	    
+	    JsonObject tsJson = Json.createObjectBuilder()
+		    .add(JSON_DAY, ts.getDay())
+		    .add(JSON_TIME, ts.getTime())
+		    .add(JSON_NAME, ts.getName()).build();
+	    timeSlotArrayBuilder.add(tsJson);
+	}
+        
+	JsonArray timeSlotsArray = timeSlotArrayBuilder.build();
+        
+        JsonObject taDataJSO = Json.createObjectBuilder()
+		.add(JSON_START_HOUR, "" + dataManager.getStartHour())
+		.add(JSON_END_HOUR, "" + dataManager.getEndHour())
+                .add(JSON_UNDERGRAD_TAS, undergradTAsArray)
+                .add(JSON_OFFICE_HOURS, timeSlotsArray).build();
+        
+        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
+	Map<String, Object> properties = new HashMap<>(1);
+	properties.put(JsonGenerator.PRETTY_PRINTING, true);
+	JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
+	StringWriter sw = new StringWriter();
+	JsonWriter jsonWriter = writerFactory.createWriter(sw);
+	jsonWriter.writeObject(taDataJSO);
+	jsonWriter.close();
+
+	// INIT THE WRITER
+        //String taDataJSOpath = fileToExport + "/js/OfficeHoursGridData.json";
+	OutputStream os = new FileOutputStream(officeHoursGridDataDirectory);
+	JsonWriter jsonFileWriter = Json.createWriter(os);
+	jsonFileWriter.writeObject(taDataJSO);
+	String prettyPrinted = sw.toString();
+	PrintWriter pw = new PrintWriter(officeHoursGridDataDirectory);
+	pw.write(prettyPrinted);
+	pw.close();
+        
+        // RECITATIONS JSON
+        JsonArrayBuilder recitationArrayBuilder = Json.createArrayBuilder();
+        ObservableList<Recitation> recitations = dataManager.getRecitations();
+        for (Recitation r: recitations) {
+            JsonObject recitationJson = Json.createObjectBuilder()
+                    .add(JSON_RECITATION_SECTION, r.getSection())
+                    .add(JSON_RECITATION_INSTRUCTOR, r.getInstructor())
+                    .add(JSON_RECITATION_DAY_TIME, r.getDayTime())
+                    .add(JSON_RECITATION_LOCATION, r.getLocation())
+                    .add(JSON_RECITATION_TA1, r.getSupervisingTA1().getName())
+                    .add(JSON_RECITATION_TA2, r.getSupervisingTA2().getName()).build();
+            recitationArrayBuilder.add(recitationJson);
+        }
+        JsonArray recitationsArray = recitationArrayBuilder.build();
+        
+        // Saving the Recitation JSON
+        JsonObject recitationJSO = Json.createObjectBuilder()
+                .add(JSON_RECITATIONS, recitationsArray).build();
+        
+        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
+	Map<String, Object> propertiesR = new HashMap<>(1);
+	propertiesR.put(JsonGenerator.PRETTY_PRINTING, true);
+	JsonWriterFactory writerFactoryR = Json.createWriterFactory(propertiesR);
+	StringWriter swR = new StringWriter();
+	JsonWriter jsonWriterR = writerFactoryR.createWriter(swR);
+	jsonWriterR.writeObject(recitationJSO);
+	jsonWriterR.close();
+
+	// INIT THE WRITER
+        //String taDataJSOpath = fileToExport + "/js/OfficeHoursGridData.json";
+	OutputStream osR = new FileOutputStream(recitationsBuilderDirectory);
+	JsonWriter jsonFileWriterR = Json.createWriter(osR);
+	jsonFileWriterR.writeObject(recitationJSO);
+	String prettyPrintedR = sw.toString();
+	PrintWriter pwR = new PrintWriter(recitationsBuilderDirectory);
+	pwR.write(prettyPrintedR);
+	pwR.close();
+        
+        // Now the Schedule Item Objects
+        JsonArrayBuilder scheduleItemArrayBuilder = Json.createArrayBuilder();
+        ObservableList<ScheduleItem> scheduleItems = dataManager.getScheduleItems();
+        for (ScheduleItem s: scheduleItems) {
+            JsonObject scheduleItem = Json.createObjectBuilder()
+                    .add(JSON_SCHEDULE_TYPE, s.getType())
+                    .add(JSON_SCHEDULE_ITEM_DATE, s.getDate().toString())
+                    .add(JSON_SCHEDULE_ITEM_TOPIC, s.getTopic())
+                    .add(JSON_SCHEDULE_ITEM_TITLE, s.getTitle())
+                    .build();
+            scheduleItemArrayBuilder.add(scheduleItem);
+        }
+        JsonArray scheduleItemsArray = scheduleItemArrayBuilder.build();
+        
+        // Saving the ScheduleItem JSON
+        JsonObject scheduleItemJSO = Json.createObjectBuilder()
+                .add(JSON_SCHEDULE_ITEMS, scheduleItemsArray).build();
+        
+        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
+	Map<String, Object> propertiesS = new HashMap<>(1);
+	propertiesS.put(JsonGenerator.PRETTY_PRINTING, true);
+	JsonWriterFactory writerFactoryS = Json.createWriterFactory(properties);
+	StringWriter swS = new StringWriter();
+	JsonWriter jsonWriterS = writerFactoryS.createWriter(swS);
+	jsonWriterS.writeObject(scheduleItemJSO);
+	jsonWriterS.close();
+
+	// INIT THE WRITER
+        //String taDataJSOpath = fileToExport + "/js/OfficeHoursGridData.json";
+	OutputStream osS = new FileOutputStream(scheduleBuilderDirectory);
+	JsonWriter jsonFileWriterS = Json.createWriter(osS);
+	jsonFileWriterS.writeObject(scheduleItemJSO);
+	String prettyPrintedS = sw.toString();
+	PrintWriter pwS = new PrintWriter(scheduleBuilderDirectory);
+	pwS.write(prettyPrintedS);
+	pwS.close();
+        
+        // ProjectTeams JSON
+        // And now the ProjectTeam JSON Objects
+        JsonArrayBuilder projectTeamArrayBuilder = Json.createArrayBuilder();
+        ObservableList<ProjectTeam> projectTeams = dataManager.getProjectTeams();
+        for (ProjectTeam p: projectTeams) {
+            JsonObject projectTeamJson = Json.createObjectBuilder()
+                    .add(JSON_PROJECT_TEAM_NAME, p.getName())
+                    .add(JSON_PROJECT_TEAM_RED_COLOR, p.getColor().getRed() + "")
+                    .add(JSON_PROJECT_TEAM_GREEN_COLOR, p.getColor().getGreen() + "")
+                    .add(JSON_PROJECT_TEAM_BLUE_COLOR, p.getColor().getBlue() + "")
+                    //.add(JSON_PROJECT_TEAM_COLOR_OPACITY, p.getColor().getTransparency())
+                    .add(JSON_PROJECT_TEAM_TEXT_RED_COLOR, p.getTextColor().getRed() + "")
+                    .add(JSON_PROJECT_TEAM_TEXT_GREEN_COLOR, p.getTextColor().getGreen() + "")
+                    .add(JSON_PROJECT_TEAM_TEXT_BLUE_COLOR, p.getTextColor().getBlue() + "")
+                    .add(JSON_PROJECT_TEAM_LINK, p.getLink()).build();
+            projectTeamArrayBuilder.add(projectTeamJson);
+        }
+        JsonArray projectTeamsArray = projectTeamArrayBuilder.build();
+        
+        // Saving the ProjectTeam JSON
+        JsonObject projectTeamJSO = Json.createObjectBuilder()
+                .add(JSON_PROJECT_TEAMS, projectTeamsArray).build();
+        
+        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
+	Map<String, Object> propertiesPT = new HashMap<>(1);
+	propertiesPT.put(JsonGenerator.PRETTY_PRINTING, true);
+	JsonWriterFactory writerFactoryPT = Json.createWriterFactory(propertiesPT);
+	StringWriter swPT = new StringWriter();
+	JsonWriter jsonWriterPT = writerFactoryPT.createWriter(swPT);
+	jsonWriterPT.writeObject(projectTeamJSO);
+	jsonWriterPT.close();
+
+	// INIT THE WRITER
+        //String taDataJSOpath = fileToExport + "/js/OfficeHoursGridData.json";
+	OutputStream osPT = new FileOutputStream(projectTeamsBuilderDirectory);
+	JsonWriter jsonFileWriterPT = Json.createWriter(osPT);
+	jsonFileWriterPT.writeObject(projectTeamJSO);
+	String prettyPrintedPT = swPT.toString();
+	PrintWriter pwPT = new PrintWriter(projectTeamsBuilderDirectory);
+	pwPT.write(prettyPrintedPT);
+	pwPT.close();
+        
+        // Students JSON Array - Constructing
+        // And finally the Student JSON Objects (pertaining to the teams)
+        JsonArrayBuilder studentArrayBuilder = Json.createArrayBuilder();
+        ObservableList<Student> students = dataManager.getStudents();
+        for (Student s: students) {
+            JsonObject studentJson = Json.createObjectBuilder()
+                    .add(JSON_STUDENT_FIRST_NAME, s.getFirstName())
+                    .add(JSON_STUDENT_LAST_NAME, s.getLastName())
+                    .add(JSON_STUDENT_TEAM, s.getTeamName())
+                    .add(JSON_STUDENT_ROLE, s.getRole()).build();
+            studentArrayBuilder.add(studentJson);
+        }
+        JsonArray studentsArray = studentArrayBuilder.build();
+        
+        // Saving the Students JSON
+        JsonObject studentsJSO = Json.createObjectBuilder()
+                .add(JSON_STUDENTS, studentsArray).build();
+        
+        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
+	Map<String, Object> propertiesST = new HashMap<>(1);
+	propertiesST.put(JsonGenerator.PRETTY_PRINTING, true);
+	JsonWriterFactory writerFactoryST = Json.createWriterFactory(propertiesST);
+	StringWriter swST = new StringWriter();
+	JsonWriter jsonWriterST = writerFactoryST.createWriter(swST);
+	jsonWriterST.writeObject(studentsJSO);
+	jsonWriterST.close();
+
+	// INIT THE WRITER
+        //String taDataJSOpath = fileToExport + "/js/OfficeHoursGridData.json";
+	OutputStream osST = new FileOutputStream(filePath);
+	JsonWriter jsonFileWriterST = Json.createWriter(osST);
+	jsonFileWriterST.writeObject(projectTeamJSO);
+	String prettyPrintedST = swST.toString();
+	PrintWriter pwST = new PrintWriter(filePath);
+	pwST.write(prettyPrintedST);
+	pwST.close();
     }
 }

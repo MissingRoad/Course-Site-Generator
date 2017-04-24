@@ -146,6 +146,10 @@ public class CSGData implements AppDataComponent {
         return gridHeaders;
     }
 
+    public CourseSite getCourseSiteInfo() {
+        return courseSiteInfo;
+    }
+    
     public ObservableList getTeachingAssistants() {
         return teachingAssistants;
     }
