@@ -59,17 +59,16 @@ public class TestSave {
             }
         }*/
         ArrayList<String> gridHeaders = dataComponent.getGridHeaders();
-        StringProperty testProp = new SimpleStringProperty("");
+        
         // ADD THE TIME HEADERS
         for (int i = 0; i < 2; i++) {
-            dataComponent.setCellProperty(i, 0, testProp);
+            addCellToGrid(dataComponent, i, 0);
             dataComponent.getCellTextProperty(i, 0).set(gridHeaders.get(i));
         }
 
         // THEN THE DAY OF WEEK HEADERS
         for (int i = 2; i < 7; i++) {
-
-            dataComponent.setCellProperty(i, 0, testProp);
+            addCellToGrid(dataComponent, i, 0);
             dataComponent.getCellTextProperty(i, 0).set(gridHeaders.get(i));
         }
 
@@ -78,25 +77,25 @@ public class TestSave {
         for (int i = dataComponent.getStartHour(); i < dataComponent.getEndHour(); i++) {
             // START TIME COLUMN
             int col = 0;
-            dataComponent.setCellProperty(col, row, testProp);
+            addCellToGrid(dataComponent, col, row);
             dataComponent.getCellTextProperty(col, row).set(buildCellText(i, "00"));
-
-            dataComponent.setCellProperty(col, row + 1, testProp);
+            addCellToGrid(dataComponent, col, row + 1);
             dataComponent.getCellTextProperty(col, row + 1).set(buildCellText(i, "30"));
 
             // END TIME COLUMN
             col++;
             int endHour = i;
-            dataComponent.setCellProperty(col, row, testProp);
+            
+            addCellToGrid(dataComponent, col, row);
             dataComponent.getCellTextProperty(col, row).set(buildCellText(endHour, "30"));
-            dataComponent.setCellProperty(col, row + 1, testProp);
+            addCellToGrid(dataComponent, col, row + 1);
             dataComponent.getCellTextProperty(col, row + 1).set(buildCellText(endHour + 1, "00"));
             col++;
 
             // AND NOW ALL THE TA TOGGLE CELLS
             while (col < 7) {
-                dataComponent.setCellProperty(col, row, testProp);
-                dataComponent.setCellProperty(col, row + 1, testProp);
+                addCellToGrid(dataComponent, col, row);
+                addCellToGrid(dataComponent, col, row + 1);
                 col++;
             }
             row += 2;
@@ -139,6 +138,12 @@ public class TestSave {
             cellText += "pm";
         }
         return cellText;
+    }
+    
+    public void addCellToGrid(CSGData data, int col, int row) {
+        StringProperty stringProp = new SimpleStringProperty("");
+        
+        data.setCellProperty(col, row, stringProp);
     }
 }
 
