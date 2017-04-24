@@ -69,6 +69,7 @@
 	<property name="LOAD_WORK_TITLE"		value="Select work file to load"></property>
 	<property name="WORK_FILE_EXT"			value="json"></property>
 	<property name="WORK_FILE_EXT_DESC"		value="TA Office Hours"></property>
+	<property name = "EXPORT_WORK_TITLE"	value = "Export your work"></property>
 
 	  <!-- TAB PANE CONTROLS -->
 	  <property name = "COURSE_DETAILS_TAB" value = "Course Details"></property>

@@ -33,7 +33,9 @@ import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
 import csg.data.TeachingAssistant;
+import static djf.settings.AppStartupConstants.PATH_PUBLIC_HTML;
 import java.awt.Color;
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -216,7 +218,7 @@ public class CSGFiles implements AppFileComponent {
 	    JsonObject taJson = Json.createObjectBuilder()
 		    .add(JSON_NAME, ta.getName())
 		    .add(JSON_EMAIL, ta.getEmail())
-                    .add(JSON_IS_UNDERGRAD_TA, ta.isUndergrad()).build(); // What will this line print for a String?
+                    .add(JSON_IS_UNDERGRAD_TA, ta.isUndergrad() + "").build(); // What will this line print for a String?
 	    taArrayBuilder.add(taJson);
 	}
 	JsonArray undergradTAsArray = taArrayBuilder.build();
@@ -334,7 +336,7 @@ public class CSGFiles implements AppFileComponent {
 
     @Override
     public void exportData(AppDataComponent data, String filePath) throws IOException {
-        /*File fileToImport = new File(PATH_PUBLIC_HTML);
+        File fileToImport = new File(PATH_PUBLIC_HTML);
          
         File fileToExport = new File(filePath + "/newImport.html");
         
@@ -345,6 +347,6 @@ public class CSGFiles implements AppFileComponent {
         
         String officeHoursGridDataDirectory = filePath + "/newImport.html/" + "js/OfficeHoursGridData.json";
         
-        saveData(data, officeHoursGridDataDirectory);*/
+        saveData(data, officeHoursGridDataDirectory);
     }
 }
