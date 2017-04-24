@@ -38,13 +38,13 @@
     "project_teams":[
         {
             "project_team_name":"Team 1",
-            "project_team_red_color":0,
-            "project_team_green_color":0,
-            "project_team_blue_color":0,
-            "project_team_text_red_color":0,
-            "project_team_text_green_color":0,
-            "project_team_text_blue_color":255,
-            "project_team_link":""
+            "project_team_red_color":"0",
+            "project_team_green_color":"0",
+            "project_team_blue_color":"0",
+            "project_team_text_red_color":"0",
+            "project_team_text_green_color":"0",
+            "project_team_text_blue_color":"255",
+            "project_team_link":"www.team1.com"
         }
     ],
     "students":[

@@ -154,7 +154,7 @@ public class CSGFiles implements AppFileComponent {
             String date = jsonScheduleItem.getString(JSON_SCHEDULE_ITEM_DATE);
             String title = jsonScheduleItem.getString(JSON_SCHEDULE_ITEM_TITLE);
             String topic = jsonScheduleItem.getString(JSON_SCHEDULE_ITEM_TOPIC);
-            SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd/MM/yyyy/hh:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd hh:mm:ss zzz YYYY");
             Date scheduleItemDate = sdf.parse(date);
             dataManager.addScheduleItem(type, scheduleItemDate, title, topic);
         }
@@ -171,12 +171,12 @@ public class CSGFiles implements AppFileComponent {
             String textColorGreen = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_TEXT_GREEN_COLOR);
             String textColorBlue = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_TEXT_BLUE_COLOR);
             String link = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_LINK);
-            float teamColorRedVal = Float.parseFloat(teamColorRed);
-            float teamColorGreenVal = Float.parseFloat(teamColorGreen);
-            float teamColorBlueVal = Float.parseFloat(teamColorBlue);
-            float textColorRedVal = Float.parseFloat(textColorRed);
-            float textColorGreenVal = Float.parseFloat(textColorGreen);
-            float textColorBlueVal = Float.parseFloat(textColorBlue);
+            int teamColorRedVal = Integer.parseInt(teamColorRed);
+            int teamColorGreenVal = Integer.parseInt(teamColorGreen);
+            int teamColorBlueVal = Integer.parseInt(teamColorBlue);
+            int textColorRedVal = Integer.parseInt(textColorRed);
+            int textColorGreenVal = Integer.parseInt(textColorGreen);
+            int textColorBlueVal = Integer.parseInt(textColorBlue); // 255.0, why?
             Color teamColor = new Color(teamColorRedVal, teamColorGreenVal, teamColorBlueVal);
             Color textColor = new Color(textColorRedVal, textColorGreenVal, textColorBlueVal);
             dataManager.addProjectTeam(name, textColor, textColor, link);
@@ -270,13 +270,13 @@ public class CSGFiles implements AppFileComponent {
         for (ProjectTeam p: projectTeams) {
             JsonObject projectTeamJson = Json.createObjectBuilder()
                     .add(JSON_PROJECT_TEAM_NAME, p.getName())
-                    .add(JSON_PROJECT_TEAM_RED_COLOR, p.getColor().getRed())
-                    .add(JSON_PROJECT_TEAM_GREEN_COLOR, p.getColor().getGreen())
-                    .add(JSON_PROJECT_TEAM_BLUE_COLOR, p.getColor().getBlue())
+                    .add(JSON_PROJECT_TEAM_RED_COLOR, p.getColor().getRed() + "")
+                    .add(JSON_PROJECT_TEAM_GREEN_COLOR, p.getColor().getGreen() + "")
+                    .add(JSON_PROJECT_TEAM_BLUE_COLOR, p.getColor().getBlue() + "")
                     //.add(JSON_PROJECT_TEAM_COLOR_OPACITY, p.getColor().getTransparency())
-                    .add(JSON_PROJECT_TEAM_TEXT_RED_COLOR, p.getTextColor().getRed())
-                    .add(JSON_PROJECT_TEAM_TEXT_GREEN_COLOR, p.getTextColor().getGreen())
-                    .add(JSON_PROJECT_TEAM_TEXT_BLUE_COLOR, p.getTextColor().getBlue())
+                    .add(JSON_PROJECT_TEAM_TEXT_RED_COLOR, p.getTextColor().getRed() + "")
+                    .add(JSON_PROJECT_TEAM_TEXT_GREEN_COLOR, p.getTextColor().getGreen() + "")
+                    .add(JSON_PROJECT_TEAM_TEXT_BLUE_COLOR, p.getTextColor().getBlue() + "")
                     .add(JSON_PROJECT_TEAM_LINK, p.getLink()).build();
             projectTeamArrayBuilder.add(projectTeamJson);
         }

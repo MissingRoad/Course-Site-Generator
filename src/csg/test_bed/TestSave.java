@@ -113,7 +113,7 @@ public class TestSave {
         dataComponent.getScheduleItems().add(new ScheduleItem("Lecture", testDate, "Lecture 3", "Event Programming"));
         Color c1 = Color.BLACK;
         Color c2 = Color.BLUE;
-        ProjectTeam sampleProjectTeam = new ProjectTeam("Team 1", c1, c2, "");
+        ProjectTeam sampleProjectTeam = new ProjectTeam("Team 1", c1, c2, "www.team1.com");
         dataComponent.getProjectTeams().add(sampleProjectTeam);
         dataComponent.getStudents().add(new Student("David", "Li", sampleProjectTeam, "Lead Developer"));
 

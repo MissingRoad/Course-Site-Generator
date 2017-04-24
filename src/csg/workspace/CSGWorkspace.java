@@ -37,6 +37,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import csg.data.CSGData;
+import csg.data.ProjectTeam;
+import csg.data.Recitation;
+import csg.data.ScheduleItem;
 import csg.data.TeachingAssistant;
 import csg.style.CSGStyle;
 import javafx.beans.value.ChangeListener;
@@ -589,15 +592,36 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         deleteRecitationButton = new Button(props.getProperty(CSGProp.DELETE_SYMBOL.toString()));
         recitationTopBox.getChildren().addAll(recitationsLabel, deleteRecitationButton);
         recitationData = new TableView();
+        ObservableList<Recitation> recitationTableData = data.getRecitations();
+        recitationData.setItems(recitationTableData);
         recSection = new TableColumn(props.getProperty(CSGProp.REC_SECTION_LABEL.toString()));
         recInstructor = new TableColumn(props.getProperty(CSGProp.REC_INSTRUCTOR_LABEL.toString()));
         recDayTime = new TableColumn(props.getProperty(CSGProp.REC_DAY_TIME_LABEL.toString()));
         recLocation = new TableColumn(props.getProperty(CSGProp.REC_LOCATION_LABEL.toString()));
         recTA1 = new TableColumn(props.getProperty(CSGProp.REC_TA2_LABEL.toString()));
         recTA2 = new TableColumn(props.getProperty(CSGProp.REC_TA2_LABEL.toString()));
+        recSection.setCellValueFactory(
+                new PropertyValueFactory<Recitation, String>("section")
+        );
+        recInstructor.setCellValueFactory(
+                new PropertyValueFactory<Recitation, String>("instructor")
+        );
+        recDayTime.setCellValueFactory(
+                new PropertyValueFactory<Recitation, String>("dayTime")
+        );
+        recLocation.setCellValueFactory(
+                new PropertyValueFactory<Recitation, String>("location")
+        );
+        // How to get their names in to the TableView?
+        recTA1.setCellValueFactory(
+                new PropertyValueFactory<Recitation, String>("supervisingTA1")
+        );
+        recTA2.setCellValueFactory(
+                new PropertyValueFactory<Recitation, String>("supervisingTA2")
+        );
+        
         recitationData.getColumns().addAll(recSection, recInstructor, recDayTime, recLocation, recTA1, recTA2);
-        //Setting up the TableView
-
+        
         addEditGridPane = new GridPane();
         sectionLabel = new Label(props.getProperty(CSGProp.REC_SECTION_LABEL.toString()));
         sectionTextField = new TextField();
@@ -661,6 +685,20 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         scheduleItemDate = new TableColumn(props.getProperty(CSGProp.SCHEDULE_ITEM_DATE_LABEL.toString()));
         scheduleItemTitle = new TableColumn(props.getProperty(CSGProp.SCHEDULE_ITEM_TITLE_LABEL.toString()));
         scheduleItemTopic = new TableColumn(props.getProperty(CSGProp.SCHEDULE_ITEM_TOPIC_LABEL.toString()));
+        ObservableList<ScheduleItem> scheduleItemsData = data.getScheduleItems();
+        scheduleItems.setItems(scheduleItemsData);
+        scheduleItemType.setCellValueFactory(
+                new PropertyValueFactory<ScheduleItem, String>("type")
+        );
+        scheduleItemDate.setCellValueFactory(
+                new PropertyValueFactory<ScheduleItem, String>("date")
+        );
+        scheduleItemTitle.setCellValueFactory(
+                new PropertyValueFactory<ScheduleItem, String>("title")
+        );
+        scheduleItemTopic.setCellValueFactory(
+                new PropertyValueFactory<ScheduleItem, String>("topic")
+        );
         scheduleItems.getColumns().addAll(scheduleItemType, scheduleItemDate, scheduleItemTitle, scheduleItemTopic);
         addEditSchedulePane = new GridPane();
         typeLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEM_TYPE_LABEL.toString()));
@@ -715,10 +753,24 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         deleteProjectButton = new Button(props.getProperty(CSGProp.DELETE_SYMBOL.toString()));
         projectTeamsTopHBox.getChildren().addAll(teamsLabel, deleteProjectButton);
         projectTeams = new TableView();
+        ObservableList<ProjectTeam> projectTeamData = data.getProjectTeams();
+        projectTeams.setItems(projectTeamData);
         projectTeamName = new TableColumn(props.getProperty(CSGProp.TEAM_NAME_LABEL.toString()));
         projectTeamColor = new TableColumn(props.getProperty(CSGProp.TEAM_COLOR_LABEL.toString()));
         projectTeamTextColor = new TableColumn(props.getProperty(CSGProp.TEXT_COLOR_LABEL.toString()));
         projectTeamLink = new TableColumn(props.getProperty(CSGProp.TEAM_LINK_LABEL.toString()));
+        projectTeamName.setCellValueFactory(
+                new PropertyValueFactory<ProjectTeam, String>("name")
+        );
+        projectTeamColor.setCellValueFactory(
+                new PropertyValueFactory<ProjectTeam, String>("color")
+        );
+        projectTeamTextColor.setCellValueFactory(
+                new PropertyValueFactory<ProjectTeam, String>("textColor")
+        );
+        projectTeamLink.setCellValueFactory(
+                new PropertyValueFactory<ProjectTeam, String>("link")
+        );
         projectTeams.getColumns().addAll(projectTeamName, projectTeamColor, projectTeamTextColor, projectTeamLink);
         addEditProjectGridPane = new GridPane();
         addEditProjectLabel = new Label(props.getProperty(CSGProp.ADD_EDIT_LABEL.toString()));
@@ -755,6 +807,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         projectTeamStudentsTopBox.getChildren().addAll(studentsLabel, deleteStudentsButton);
 
         teamMembers = new TableView();
+        // How to construct the TableView in accordance with the Team Members?
         teamMemberFirstName = new TableColumn(props.getProperty(CSGProp.STUDENT_FIRST_NAME_LABEL.toString()));
         teamMemberLastName = new TableColumn(props.getProperty(CSGProp.STUDENT_LAST_NAME_LABEL.toString()));
         teamMemberTeam = new TableColumn(props.getProperty(CSGProp.STUDENT_TEAM_LABEL.toString()));

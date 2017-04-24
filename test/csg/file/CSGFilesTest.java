@@ -110,8 +110,7 @@ public class CSGFilesTest {
 
         String filePath = AppStartupConstants.PATH_WORK + "/SiteSaveTest.json";
         instance.loadData(data, filePath);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
 
     }
 
