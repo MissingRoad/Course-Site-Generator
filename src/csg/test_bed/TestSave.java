@@ -101,7 +101,7 @@ public class TestSave {
             row += 2;
         }
         
-        dataComponent.addTA("Jacob Evans", "jacob.evans@stonybrook.edu", true);
+        dataComponent.addTA("Jacob Evans", "jacob.evans@stonybrook.edu", false);
         
         TeachingAssistant jacobEvans = new TeachingAssistant("Jacob", "Evans", true);
         TeachingAssistant jamesHoffman = new TeachingAssistant("James", "Hoffman", true);

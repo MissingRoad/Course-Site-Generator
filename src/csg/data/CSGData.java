@@ -46,6 +46,9 @@ public class CSGData implements AppDataComponent {
     // INITIALIZE OUR OFFICE HOURS GRID
     ArrayList<String> gridHeaders;
     
+    // THIS DATA STRUCTURE STORES THE COURSE INFORMATION
+    CourseSite courseSiteInfo;
+    
     // THIS DATA STRUCTURE WILL STORE THE DATA FOR THE RECITATIONS
     ObservableList<Recitation> recitations;
     
@@ -84,6 +87,7 @@ public class CSGData implements AppDataComponent {
         // KEEP THIS FOR LATER
         app = initApp;
 
+        courseSiteInfo = new CourseSite();
         // CONSTRUCT THE LIST OF TAs FOR THE TABLE, and the other observableLists
         teachingAssistants = FXCollections.observableArrayList();
         recitations = FXCollections.observableArrayList();

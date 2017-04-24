@@ -142,4 +142,18 @@ public class CSGFilesTest {
         fail("The test case is a prototype.");
     }
 
+    /**
+     * Test of importData method, of class CSGFiles.
+     */
+    @Test
+    public void testImportData() throws Exception {
+        System.out.println("importData");
+        AppDataComponent data = null;
+        String filePath = "";
+        CSGFiles instance = null;
+        instance.importData(data, filePath);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
 }

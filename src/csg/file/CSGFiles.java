@@ -208,8 +208,11 @@ public class CSGFiles implements AppFileComponent {
 
     @Override
     public void saveData(AppDataComponent data, String filePath) throws IOException {
-	// GET THE DATA
+        // GET THE DATA
 	CSGData dataManager = (CSGData)data;
+        
+        // Build a JsonObject - The CourseSite Information Object
+        
 
 	// NOW BUILD THE TA JSON OBJCTS TO SAVE
 	JsonArrayBuilder taArrayBuilder = Json.createArrayBuilder();
