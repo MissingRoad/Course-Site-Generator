@@ -7,6 +7,7 @@ package csg.file;
 
 import csg.CourseSiteGeneratorApp;
 import csg.data.CSGData;
+import csg.data.CourseSite;
 import csg.data.ProjectTeam;
 import csg.data.Recitation;
 import csg.data.ScheduleItem;
@@ -36,7 +37,6 @@ import csg.data.TeachingAssistant;
 import static djf.settings.AppStartupConstants.PATH_PUBLIC_HTML;
 import java.awt.Color;
 import java.io.File;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,6 +52,19 @@ public class CSGFiles implements AppFileComponent {
     // THESE ARE USED FOR IDENTIFYING JSON TYPES
     static final String JSON_START_HOUR = "startHour";
     static final String JSON_END_HOUR = "endHour";
+    static final String JSON_COURSE_SUBJECT = "course_subject";
+    static final String JSON_COURSE_NUMBER = "course_number";
+    static final String JSON_COURSE_SEMESTER = "course_semester";
+    static final String JSON_COURSE_YEAR = "course_year";
+    static final String JSON_COURSE_TITLE = "course_title";
+    static final String JSON_INSTRUCTOR_NAME = "course_instructor_name";
+    static final String JSON_INSTRUCTOR_HOME = "course_instructor_home";
+    static final String JSON_EXPORT_DIR = "course_export_dir";
+    static final String JSON_HAS_HOME = "course_has_home";
+    static final String JSON_HAS_SYLLABUS = "course_has_syllabus";
+    static final String JSON_HAS_SCHEDULE = "course_has_schedule";
+    static final String JSON_HAS_HW = "course_has_hw";
+    static final String JSON_HAS_PROJECT = "course_has_project";
     static final String JSON_OFFICE_HOURS = "officeHours";
     static final String JSON_DAY = "day";
     static final String JSON_TIME = "time";
@@ -86,6 +99,7 @@ public class CSGFiles implements AppFileComponent {
     static final String JSON_STUDENT_TEAM = "team";
     static final String JSON_STUDENT_ROLE = "role";
     // Data types regarding various types for the various JSON arrays
+    static final String JSON_COURSE_INFO = "course_info";
     static final String JSON_RECITATIONS = "recitations";
     static final String JSON_SCHEDULE_ITEMS = "schedule_items";
     static final String JSON_PROJECT_TEAMS = "project_teams";
@@ -214,7 +228,21 @@ public class CSGFiles implements AppFileComponent {
 	CSGData dataManager = (CSGData)data;
         
         // Build a JsonObject - The CourseSite Information Object
-        
+        CourseSite cs = dataManager.getCourseSiteInfo();
+        JsonObject csInfo = Json.createObjectBuilder()
+                .add(JSON_COURSE_SUBJECT, cs.getCourseSubject())
+                .add(JSON_COURSE_NUMBER, "" + cs.getCourseNumber())
+                .add(JSON_COURSE_SEMESTER, cs.getCourseSemester())
+                .add(JSON_COURSE_YEAR, cs.getCourseYear() + "")
+                .add(JSON_COURSE_TITLE, cs.getCourseTitle())
+                .add(JSON_INSTRUCTOR_NAME, cs.getInstName())
+                .add(JSON_INSTRUCTOR_HOME, cs.getInstHome())
+                .add(JSON_EXPORT_DIR, cs.getExportDir())
+                .add(JSON_HAS_HOME, cs.getHasHomePage())
+                .add(JSON_HAS_SYLLABUS, cs.getHasSyllabusPage())
+                .add(JSON_HAS_SCHEDULE, cs.getHasSchedulePage())
+                .add(JSON_HAS_HW, cs.getHasHWPage())
+                .add(JSON_HAS_PROJECT, cs.getHasProjectPage()).build();
 
 	// NOW BUILD THE TA JSON OBJCTS TO SAVE
 	JsonArrayBuilder taArrayBuilder = Json.createArrayBuilder();
@@ -302,6 +330,7 @@ public class CSGFiles implements AppFileComponent {
         
 	// THEN PUT IT ALL TOGETHER IN A JsonObject
 	JsonObject dataManagerJSO = Json.createObjectBuilder()
+                .add(JSON_COURSE_INFO, csInfo)
 		.add(JSON_START_HOUR, "" + dataManager.getStartHour())
 		.add(JSON_END_HOUR, "" + dataManager.getEndHour())
                 .add(JSON_UNDERGRAD_TAS, undergradTAsArray)
@@ -439,7 +468,7 @@ public class CSGFiles implements AppFileComponent {
 	OutputStream osR = new FileOutputStream(recitationsBuilderDirectory);
 	JsonWriter jsonFileWriterR = Json.createWriter(osR);
 	jsonFileWriterR.writeObject(recitationJSO);
-	String prettyPrintedR = sw.toString();
+	String prettyPrintedR = swR.toString();
 	PrintWriter pwR = new PrintWriter(recitationsBuilderDirectory);
 	pwR.write(prettyPrintedR);
 	pwR.close();
@@ -525,7 +554,7 @@ public class CSGFiles implements AppFileComponent {
         
         // Students JSON Array - Constructing
         // And finally the Student JSON Objects (pertaining to the teams)
-        JsonArrayBuilder studentArrayBuilder = Json.createArrayBuilder();
+        /*JsonArrayBuilder studentArrayBuilder = Json.createArrayBuilder();
         ObservableList<Student> students = dataManager.getStudents();
         for (Student s: students) {
             JsonObject studentJson = Json.createObjectBuilder()
@@ -558,6 +587,6 @@ public class CSGFiles implements AppFileComponent {
 	String prettyPrintedST = swST.toString();
 	PrintWriter pwST = new PrintWriter(filePath);
 	pwST.write(prettyPrintedST);
-	pwST.close();
+	pwST.close();*/
     }
 }

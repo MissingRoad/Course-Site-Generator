@@ -24,6 +24,7 @@ public class CourseSite {
     private final StringProperty courseTitle;
     private final StringProperty instName;
     private final StringProperty instHome;
+    private final StringProperty exportDir;
     private final BooleanProperty hasHomePage;
     private final BooleanProperty hasSyllabusPage;
     private final BooleanProperty hasSchedulePage;
@@ -38,6 +39,7 @@ public class CourseSite {
         this.courseTitle = new SimpleStringProperty("");
         this.instName = new SimpleStringProperty("");
         this.instHome = new SimpleStringProperty("");
+        this.exportDir = new SimpleStringProperty("");
         this.hasHomePage = new SimpleBooleanProperty(false);
         this.hasSyllabusPage = new SimpleBooleanProperty(false);
         this.hasSchedulePage = new SimpleBooleanProperty(false);
@@ -100,6 +102,14 @@ public class CourseSite {
     
     public String getInstHome() {
         return this.instHome.get();
+    }
+    
+    public void setExportDir(String newExportDir) {
+        this.exportDir.set(newExportDir);
+    }
+    
+    public String getExportDir() {
+        return this.exportDir.get();
     }
     public boolean getHasHomePage() {
         return hasHomePage.get();

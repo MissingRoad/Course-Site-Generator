@@ -101,10 +101,12 @@ public class TestSave {
             row += 2;
         }
         
-        dataComponent.addTA("Jacob Evans", "jacob.evans@stonybrook.edu", false);
+        //dataComponent.addTA("Jacob Evans", "jacob.evans@stonybrook.edu", false);
         
-        TeachingAssistant jacobEvans = new TeachingAssistant("Jacob", "Evans", true);
-        TeachingAssistant jamesHoffman = new TeachingAssistant("James", "Hoffman", true);
+        TeachingAssistant jacobEvans = new TeachingAssistant("Jacob Evans", "jacob.evans@stonybrook.edu", true);
+        TeachingAssistant jamesHoffman = new TeachingAssistant("James Hoffman", "james.hoffman@stonybrook.edu", true);
+        
+        dataComponent.getTeachingAssistants().addAll(jacobEvans, jamesHoffman);
         
         dataComponent.getRecitations().add(new Recitation("R01", "McKenna", "Monday 5:30 - 6:23 PM", "Old CS 2120", jacobEvans, jamesHoffman));
         GregorianCalendar g = new GregorianCalendar(2017, 2, 17);
@@ -119,7 +121,7 @@ public class TestSave {
 
         // Save the hard coded data from above
         try {
-            fileComponent.saveData(dataComponent, AppStartupConstants.PATH_WORK + "/SiteSaveTest.json"); // What is filePath?
+            fileComponent.saveData(dataComponent, AppStartupConstants.PATH_WORK + "/SiteSaveTest.json");
         } catch (IOException e) {
             System.out.println("Bad file saving.");
         }

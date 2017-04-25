@@ -475,6 +475,8 @@ public class CSGData implements AppDataComponent {
             if (ta.getName().equals(name)) {
                 return ta;
             }
+            if (ta.getName().contains(name))
+                return ta;
         }
         return null;
     }
