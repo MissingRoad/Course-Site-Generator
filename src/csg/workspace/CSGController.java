@@ -28,13 +28,14 @@ import djf.ui.AppYesNoCancelDialogSingleton;
 import java.util.ArrayList;
 import javafx.scene.control.ComboBox;
 import csg.data.CSGData;
+import csg.data.Recitation;
 import csg.file.TimeSlot;
 import csg.jtps.RecitationAdderUR;
 import static csg.style.CSGStyle.CLASS_HIGHLIGHTED_GRID_CELL;
 import static csg.style.CSGStyle.CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN;
 import static csg.style.CSGStyle.CLASS_OFFICE_HOURS_GRID_TA_CELL_PANE;
-import javafx.scene.paint.Color;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.paint.Color;
 
 
 /**
@@ -170,13 +171,26 @@ public class CSGController {
     
     public void handleAddProjectTeam() {
         CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        CSGData data = (CSGData)app.getDataComponent();
         TextField teamNameTextField = workspace.getTeamNameTextField();
         ColorPicker teamColorPicker = workspace.getTeamColorPicker();
         ColorPicker teamTextColorPicker = workspace.getTeamTextColorPicker();
         TextField teamLinkTextField = workspace.getTeamLinkTextField();
         
         String teamName = teamNameTextField.getText();
-        //Color teamColor = teamColorPicker.getValue(); // FIX COLOR ISSUE!!!
+        Color teamColor = teamColorPicker.getValue();
+        Color teamTextColor = teamTextColorPicker.getValue();
+        String teamLink = teamLinkTextField.getText();
+        
+        if (teamName.isEmpty()) {
+            
+        }
+        else if (teamLink.isEmpty()) {
+            
+        }
+        else {
+            // PROJECT TEAM ADD CODE --> INSERT HERE
+        }
     }
     
     private void markWorkAsEdited() {
@@ -333,6 +347,20 @@ public class CSGController {
         jTPS_Transaction replaceTAUR = new TAReplaceUR(app);
         jTPS.addTransaction(replaceTAUR);
         markWorkAsEdited();
+    }
+    
+    public void handleEditRecitation() {
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        CSGData data = (CSGData)app.getDataComponent();
+        TableView recitationTable = workspace.getRecitationData();
+        Object selectedItem = recitationTable.getSelectionModel().getSelectedItem();
+        Recitation recitation = (Recitation)selectedItem;
+        String section = recitation.getSection();
+        String instructor = recitation.getInstructor();
+        String dayTime = recitation.getDayTime();
+        String location = recitation.getLocation();
+        TeachingAssistant ta1 = recitation.getSupervisingTA1();
+        TeachingAssistant ta2 = recitation.getSupervisingTA2();
     }
     
     public void loadTAtotext(){

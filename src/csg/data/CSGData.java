@@ -395,6 +395,13 @@ public class CSGData implements AppDataComponent {
         if (!containsProjectTeam(name))
             projectTeams.add(p);
     }
+    
+    public void removeProjectTeam(String name) {
+        for (ProjectTeam p: projectTeams) {
+            if (!containsProjectTeam(name))
+                projectTeams.remove(p);
+        }
+    }
 
     /**
      * This function toggles the taName in the cell represented

@@ -9,11 +9,11 @@
         "course_instructor_name":"",
         "course_instructor_home":"",
         "course_export_dir":"",
-        "course_has_home":false,
-        "course_has_syllabus":false,
-        "course_has_schedule":false,
-        "course_has_hw":false,
-        "course_has_project":false
+        "course_has_home":"false",
+        "course_has_syllabus":"false",
+        "course_has_schedule":"false",
+        "course_has_hw":"false",
+        "course_has_project":"false"
     },
     "startHour":"0",
     "endHour":"23",
@@ -58,12 +58,14 @@
     "project_teams":[
         {
             "project_team_name":"Team 1",
-            "project_team_red_color":"0",
-            "project_team_green_color":"0",
-            "project_team_blue_color":"0",
-            "project_team_text_red_color":"0",
-            "project_team_text_green_color":"0",
-            "project_team_text_blue_color":"255",
+            "project_team_red_color":"0.0",
+            "project_team_green_color":"0.0",
+            "project_team_blue_color":"0.0",
+            "project_team_color_opacity":"1.0",
+            "project_team_text_red_color":"0.0",
+            "project_team_text_green_color":"0.0",
+            "project_team_text_blue_color":"1.0",
+            "project_team_text_color_opacity":"1.0",
             "project_team_link":"www.team1.com"
         }
     ],

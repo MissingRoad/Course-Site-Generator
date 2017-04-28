@@ -170,6 +170,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     HashMap<String, Label> taDataOfficeHoursGridTACellLabels;
 
     //Components for recitationDataTab
+    boolean addRecitation;
     VBox recitationDataVBox;
     HBox recitationTopBox;
     Label recitationsLabel;
@@ -665,6 +666,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
         /*recitationDataTab = new Tab();
         recitationDataTab.setText(CSGProp.RECITATION_DATA_TAB.toString());*/
+        this.addRecitation = true;
         recitationDataVBox = new VBox();
         recitationTopBox = new HBox();
         recitationsLabel = new Label(props.getProperty(CSGProp.RECITATIONS_LABEL.toString()));
@@ -730,6 +732,46 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         addEditGridPane.add(supervisingTa2Box, 1, 5);
         addEditGridPane.add(addUpdateButton, 0, 6);
         addEditGridPane.add(clearButton, 1, 6);
+        
+        // Recitation Tab Controls
+        /*recitationNameTextField.setOnAction(e -> {
+            if (!addTA) {
+                controller.changeExistTA();
+            } else {
+                controller.handleAddTA();
+            }
+        });
+        taEmailTextField.setOnAction(e -> {
+            if (!addTA) {
+                controller.changeExistTA();
+            } else {
+                controller.handleAddTA();
+            }
+        });
+        addTAButton.setOnAction(e -> {
+            if (!addTA) {
+                controller.changeExistTA();
+            } else {
+                controller.handleAddTA();
+            }
+        });
+        clearTAButton.setOnAction(e -> {
+            addTAButton.setText(props.getProperty(CSGProp.ADD_BUTTON_LABEL.toString()));
+            addTA = true;
+            taNameTextField.clear();
+            taEmailTextField.clear();
+            taInformation.getSelectionModel().select(null);
+        });
+
+        taInformation.setFocusTraversable(true);
+        taInformation.setOnKeyPressed(e -> {
+            controller.handleKeyPress(e.getCode());
+        });
+        taInformation.setOnMouseClicked(e -> {
+            addTAButton.setText(props.getProperty(CSGProp.ADD_EDIT_LABEL.toString()));
+            addTA = false;
+            controller.loadTAtotext();
+        });*/
 
         recitationDataVBox.getChildren().addAll(recitationTopBox, recitationData, addEditGridPane);
         recitationDataVBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
