@@ -74,7 +74,7 @@ span {
 }
 
 span.reading {
-	color:#990099;
+	color:#000000;
 	font-weight:normal;
 }
 
@@ -89,8 +89,8 @@ span.hw {
 }
 
 span.grading {
-	color:#771177;
-	font-weight:bold;
+	color:#007700;
+	font-weight:normal;
 }
 
 td.highlight {
@@ -103,12 +103,14 @@ table.hws {
 }
 
 th.hws {
+	text-align:centered;
 	padding-right: 80px;
 }
 
 td.hws {
 	padding-right:80px;
 }
+
 
    .office_hours_schedule td
    {
@@ -124,7 +126,7 @@ td.hws {
    }
    td.open
    {
-	background-color:rgb(220,100,100);
+	background-color:rgb(200,200,200);
    }
    td.lecture
    {
@@ -133,6 +135,12 @@ td.hws {
    td.tas
    {
 	width:260px;
+   }
+   td.not_available
+   {
+	background-color:rgb(100,100,100);
+	border-top:0px;
+	border-bottom:0px;
    }
    .office_hours_schedule th
    {

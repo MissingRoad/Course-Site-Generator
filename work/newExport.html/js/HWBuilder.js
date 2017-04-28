@@ -17,6 +17,12 @@ function ScheduleDate(sMonth, sDay) {
     this.month = sMonth;
     this.day = sDay;
 }
+
+function initBanner() {
+    var banner = $("#banner");
+    banner.append("Not CSE 219");
+}
+
 function initHWs() {
     redInc = 10;
     greenInc = 10;
@@ -33,6 +39,8 @@ function initHWs() {
     
     var dataFile = "./js/ScheduleData.json";
     loadData(dataFile);
+    
+    initBanner();
 }
 function loadData(jsonFile) {
     $.getJSON(jsonFile, function (json) {

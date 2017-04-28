@@ -1,0 +1,13 @@
+
+{
+    "recitations":[
+        {
+            "recitation_section":"R01",
+            "recitation_instructor":"McKenna",
+            "recitation_day_time":"Monday 5:30 - 6:23 PM",
+            "recitation_location":"R01",
+            "recitation_ta1":"Jacob Evans",
+            "recitation_ta2":"James Hoffman"
+        }
+    ]
+}

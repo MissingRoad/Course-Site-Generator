@@ -25,11 +25,16 @@ public class CourseSite {
     private final StringProperty instName;
     private final StringProperty instHome;
     private final StringProperty exportDir;
-    private final BooleanProperty hasHomePage;
+    /*private final BooleanProperty hasHomePage;
     private final BooleanProperty hasSyllabusPage;
     private final BooleanProperty hasSchedulePage;
     private final BooleanProperty hasHWPage;
-    private final BooleanProperty hasProjectPage;
+    private final BooleanProperty hasProjectPage;*/
+    private CourseSitePage homePage;
+    private CourseSitePage schedulePage;
+    private CourseSitePage syllabusPage;
+    private CourseSitePage hwPage;
+    private CourseSitePage projectsPage;
     
     public CourseSite() {
         this.courseSubject = new SimpleStringProperty("");
@@ -40,11 +45,36 @@ public class CourseSite {
         this.instName = new SimpleStringProperty("");
         this.instHome = new SimpleStringProperty("");
         this.exportDir = new SimpleStringProperty("");
-        this.hasHomePage = new SimpleBooleanProperty(false);
+        /*this.hasHomePage = new SimpleBooleanProperty(false);
         this.hasSyllabusPage = new SimpleBooleanProperty(false);
         this.hasSchedulePage = new SimpleBooleanProperty(false);
         this.hasHWPage = new SimpleBooleanProperty(false);
-        this.hasProjectPage = new SimpleBooleanProperty(false);
+        this.hasProjectPage = new SimpleBooleanProperty(false);*/
+        this.homePage = new CourseSitePage(false, "Home", "index.html", "HomeBuilder.js");
+        this.syllabusPage = new CourseSitePage(false, "Syllabus", "syllabus.html", "SyllabusBuilder.js");
+        this.schedulePage = new CourseSitePage(false, "Schedule", "schedule.html", "ScheduleBuilder.js");
+        this.hwPage = new CourseSitePage(false, "HWs", "hws.html", "HWsBuilder.js");
+        this.projectsPage = new CourseSitePage(false, "Projects", "projects.html", "ProjectsBuilder.js");
+    }
+
+    public CourseSitePage getHomePage() {
+        return homePage;
+    }
+
+    public CourseSitePage getSchedulePage() {
+        return schedulePage;
+    }
+
+    public CourseSitePage getSyllabusPage() {
+        return syllabusPage;
+    }
+
+    public CourseSitePage getHwPage() {
+        return hwPage;
+    }
+
+    public CourseSitePage getProjectsPage() {
+        return projectsPage;
     }
     
     //Getters and setters
@@ -111,7 +141,7 @@ public class CourseSite {
     public String getExportDir() {
         return this.exportDir.get();
     }
-    public boolean getHasHomePage() {
+    /*public boolean getHasHomePage() {
         return hasHomePage.get();
     }
     
@@ -149,6 +179,6 @@ public class CourseSite {
     
     public void setHasProjectPage(boolean hasProjectPage) {
         this.hasProjectPage.set(hasProjectPage);
-    }
+    }*/
     
 }

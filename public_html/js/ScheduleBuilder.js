@@ -20,6 +20,7 @@ function ScheduleDate(sMonth, sDay) {
     this.day = sDay;
 }
 function initSchedule() {
+    initBanner();
     initDateData();
     var dataFile = "./js/ScheduleData.json";
     loadData(dataFile);
@@ -33,12 +34,13 @@ function loadData(jsonFile) {
         addReferences();
         addRecitations();
         addHWs();
+        initBanner();
     });
 }
 function initDateData() {
     var currentYear = new Date().getFullYear();
     daysInMonth = new Array();
-    if ((currentYear %4) == 0) {
+    if ((currentYear %4) === 0) {
         isLeapYear = true;
         daysInMonth[2] = 29;
     }
@@ -234,4 +236,9 @@ function addHWs() {
         var cell = $("#" + hw.date.month + "_" + hw.date.day);
         cell.append(textToAppend);
     }
+}
+
+function initBanner() {
+    var banner = $("#banner");
+    banner.append("Not CSE 219");
 }

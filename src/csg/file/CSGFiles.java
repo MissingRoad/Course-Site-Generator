@@ -238,11 +238,12 @@ public class CSGFiles implements AppFileComponent {
                 .add(JSON_INSTRUCTOR_NAME, cs.getInstName())
                 .add(JSON_INSTRUCTOR_HOME, cs.getInstHome())
                 .add(JSON_EXPORT_DIR, cs.getExportDir())
-                .add(JSON_HAS_HOME, cs.getHasHomePage())
-                .add(JSON_HAS_SYLLABUS, cs.getHasSyllabusPage())
-                .add(JSON_HAS_SCHEDULE, cs.getHasSchedulePage())
-                .add(JSON_HAS_HW, cs.getHasHWPage())
-                .add(JSON_HAS_PROJECT, cs.getHasProjectPage()).build();
+                // FIX THESE LINES
+                .add(JSON_HAS_HOME, cs.getHomePage().getExists() + "")
+                .add(JSON_HAS_SYLLABUS, cs.getSyllabusPage().getExists() + "")
+                .add(JSON_HAS_SCHEDULE, cs.getSchedulePage().getExists() + "")
+                .add(JSON_HAS_HW, cs.getHwPage().getExists() + "")
+                .add(JSON_HAS_PROJECT, cs.getProjectsPage().getExists() + "").build();
 
 	// NOW BUILD THE TA JSON OBJCTS TO SAVE
 	JsonArrayBuilder taArrayBuilder = Json.createArrayBuilder();
@@ -494,7 +495,7 @@ public class CSGFiles implements AppFileComponent {
         // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
 	Map<String, Object> propertiesS = new HashMap<>(1);
 	propertiesS.put(JsonGenerator.PRETTY_PRINTING, true);
-	JsonWriterFactory writerFactoryS = Json.createWriterFactory(properties);
+	JsonWriterFactory writerFactoryS = Json.createWriterFactory(propertiesS);
 	StringWriter swS = new StringWriter();
 	JsonWriter jsonWriterS = writerFactoryS.createWriter(swS);
 	jsonWriterS.writeObject(scheduleItemJSO);
@@ -505,7 +506,7 @@ public class CSGFiles implements AppFileComponent {
 	OutputStream osS = new FileOutputStream(scheduleBuilderDirectory);
 	JsonWriter jsonFileWriterS = Json.createWriter(osS);
 	jsonFileWriterS.writeObject(scheduleItemJSO);
-	String prettyPrintedS = sw.toString();
+	String prettyPrintedS = swS.toString();
 	PrintWriter pwS = new PrintWriter(scheduleBuilderDirectory);
 	pwS.write(prettyPrintedS);
 	pwS.close();

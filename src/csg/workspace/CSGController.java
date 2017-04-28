@@ -103,6 +103,34 @@ public class CSGController {
         }
     }
     
+    public void handleAddRecitation() {
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        TextField sectionTextField = workspace.getSectionTextField();
+        TextField instructorTextField = workspace.getInstructorTextField();
+        TextField dayTimeTextField = workspace.getDayTimeTextField();
+        TextField locationTextField = workspace.getLocationTextField();
+        ComboBox supervisingTAComboBox1 = workspace.getSupervisingTa1Box();
+        ComboBox supervisingTAComboBox2 = workspace.getSupervisingTa2Box();
+        
+        // For checking the existing data
+        CSGData dataComponent = (CSGData)app.getDataComponent();
+        
+        // For in case we need to alert the user to an error
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        
+        // Getting our String variables
+        String section = sectionTextField.getText();
+        String instructor = instructorTextField.getText();
+        String dayTime = dayTimeTextField.getText();
+        String location = locationTextField.getText();
+        // How to represent your TA Objects?
+        String ta1 = supervisingTAComboBox1.getSelectionModel().getSelectedItem().toString();
+    }
+    
+    public void handleAddProjectTeam() {
+        
+    }
+    
     private void markWorkAsEdited() {
         // MARK WORK AS EDITED
         AppGUI gui = app.getGUI();

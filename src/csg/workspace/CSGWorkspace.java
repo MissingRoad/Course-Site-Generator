@@ -37,6 +37,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import csg.data.CSGData;
+import csg.data.CourseSite;
+import csg.data.CourseSitePage;
 import csg.data.ProjectTeam;
 import csg.data.Recitation;
 import csg.data.ScheduleItem;
@@ -45,6 +47,7 @@ import csg.style.CSGStyle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.input.KeyCode;
 //import tam.data.TAData;
@@ -99,11 +102,20 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     Button selectTemplateDirButton;
     Label sitePagesLabel;
     // For the site pages table, maybe use generics later on for your datatypes here
+    
+    CourseSite courseSite;
+    
     TableView sitePages;
     TableColumn useColumn;
     TableColumn navbarTitleColumn;
     TableColumn fileNameColumn;
     TableColumn scriptColumn;
+
+    TableRow homePageRow;
+    TableRow syllabusPageRow;
+    TableRow schedulePageRow;
+    TableRow hwPageRow;
+    TableRow projectsPageRow;
     //checkBox declaration here?
 
     GridPane pageStyleDataBox;
@@ -344,7 +356,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         topCourseDataBox.add(exportDirLabel, 0, 6);
         topCourseDataBox.add(exportDirTextView, 1, 6);
         topCourseDataBox.add(changeExportDirButton, 2, 6);
-        
+
         topCourseDataBox.setStyle("-fx-background-color: bisque;-fx-border: 5px; -fx-border-color: black;");
 
         //Middle box content, the Site Template
@@ -365,11 +377,66 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         String filenameLabelText = props.getProperty(CSGProp.COURSE_SITE_PAGES_FILE_NAME_LABEL.toString());
         String scriptLabelText = props.getProperty(CSGProp.COURSE_SITE_PAGES_SCRIPT_LABEL.toString());
         useColumn = new TableColumn(useLabelText);
-
         navbarTitleColumn = new TableColumn(navbarTitleLabelText);
         fileNameColumn = new TableColumn(filenameLabelText);
         scriptColumn = new TableColumn(scriptLabelText);
-        //insert setCellValueFactory methods here when you develop the data component
+        
+        useColumn.setCellValueFactory(
+                new PropertyValueFactory<CourseSitePage, CheckBox>("exists")
+        );
+        useColumn.setCellFactory(column -> new CheckBoxTableCell());
+        navbarTitleColumn.setCellValueFactory(
+                new PropertyValueFactory<CourseSitePage, String>("navbarTitle")
+        );
+        fileNameColumn.setCellValueFactory(
+                new PropertyValueFactory<CourseSitePage, String>("fileName")
+        );
+        scriptColumn.setCellValueFactory(
+                new PropertyValueFactory<CourseSitePage, String>("script")
+        );
+        
+        courseSite = new CourseSite();
+        CourseSitePage homePage = courseSite.getHomePage();
+        CourseSitePage syllabusPage = courseSite.getSyllabusPage();
+        CourseSitePage schedulePage = courseSite.getSchedulePage();
+        CourseSitePage hwPage = courseSite.getHwPage();
+        CourseSitePage projectsPage = courseSite.getProjectsPage();
+        
+        ObservableList courseSitePages = FXCollections.observableArrayList();
+        courseSitePages.addAll(homePage, syllabusPage, schedulePage, hwPage, projectsPage);
+        sitePages.setItems(courseSitePages);
+        sitePages.setEditable(true);
+
+        /*homePageRow = new TableRow();
+        TableCell hasHomePage = new TableCell();
+        CheckBox hasHomePageBox = new CheckBox();
+        hasHomePage.setGraphic(hasHomePageBox);
+        TableCell homeLabel = new TableCell();
+        Label homePageLabel = new Label("Home"); // XML!!!!!!
+        homeLabel.setGraphic(homePageLabel);
+        TableCell homeHtml = new TableCell();
+        Label homeHtmlLabel = new Label("index.html"); //REPLACE WITH XML STUFF
+        homeHtml.setGraphic(homeHtmlLabel);
+        TableCell homeScript = new TableCell();
+        Label homeScriptLabel = new Label("HomeBuilder.js");
+        homeScript.setGraphic(homeScriptLabel);
+        //homePageRow.getChildren().addAll(hasHomePage, homeLabel, homeHtml, homeScript); // HOW TO SET THE TABLE CELLS TO THE RIGHT PLACE IN THE TABLEVIEW????
+        syllabusPageRow = new TableRow();
+        schedulePageRow = new TableRow();
+        hwPageRow = new TableRow();
+        projectsPageRow = new TableRow();*/
+
+        /**
+         * taIsUndergradColumn.setCellValueFactory( new
+         * PropertyValueFactory<TeachingAssistant, CheckBox>("isUndergrad") );
+         * taIsUndergradColumn.setCellFactory(column -> new
+         * CheckBoxTableCell()); taInformation.setEditable(true);
+         * taNameColumn.setCellValueFactory( new
+         * PropertyValueFactory<TeachingAssistant, String>("name") );
+         * taEmailColumn.setCellValueFactory( new
+         * PropertyValueFactory<TeachingAssistant, String>("email") );
+         *
+         */
         sitePages.getColumns().add(useColumn);
         sitePages.getColumns().addAll(navbarTitleColumn, fileNameColumn, scriptColumn);
 
@@ -406,7 +473,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         pageStyleDataBox.add(stylesheetLabel, 0, 4);
         pageStyleDataBox.add(stylesheetSelect, 1, 4);
         pageStyleDataBox.add(stylesheetNote, 0, 5);
-        
+
         pageStyleDataBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
 
         //add everything to the VBox
@@ -427,7 +494,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         teachingAssistantsLabel = new Label(props.getProperty(CSGProp.TEACHING_ASSISTANTS_LABEL).toString());
         deleteTAButton = new Button(props.getProperty(CSGProp.DELETE_SYMBOL).toString());
         taDataTableViewTopPane.getChildren().addAll(teachingAssistantsLabel, deleteTAButton);
-        
+
         taInformation = new TableView();
         taInformation.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         CSGData data = (CSGData) app.getDataComponent();
@@ -435,7 +502,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         taInformation.setItems(taTableData);
         // Is undergrad column initialization here
         String isUndergradColumnText = props.getProperty(CSGProp.IS_UNDERGRAD_COLUMN_TEXT.toString());
-        
+
         String nameColumnText = props.getProperty(CSGProp.NAME_COLUMN_TEXT.toString());
         String emailColumnText = props.getProperty(CSGProp.EMAIL_COLUMN_TEXT.toString());
         taIsUndergradColumn = new TableColumn(isUndergradColumnText);
@@ -462,35 +529,35 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         clearTAButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL).toString());
         taDataTextFieldPane.getChildren().addAll(taNameTextField, taEmailTextField, addTAButton, clearTAButton);
         taDataTATableViewVBox.getChildren().addAll(taDataTableViewTopPane, taInformation, taDataTextFieldPane);
-        
+
         taDataTATableViewVBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
 
         //Assembling the right VBox
         time_options = FXCollections.observableArrayList(
-        props.getProperty(CSGProp.TIME_12AM.toString()),
-        props.getProperty(CSGProp.TIME_1AM.toString()),
-        props.getProperty(CSGProp.TIME_2AM.toString()),
-        props.getProperty(CSGProp.TIME_3AM.toString()),
-        props.getProperty(CSGProp.TIME_4AM.toString()),
-        props.getProperty(CSGProp.TIME_5AM.toString()),
-        props.getProperty(CSGProp.TIME_6AM.toString()),
-        props.getProperty(CSGProp.TIME_7AM.toString()),
-        props.getProperty(CSGProp.TIME_8AM.toString()),
-        props.getProperty(CSGProp.TIME_9AM.toString()),
-        props.getProperty(CSGProp.TIME_10AM.toString()),
-        props.getProperty(CSGProp.TIME_11AM.toString()),
-        props.getProperty(CSGProp.TIME_12PM.toString()),
-        props.getProperty(CSGProp.TIME_1PM.toString()),
-        props.getProperty(CSGProp.TIME_2PM.toString()),
-        props.getProperty(CSGProp.TIME_3PM.toString()),
-        props.getProperty(CSGProp.TIME_4PM.toString()),
-        props.getProperty(CSGProp.TIME_5PM.toString()),
-        props.getProperty(CSGProp.TIME_6PM.toString()),
-        props.getProperty(CSGProp.TIME_7PM.toString()),
-        props.getProperty(CSGProp.TIME_8PM.toString()),
-        props.getProperty(CSGProp.TIME_9PM.toString()),
-        props.getProperty(CSGProp.TIME_10PM.toString()),
-        props.getProperty(CSGProp.TIME_11PM.toString())
+                props.getProperty(CSGProp.TIME_12AM.toString()),
+                props.getProperty(CSGProp.TIME_1AM.toString()),
+                props.getProperty(CSGProp.TIME_2AM.toString()),
+                props.getProperty(CSGProp.TIME_3AM.toString()),
+                props.getProperty(CSGProp.TIME_4AM.toString()),
+                props.getProperty(CSGProp.TIME_5AM.toString()),
+                props.getProperty(CSGProp.TIME_6AM.toString()),
+                props.getProperty(CSGProp.TIME_7AM.toString()),
+                props.getProperty(CSGProp.TIME_8AM.toString()),
+                props.getProperty(CSGProp.TIME_9AM.toString()),
+                props.getProperty(CSGProp.TIME_10AM.toString()),
+                props.getProperty(CSGProp.TIME_11AM.toString()),
+                props.getProperty(CSGProp.TIME_12PM.toString()),
+                props.getProperty(CSGProp.TIME_1PM.toString()),
+                props.getProperty(CSGProp.TIME_2PM.toString()),
+                props.getProperty(CSGProp.TIME_3PM.toString()),
+                props.getProperty(CSGProp.TIME_4PM.toString()),
+                props.getProperty(CSGProp.TIME_5PM.toString()),
+                props.getProperty(CSGProp.TIME_6PM.toString()),
+                props.getProperty(CSGProp.TIME_7PM.toString()),
+                props.getProperty(CSGProp.TIME_8PM.toString()),
+                props.getProperty(CSGProp.TIME_9PM.toString()),
+                props.getProperty(CSGProp.TIME_10PM.toString()),
+                props.getProperty(CSGProp.TIME_11PM.toString())
         );
         taDataGridScrollPane = new ScrollPane();
         taDataGridPaneVBox = new VBox();
@@ -500,7 +567,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         officeHoursStartBox = new ComboBox(time_options);
         officeHoursEndLabel = new Label(props.getProperty(CSGProp.OFFICE_HOURS_END_LABEL.toString()));
         officeHoursEndBox = new ComboBox(time_options);
-        
+
         taOfficeHoursTopBox.getChildren().addAll(officeHoursLabel, officeHoursStartLabel, officeHoursStartBox, officeHoursEndLabel, officeHoursEndBox);
         taDataOfficeHoursGridPane = new GridPane();
         //Code here for actually assembling the GridPane
@@ -514,51 +581,60 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         taDataOfficeHoursGridTACellLabels = new HashMap<String, Label>();
         taDataGridPaneVBox.getChildren().addAll(taOfficeHoursTopBox, taDataOfficeHoursGridPane);
         taDataGridScrollPane.setContent(taDataGridPaneVBox);
-        
+
         // NOW LET'S SETUP THE EVENT HANDLING - for the TA DATA TAB ONLY
         controller = new CSGController(app);
-        
+
         //ComboBox Events
         officeHoursStartBox.setPrefHeight(42);
         officeHoursStartBox.setPrefWidth(150);
         officeHoursStartBox.getSelectionModel().select(data.getStartHour());
         officeHoursStartBox.valueProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue ov, String t, String t1) {
-                if(t != null && t1 != null)
-                    if(officeHoursStartBox.getSelectionModel().getSelectedIndex() != data.getStartHour())
+            @Override
+            public void changed(ObservableValue ov, String t, String t1) {
+                if (t != null && t1 != null) {
+                    if (officeHoursStartBox.getSelectionModel().getSelectedIndex() != data.getStartHour()) {
                         controller.changeTime();
+                    }
+                }
             }
         });
-        
+
         officeHoursEndBox.setPrefHeight(42);
         officeHoursEndBox.setPrefWidth(150);
         officeHoursEndBox.getSelectionModel().select(data.getEndHour());
         officeHoursEndBox.valueProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue ov, String t, String t1) {
-                if(t != null && t1 != null)
-                    if(officeHoursEndBox.getSelectionModel().getSelectedIndex() != data.getEndHour())
+            @Override
+            public void changed(ObservableValue ov, String t, String t1) {
+                if (t != null && t1 != null) {
+                    if (officeHoursEndBox.getSelectionModel().getSelectedIndex() != data.getEndHour()) {
                         controller.changeTime();
-            }    
+                    }
+                }
+            }
         });
 
         // CONTROLS FOR ADDING TAs
         taNameTextField.setOnAction(e -> {
-            if(!addTA)
+            if (!addTA) {
                 controller.changeExistTA();
-            else
+            } else {
                 controller.handleAddTA();
+            }
         });
         taEmailTextField.setOnAction(e -> {
-            if(!addTA)
+            if (!addTA) {
                 controller.changeExistTA();
-            else
+            } else {
                 controller.handleAddTA();
+            }
         });
         addTAButton.setOnAction(e -> {
-            if(!addTA)
+            if (!addTA) {
                 controller.changeExistTA();
-            else
+            } else {
                 controller.handleAddTA();
+            }
         });
         clearTAButton.setOnAction(e -> {
             addTAButton.setText(props.getProperty(CSGProp.ADD_BUTTON_LABEL.toString()));
@@ -577,9 +653,8 @@ public class CSGWorkspace extends AppWorkspaceComponent {
             addTA = false;
             controller.loadTAtotext();
         });
-        
-        // Workspace handler goes at the end, handler organized by tab
 
+        // Workspace handler goes at the end, handler organized by tab
         //Assembling the whole taDataTab
         taDataTabHBox.getChildren().addAll(taDataTATableViewVBox, taDataGridScrollPane);
         taDataTab.setContent(taDataTabHBox);
@@ -619,9 +694,9 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         recTA2.setCellValueFactory(
                 new PropertyValueFactory<Recitation, String>("supervisingTA2")
         );
-        
+
         recitationData.getColumns().addAll(recSection, recInstructor, recDayTime, recLocation, recTA1, recTA2);
-        
+
         addEditGridPane = new GridPane();
         sectionLabel = new Label(props.getProperty(CSGProp.REC_SECTION_LABEL.toString()));
         sectionTextField = new TextField();
@@ -846,63 +921,777 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
         workspace = new BorderPane();
         ((BorderPane) workspace).setCenter(t);
-        
+
         //Workspace handler here
-        workspace.setOnKeyPressed(e ->{
-            if(e.isControlDown())
-                if(e.getCode() == KeyCode.Z)
+        workspace.setOnKeyPressed(e -> {
+            if (e.isControlDown()) {
+                if (e.getCode() == KeyCode.Z) {
                     controller.Undo();
-                else if(e.getCode() == KeyCode.Y)
+                } else if (e.getCode() == KeyCode.Y) {
                     controller.Redo();
+                }
+            }
         });
-        
+
         workspace.setStyle("-fx-background-color: bisque;");
     }
-    
+
+    public CourseSiteGeneratorApp getApp() {
+        return app;
+    }
+
+    public CSGController getController() {
+        return controller;
+    }
+
+    public Tab getTaDataTab() {
+        return taDataTab;
+    }
+
+    public GridPane getTopCourseDataBox() {
+        return topCourseDataBox;
+    }
+
+    public ComboBox getSubjectComboBox() {
+        return subjectComboBox;
+    }
+
+    public ComboBox getNumberComboBox() {
+        return numberComboBox;
+    }
+
+    public ComboBox getSemesterComboBox() {
+        return semesterComboBox;
+    }
+
+    public ComboBox getYearComboBox() {
+        return yearComboBox;
+    }
+
+    public Label getCourseInfoLabel() {
+        return courseInfoLabel;
+    }
+
+    public Label getSubjectLabel() {
+        return subjectLabel;
+    }
+
+    public Label getNumberLabel() {
+        return numberLabel;
+    }
+
+    public Label getSemesterLabel() {
+        return semesterLabel;
+    }
+
+    public Label getYearLabel() {
+        return yearLabel;
+    }
+
+    public Label getTitleLabel() {
+        return titleLabel;
+    }
+
+    public Label getInstructorNameLabel() {
+        return instructorNameLabel;
+    }
+
+    public Label getInstructorHomeLabel() {
+        return instructorHomeLabel;
+    }
+
+    public Label getExportDirLabel() {
+        return exportDirLabel;
+    }
+
+    public TextField getTitleTextField() {
+        return titleTextField;
+    }
+
+    public TextField getInstructorNameTextField() {
+        return instructorNameTextField;
+    }
+
+    public TextField getInstructorHomeTextField() {
+        return instructorHomeTextField;
+    }
+
+    public Label getExportDirTextView() {
+        return exportDirTextView;
+    }
+
+    public Button getChangeExportDirButton() {
+        return changeExportDirButton;
+    }
+
+    public VBox getCourseDataMiddleBox() {
+        return courseDataMiddleBox;
+    }
+
+    public Label getSiteTemplateLabel() {
+        return siteTemplateLabel;
+    }
+
+    public Label getSiteTemplateDescriptionLabel() {
+        return siteTemplateDescriptionLabel;
+    }
+
+    public Label getTemplateDir() {
+        return templateDir;
+    }
+
+    public Button getSelectTemplateDirButton() {
+        return selectTemplateDirButton;
+    }
+
+    public Label getSitePagesLabel() {
+        return sitePagesLabel;
+    }
+
+    public TableView getSitePages() {
+        return sitePages;
+    }
+
+    public TableColumn getUseColumn() {
+        return useColumn;
+    }
+
+    public TableColumn getNavbarTitleColumn() {
+        return navbarTitleColumn;
+    }
+
+    public TableColumn getFileNameColumn() {
+        return fileNameColumn;
+    }
+
+    public TableColumn getScriptColumn() {
+        return scriptColumn;
+    }
+
+    public GridPane getPageStyleDataBox() {
+        return pageStyleDataBox;
+    }
+
+    public Label getPageStyleLabel() {
+        return pageStyleLabel;
+    }
+
+    public Label getBannerSchoolLabel() {
+        return bannerSchoolLabel;
+    }
+
+    public Label getLeftFooterLabel() {
+        return leftFooterLabel;
+    }
+
+    public Label getRightFooterLabel() {
+        return rightFooterLabel;
+    }
+
+    public Label getStylesheetLabel() {
+        return stylesheetLabel;
+    }
+
+    public ImageView getBannerSchoolImage() {
+        return bannerSchoolImage;
+    }
+
+    public ImageView getLeftFooterImage() {
+        return leftFooterImage;
+    }
+
+    public ImageView getRightFooterImage() {
+        return rightFooterImage;
+    }
+
+    public Button getChangeBannerSchoolImageButton() {
+        return changeBannerSchoolImageButton;
+    }
+
+    public Button getChangeLeftFooterImageButton() {
+        return changeLeftFooterImageButton;
+    }
+
+    public Button getChangeRightFooterImageButton() {
+        return changeRightFooterImageButton;
+    }
+
+    public ComboBox getStylesheetSelect() {
+        return stylesheetSelect;
+    }
+
+    public Label getStylesheetNote() {
+        return stylesheetNote;
+    }
+
+    public HBox getTaDataTabHBox() {
+        return taDataTabHBox;
+    }
+
+    public VBox getTaDataTATableViewVBox() {
+        return taDataTATableViewVBox;
+    }
+
+    public Label getTeachingAssistantsLabel() {
+        return teachingAssistantsLabel;
+    }
+
+    public Button getDeleteTAButton() {
+        return deleteTAButton;
+    }
+
+    public HBox getTaDataTableViewTopPane() {
+        return taDataTableViewTopPane;
+    }
+
+    public TableView getTaInformation() {
+        return taInformation;
+    }
+
+    public TableColumn<TeachingAssistant, CheckBox> getTaIsUndergradColumn() {
+        return taIsUndergradColumn;
+    }
+
+    public TableColumn<TeachingAssistant, String> getTaNameColumn() {
+        return taNameColumn;
+    }
+
+    public TableColumn<TeachingAssistant, String> getTaEmailColumn() {
+        return taEmailColumn;
+    }
+
+    public HBox getTaDataTextFieldPane() {
+        return taDataTextFieldPane;
+    }
+
+    public TextField getTaNameTextField() {
+        return taNameTextField;
+    }
+
+    public TextField getTaEmailTextField() {
+        return taEmailTextField;
+    }
+
+    public ScrollPane getTaDataGridScrollPane() {
+        return taDataGridScrollPane;
+    }
+
+    public VBox getTaDataGridPaneVBox() {
+        return taDataGridPaneVBox;
+    }
+
+    public HBox getTaOfficeHoursTopBox() {
+        return taOfficeHoursTopBox;
+    }
+
+    public Label getOfficeHoursLabel() {
+        return officeHoursLabel;
+    }
+
+    public Label getOfficeHoursStartLabel() {
+        return officeHoursStartLabel;
+    }
+
+    public ComboBox getOfficeHoursStartBox() {
+        return officeHoursStartBox;
+    }
+
+    public Label getOfficeHoursEndLabel() {
+        return officeHoursEndLabel;
+    }
+
+    public ComboBox getOfficeHoursEndBox() {
+        return officeHoursEndBox;
+    }
+
+    public ObservableList<String> getTime_options() {
+        return time_options;
+    }
+
+    public GridPane getTaDataOfficeHoursGridPane() {
+        return taDataOfficeHoursGridPane;
+    }
+
+    public HashMap<String, Pane> getTaDataOfficeHoursGridTimeHeaderPanes() {
+        return taDataOfficeHoursGridTimeHeaderPanes;
+    }
+
+    public HashMap<String, Label> getTaDataOfficeHoursGridTimeHeaderLabels() {
+        return taDataOfficeHoursGridTimeHeaderLabels;
+    }
+
+    public HashMap<String, Pane> getTaDataOfficeHoursGridDayHeaderPanes() {
+        return taDataOfficeHoursGridDayHeaderPanes;
+    }
+
+    public HashMap<String, Label> getTaDataOfficeHoursGridDayHeaderLabels() {
+        return taDataOfficeHoursGridDayHeaderLabels;
+    }
+
+    public HashMap<String, Pane> getTaDataOfficeHoursGridTimeCellPanes() {
+        return taDataOfficeHoursGridTimeCellPanes;
+    }
+
+    public HashMap<String, Label> getTaDataOfficeHoursGridTimeCellLabels() {
+        return taDataOfficeHoursGridTimeCellLabels;
+    }
+
+    public HashMap<String, Pane> getTaDataOfficeHoursGridTACellPanes() {
+        return taDataOfficeHoursGridTACellPanes;
+    }
+
+    public HashMap<String, Label> getTaDataOfficeHoursGridTACellLabels() {
+        return taDataOfficeHoursGridTACellLabels;
+    }
+
+    public HBox getRecitationTopBox() {
+        return recitationTopBox;
+    }
+
+    public Label getRecitationsLabel() {
+        return recitationsLabel;
+    }
+
+    public Button getDeleteRecitationButton() {
+        return deleteRecitationButton;
+    }
+
+    public TableView getRecitationData() {
+        return recitationData;
+    }
+
+    public TableColumn getRecSection() {
+        return recSection;
+    }
+
+    public TableColumn getRecInstructor() {
+        return recInstructor;
+    }
+
+    public TableColumn getRecDayTime() {
+        return recDayTime;
+    }
+
+    public TableColumn getRecLocation() {
+        return recLocation;
+    }
+
+    public TableColumn getRecTA1() {
+        return recTA1;
+    }
+
+    public TableColumn getRecTA2() {
+        return recTA2;
+    }
+
+    public GridPane getAddEditGridPane() {
+        return addEditGridPane;
+    }
+
+    public Label getSectionLabel() {
+        return sectionLabel;
+    }
+
+    public TextField getSectionTextField() {
+        return sectionTextField;
+    }
+
+    public Label getInstructorLabel() {
+        return instructorLabel;
+    }
+
+    public TextField getInstructorTextField() {
+        return instructorTextField;
+    }
+
+    public Label getDayTimeLabel() {
+        return dayTimeLabel;
+    }
+
+    public TextField getDayTimeTextField() {
+        return dayTimeTextField;
+    }
+
+    public Label getLocationLabel() {
+        return locationLabel;
+    }
+
+    public TextField getLocationTextField() {
+        return locationTextField;
+    }
+
+    public Label getSupervisingTa1Label() {
+        return supervisingTa1Label;
+    }
+
+    public ComboBox getSupervisingTa1Box() {
+        return supervisingTa1Box;
+    }
+
+    public Label getSupervisingTa2Label() {
+        return supervisingTa2Label;
+    }
+
+    public ComboBox getSupervisingTa2Box() {
+        return supervisingTa2Box;
+    }
+
+    public Button getAddUpdateButton() {
+        return addUpdateButton;
+    }
+
+    public Button getClearButton() {
+        return clearButton;
+    }
+
+    public Label getScheduleLabel() {
+        return scheduleLabel;
+    }
+
+    public GridPane getStartEndGridPane() {
+        return startEndGridPane;
+    }
+
+    public Label getCalendarBoundariesLabel() {
+        return calendarBoundariesLabel;
+    }
+
+    public Label getStartingMondayLabel() {
+        return startingMondayLabel;
+    }
+
+    public DatePicker getStartingMondayPicker() {
+        return startingMondayPicker;
+    }
+
+    public Label getEndingFridayLabel() {
+        return endingFridayLabel;
+    }
+
+    public DatePicker getEndingFridayPicker() {
+        return endingFridayPicker;
+    }
+
+    public VBox getScheduleItemsVBox() {
+        return scheduleItemsVBox;
+    }
+
+    public HBox getTopScheduleItemsBox() {
+        return topScheduleItemsBox;
+    }
+
+    public Label getScheduleItemsLabel() {
+        return scheduleItemsLabel;
+    }
+
+    public Button getDeleteScheduleItemButton() {
+        return deleteScheduleItemButton;
+    }
+
+    public TableView getScheduleItems() {
+        return scheduleItems;
+    }
+
+    public TableColumn getScheduleItemType() {
+        return scheduleItemType;
+    }
+
+    public TableColumn getScheduleItemDate() {
+        return scheduleItemDate;
+    }
+
+    public TableColumn getScheduleItemTitle() {
+        return scheduleItemTitle;
+    }
+
+    public TableColumn getScheduleItemTopic() {
+        return scheduleItemTopic;
+    }
+
+    public GridPane getAddEditSchedulePane() {
+        return addEditSchedulePane;
+    }
+
+    public Label getTypeLabel() {
+        return typeLabel;
+    }
+
+    public ComboBox getTypeBox() {
+        return typeBox;
+    }
+
+    public Label getDateLabel() {
+        return dateLabel;
+    }
+
+    public DatePicker getDatePicker() {
+        return datePicker;
+    }
+
+    public Label getTimeLabel() {
+        return timeLabel;
+    }
+
+    public TextField getTimeTextField() {
+        return timeTextField;
+    }
+
+    public Label getScheduleItemTitleLabel() {
+        return scheduleItemTitleLabel;
+    }
+
+    public TextField getScheduleItemTitleTextField() {
+        return scheduleItemTitleTextField;
+    }
+
+    public Label getTopicLabel() {
+        return topicLabel;
+    }
+
+    public TextField getTopicTextField() {
+        return topicTextField;
+    }
+
+    public Label getLinkLabel() {
+        return linkLabel;
+    }
+
+    public TextField getLinkTextField() {
+        return linkTextField;
+    }
+
+    public Label getCriteriaLabel() {
+        return criteriaLabel;
+    }
+
+    public TextField getCriteriaTextField() {
+        return criteriaTextField;
+    }
+
+    public Button getAddUpdateScheduleItemButton() {
+        return addUpdateScheduleItemButton;
+    }
+
+    public Button getClearScheduleItemButton() {
+        return clearScheduleItemButton;
+    }
+
+    public Label getProjectsLabel() {
+        return projectsLabel;
+    }
+
+    public VBox getProjectTeamsVBox() {
+        return projectTeamsVBox;
+    }
+
+    public HBox getProjectTeamsTopHBox() {
+        return projectTeamsTopHBox;
+    }
+
+    public Label getTeamsLabel() {
+        return teamsLabel;
+    }
+
+    public Button getDeleteProjectButton() {
+        return deleteProjectButton;
+    }
+
+    public TableView getProjectTeams() {
+        return projectTeams;
+    }
+
+    public TableColumn getProjectTeamName() {
+        return projectTeamName;
+    }
+
+    public TableColumn getProjectTeamColor() {
+        return projectTeamColor;
+    }
+
+    public TableColumn getProjectTeamTextColor() {
+        return projectTeamTextColor;
+    }
+
+    public TableColumn getProjectTeamLink() {
+        return projectTeamLink;
+    }
+
+    public GridPane getAddEditProjectGridPane() {
+        return addEditProjectGridPane;
+    }
+
+    public Label getAddEditProjectLabel() {
+        return addEditProjectLabel;
+    }
+
+    public Label getTeamNameLabel() {
+        return teamNameLabel;
+    }
+
+    public TextField getTeamNameTextField() {
+        return teamNameTextField;
+    }
+
+    public Label getTeamColorLabel() {
+        return teamColorLabel;
+    }
+
+    public ColorPicker getTeamColorPicker() {
+        return teamColorPicker;
+    }
+
+    public Label getTeamTextColorLabel() {
+        return teamTextColorLabel;
+    }
+
+    public ColorPicker getTeamTextColorPicker() {
+        return teamTextColorPicker;
+    }
+
+    public Label getTeamLinkLabel() {
+        return teamLinkLabel;
+    }
+
+    public TextField getTeamLinkTextField() {
+        return teamLinkTextField;
+    }
+
+    public Button getAddEditTeamButton() {
+        return addEditTeamButton;
+    }
+
+    public Button getClearTeamButton() {
+        return clearTeamButton;
+    }
+
+    public VBox getProjectTeamStudentsVBox() {
+        return projectTeamStudentsVBox;
+    }
+
+    public HBox getProjectTeamStudentsTopBox() {
+        return projectTeamStudentsTopBox;
+    }
+
+    public Label getStudentsLabel() {
+        return studentsLabel;
+    }
+
+    public Button getDeleteStudentsButton() {
+        return deleteStudentsButton;
+    }
+
+    public TableView getTeamMembers() {
+        return teamMembers;
+    }
+
+    public TableColumn getTeamMemberFirstName() {
+        return teamMemberFirstName;
+    }
+
+    public TableColumn getTeamMemberLastName() {
+        return teamMemberLastName;
+    }
+
+    public TableColumn getTeamMemberTeam() {
+        return teamMemberTeam;
+    }
+
+    public TableColumn getTeamMemberRole() {
+        return teamMemberRole;
+    }
+
+    public Label getAddEditStudentsLabel() {
+        return addEditStudentsLabel;
+    }
+
+    public GridPane getAddEditStudentsPane() {
+        return addEditStudentsPane;
+    }
+
+    public Label getFirstNameLabel() {
+        return firstNameLabel;
+    }
+
+    public TextField getFirstNameTextField() {
+        return firstNameTextField;
+    }
+
+    public Label getLastNameLabel() {
+        return lastNameLabel;
+    }
+
+    public TextField getLastNameTextField() {
+        return lastNameTextField;
+    }
+
+    public Label getTeamLabel() {
+        return teamLabel;
+    }
+
+    public ComboBox getTeamBox() {
+        return teamBox;
+    }
+
+    public Label getRoleLabel() {
+        return roleLabel;
+    }
+
+    public TextField getRoleTextField() {
+        return roleTextField;
+    }
+
+    public Button getAddUpdateStudentsButton() {
+        return addUpdateStudentsButton;
+    }
+
+    public Button getClearStudentsButton() {
+        return clearStudentsButton;
+    }
+
     public TabPane getT() {
         return t;
     }
-    
+
     public Tab getCourseDataTab() {
         return courseDataTab;
     }
-    
+
     public Tab getTADataTab() {
         return taDataTab;
     }
-    
+
     public Tab getRecitationDataTab() {
         return recitationDataTab;
     }
-    
+
     public Tab getScheduleDataTab() {
         return scheduleDataTab;
     }
-    
+
     public Tab getProjectDataTab() {
         return projectDataTab;
     }
-    
+
     public VBox getCourseDataTabVBox() {
         return courseDataTabVBox;
     }
-    
+
     public HBox getTADataTabHBox() {
         return taDataTabHBox;
     }
-    
+
     public VBox getRecitationDataVBox() {
         return recitationDataVBox;
     }
-    
+
     public VBox getScheduleDataVBox() {
         return scheduleDataVBox;
     }
-    
+
     public VBox getProjectDataVBox() {
         return projectDataVBox;
     }
-    
+
     public HBox getTADataTextFieldPane() {
         return taDataTextFieldPane;
     }
@@ -910,39 +1699,39 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     public GridPane getTADataOfficeHoursGridPane() {
         return taDataOfficeHoursGridPane;
     }
-    
+
     public HashMap<String, Pane> getTADataOfficeHoursGridTimeHeaderPanes() {
         return taDataOfficeHoursGridTimeHeaderPanes;
     }
-    
+
     public HashMap<String, Label> getTADataOfficeHoursGridTimeHeaderLabels() {
         return taDataOfficeHoursGridTimeHeaderLabels;
     }
-    
+
     public HashMap<String, Pane> getTADataOfficeHoursGridDayHeaderPanes() {
         return taDataOfficeHoursGridDayHeaderPanes;
     }
-    
+
     public HashMap<String, Label> getTADataOfficeHoursGridDayHeaderLabels() {
         return taDataOfficeHoursGridDayHeaderLabels;
     }
-    
+
     public HashMap<String, Pane> getTADataOfficeHoursGridTimeCellPanes() {
         return taDataOfficeHoursGridTimeCellPanes;
     }
-    
+
     public HashMap<String, Label> getTADataOfficeHoursGridTimeCellLabels() {
         return taDataOfficeHoursGridTimeCellLabels;
     }
-    
+
     public HashMap<String, Pane> getTADataOfficeHoursGridTACellPanes() {
         return taDataOfficeHoursGridTACellPanes;
     }
-    
+
     public HashMap<String, Label> getTADataOfficeHoursGridTACellLabels() {
         return taDataOfficeHoursGridTACellLabels;
     }
-    
+
     public TextField getTANameTextField() {
         return taNameTextField;
     }
@@ -950,19 +1739,19 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     public TextField getTAEmailTextField() {
         return taEmailTextField;
     }
-    
+
     public Button getAddTAButton() {
         return addTAButton;
     }
-    
+
     public Button getClearTAButton() {
         return clearTAButton;
     }
-    
+
     public TableView getTAInformationTable() {
         return taInformation;
     }
-    
+
     public String getCellKey(Pane testPane) {
         for (String key : taDataOfficeHoursGridTACellLabels.keySet()) {
             if (taDataOfficeHoursGridTACellPanes.get(key) == testPane) {
@@ -1116,6 +1905,5 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         // SO IT CAN MANAGE ALL CHANGES
         dataComponent.setCellProperty(col, row, cellLabel.textProperty());
     }
-    
-    
+
 }
