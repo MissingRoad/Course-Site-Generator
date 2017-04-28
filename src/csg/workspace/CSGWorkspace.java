@@ -311,12 +311,16 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         scheduleDataTab.setClosable(false);
         projectDataTab.setClosable(false);
         courseDataTabVBox = new VBox();
+        
+        //ComboBox Lists
+        ObservableList subjectValues = FXCollections.observableArrayList(props.getProperty(CSGProp.CSE_LABEL), props.getProperty(CSGProp.ISE_LABEL));
+        ObservableList semesterValues = FXCollections.observableArrayList(props.getProperty(CSGProp.FALL_SEMESTER), props.getProperty(CSGProp.SPRING_SEMESTER));
 
         //Stuff for the top VBox, Course Information
         topCourseDataBox = new GridPane();
-        subjectComboBox = new ComboBox();
+        subjectComboBox = new ComboBox(subjectValues);
         numberComboBox = new ComboBox();
-        semesterComboBox = new ComboBox();
+        semesterComboBox = new ComboBox(semesterValues);
         yearComboBox = new ComboBox();
 
         courseInfoLabel = new Label(props.getProperty(CSGProp.COURSE_INFO_LABEL).toString());
@@ -753,7 +757,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         scheduleItemsVBox = new VBox();
         topScheduleItemsBox = new HBox();
         scheduleItemsLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEMS_LABEL.toString()));
-        deleteScheduleItemButton = new Button();
+        deleteScheduleItemButton = new Button(props.getProperty(CSGProp.DELETE_SYMBOL.toString()));
         topScheduleItemsBox.getChildren().addAll(scheduleItemsLabel, deleteScheduleItemButton);
         scheduleItems = new TableView();
         scheduleItemType = new TableColumn(props.getProperty(CSGProp.SCHEDULE_ITEM_TYPE_LABEL.toString()));

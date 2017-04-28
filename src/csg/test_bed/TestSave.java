@@ -16,7 +16,7 @@ import csg.file.CSGFiles;
 import csg.style.CSGStyle;
 import csg.workspace.CSGWorkspace;
 import djf.settings.AppStartupConstants;
-import java.awt.Color;
+import javafx.scene.paint.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;

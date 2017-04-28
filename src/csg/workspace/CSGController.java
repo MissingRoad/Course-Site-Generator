@@ -6,7 +6,6 @@
 package csg.workspace;
 
 import csg.CourseSiteGeneratorApp;
-import csg.data.CSGData;
 import csg.data.TeachingAssistant;
 import csg.jtps.TAAdderUR;
 import csg.jtps.TAtoggleUR;
@@ -30,9 +29,12 @@ import java.util.ArrayList;
 import javafx.scene.control.ComboBox;
 import csg.data.CSGData;
 import csg.file.TimeSlot;
+import csg.jtps.RecitationAdderUR;
 import static csg.style.CSGStyle.CLASS_HIGHLIGHTED_GRID_CELL;
 import static csg.style.CSGStyle.CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN;
 import static csg.style.CSGStyle.CLASS_OFFICE_HOURS_GRID_TA_CELL_PANE;
+import javafx.scene.paint.Color;
+import javafx.scene.control.ColorPicker;
 
 
 /**
@@ -124,11 +126,57 @@ public class CSGController {
         String dayTime = dayTimeTextField.getText();
         String location = locationTextField.getText();
         // How to represent your TA Objects?
-        String ta1 = supervisingTAComboBox1.getSelectionModel().getSelectedItem().toString();
+        TeachingAssistant ta1 = (TeachingAssistant)supervisingTAComboBox1.getSelectionModel().getSelectedItem();
+        TeachingAssistant ta2 = (TeachingAssistant)supervisingTAComboBox2.getSelectionModel().getSelectedItem();
+        String ta1Str = ta1.toString();
+        String ta2Str = ta2.toString();
+        
+        if (section.isEmpty()) {
+            
+        }
+        else if (instructor.isEmpty()) {
+            
+        }
+        else if (dayTime.isEmpty()) {
+            
+        }
+        else if (location.isEmpty()) {
+            
+        }
+        else if (ta1Str.isEmpty()) {
+            
+        }
+        else if (ta2Str.isEmpty()) {
+            
+        }
+        else if (ta1Str.equals(ta2Str)) {
+            
+        }
+        else {
+            jTPS_Transaction addRecitationUR = new RecitationAdderUR(app);
+            jTPS.addTransaction(addRecitationUR);
+            
+            sectionTextField.setText("");
+            instructorTextField.setText("");
+            dayTimeTextField.setText("");
+            locationTextField.setText("");
+            supervisingTAComboBox1.getSelectionModel().selectFirst();
+            supervisingTAComboBox2.getSelectionModel().selectFirst();
+            
+            // We've changed stuff
+            markWorkAsEdited();
+        }
     }
     
     public void handleAddProjectTeam() {
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        TextField teamNameTextField = workspace.getTeamNameTextField();
+        ColorPicker teamColorPicker = workspace.getTeamColorPicker();
+        ColorPicker teamTextColorPicker = workspace.getTeamTextColorPicker();
+        TextField teamLinkTextField = workspace.getTeamLinkTextField();
         
+        String teamName = teamNameTextField.getText();
+        //Color teamColor = teamColorPicker.getValue(); // FIX COLOR ISSUE!!!
     }
     
     private void markWorkAsEdited() {

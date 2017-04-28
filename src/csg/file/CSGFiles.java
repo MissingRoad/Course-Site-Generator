@@ -35,7 +35,7 @@ import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
 import csg.data.TeachingAssistant;
 import static djf.settings.AppStartupConstants.PATH_PUBLIC_HTML;
-import java.awt.Color;
+import javafx.scene.paint.Color;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -183,18 +183,22 @@ public class CSGFiles implements AppFileComponent {
             String teamColorRed = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_RED_COLOR);
             String teamColorGreen = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_GREEN_COLOR);
             String teamColorBlue = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_BLUE_COLOR);
+            String teamColorOpacity = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_COLOR_OPACITY);
             String textColorRed = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_TEXT_RED_COLOR);
             String textColorGreen = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_TEXT_GREEN_COLOR);
             String textColorBlue = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_TEXT_BLUE_COLOR);
+            String textColorOpacity = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_TEXT_COLOR_OPACITY);
             String link = jsonProjectTeamItem.getString(JSON_PROJECT_TEAM_LINK);
-            int teamColorRedVal = Integer.parseInt(teamColorRed);
-            int teamColorGreenVal = Integer.parseInt(teamColorGreen);
-            int teamColorBlueVal = Integer.parseInt(teamColorBlue);
-            int textColorRedVal = Integer.parseInt(textColorRed);
-            int textColorGreenVal = Integer.parseInt(textColorGreen);
-            int textColorBlueVal = Integer.parseInt(textColorBlue); // 255.0, why?
-            Color teamColor = new Color(teamColorRedVal, teamColorGreenVal, teamColorBlueVal);
-            Color textColor = new Color(textColorRedVal, textColorGreenVal, textColorBlueVal);
+            double teamColorRedVal = Double.parseDouble(teamColorRed);
+            double teamColorGreenVal = Double.parseDouble(teamColorGreen);
+            double teamColorBlueVal = Double.parseDouble(teamColorBlue);
+            double teamColorOpacityVal = Double.parseDouble(teamColorOpacity);
+            double textColorRedVal = Double.parseDouble(textColorRed);
+            double textColorGreenVal = Double.parseDouble(textColorGreen);
+            double textColorBlueVal = Double.parseDouble(textColorBlue);
+            double textColorOpacityVal = Double.parseDouble(textColorOpacity);
+            Color teamColor = new Color(teamColorRedVal, teamColorGreenVal, teamColorBlueVal, teamColorOpacityVal);
+            Color textColor = new Color(textColorRedVal, textColorGreenVal, textColorBlueVal, textColorOpacityVal);
             dataManager.addProjectTeam(name, textColor, textColor, link);
         }
         
@@ -307,10 +311,11 @@ public class CSGFiles implements AppFileComponent {
                     .add(JSON_PROJECT_TEAM_RED_COLOR, p.getColor().getRed() + "")
                     .add(JSON_PROJECT_TEAM_GREEN_COLOR, p.getColor().getGreen() + "")
                     .add(JSON_PROJECT_TEAM_BLUE_COLOR, p.getColor().getBlue() + "")
-                    //.add(JSON_PROJECT_TEAM_COLOR_OPACITY, p.getColor().getTransparency())
+                    .add(JSON_PROJECT_TEAM_COLOR_OPACITY, p.getColor().getOpacity() + "")
                     .add(JSON_PROJECT_TEAM_TEXT_RED_COLOR, p.getTextColor().getRed() + "")
                     .add(JSON_PROJECT_TEAM_TEXT_GREEN_COLOR, p.getTextColor().getGreen() + "")
                     .add(JSON_PROJECT_TEAM_TEXT_BLUE_COLOR, p.getTextColor().getBlue() + "")
+                    .add(JSON_PROJECT_TEAM_TEXT_COLOR_OPACITY, p.getTextColor().getOpacity() + "")
                     .add(JSON_PROJECT_TEAM_LINK, p.getLink()).build();
             projectTeamArrayBuilder.add(projectTeamJson);
         }

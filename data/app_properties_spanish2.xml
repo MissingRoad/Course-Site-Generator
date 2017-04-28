@@ -195,6 +195,16 @@
         <property name="TIME_10PM"                      value="10 pm"></property>
         <property name="TIME_11PM"                      value="11 pm"></property>
 
+<!-- LIST VALUES -->
+	<!-- SUBJECTS -->
+<property name = "CSE_LABEL"	value = "CSE"></property>
+<property name = "ISE_LABEL"	value = "ISE"></property>
+
+
+	<!-- SEMESTERS -->
+<property name = "FALL_SEMESTER"	value = "Otono"></property>
+<property name = "SPRING_SEMESTER" value = "Primavera"></property>
+
 
 
         <!-- PROJECT DATA TAB LABELS -->

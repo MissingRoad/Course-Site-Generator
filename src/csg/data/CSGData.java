@@ -10,7 +10,7 @@ import csg.CourseSiteGeneratorApp;
 import csg.file.TimeSlot;
 import csg.workspace.CSGWorkspace;
 import djf.components.AppDataComponent;
-import java.awt.Color;
+import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -299,6 +299,14 @@ public class CSGData implements AppDataComponent {
         }
         return false;
     }
+    
+    public Recitation findRecitation(String recNum, String instructor) {
+        for (Recitation r: recitations) {
+            if (r.getInstructor().equals(instructor) && r.getSection().equals(recNum))
+                return r;
+        }
+        return null;
+    }
 
     public boolean containsRecitation(String recNum, String instructor) {
         for (Recitation r: recitations) {
@@ -362,13 +370,14 @@ public class CSGData implements AppDataComponent {
         // Provision for sorting here...
     }
     
-    public void removeRecitation(Recitation r) {
-        String section = r.getSection();
-        String instructor = r.getInstructor();
+    public void removeRecitation(String section, String instructor) {
+        
         if (containsRecitation(section, instructor)) {
-            recitations.remove(r);
+            recitations.remove(findRecitation(section, instructor));
         }
     }
+    
+    // Overloading the removeRecitaion method?
     
     public void addScheduleItem(String type, Date date, String title, String topic) {
         ScheduleItem s = new ScheduleItem(type, date, title, topic);

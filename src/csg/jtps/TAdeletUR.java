@@ -19,6 +19,8 @@ import csg.data.CSGData;
  *
  * @author zhaotingyi
  */
+
+// MAKE SURE TO ADD THE EXTRA FUNCTIONALITY FOR THE OTHER TABS
 public class TAdeletUR implements jTPS_Transaction{
     
     private CourseSiteGeneratorApp app;
