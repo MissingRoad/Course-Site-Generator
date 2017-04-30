@@ -316,14 +316,6 @@ public class CSGData implements AppDataComponent {
         return false;
     }
     
-    public boolean containsScheduleItem(String title, Date d) {
-        for (ScheduleItem s: scheduleItems) {
-            if (s.getTitle().equals(title) &&  s.getDate().equals(d))
-                return true;
-        }
-        return false;
-    }
-    
     public boolean containsProjectTeam(String name) {
         for (ProjectTeam p: projectTeams) {
             if (p.getName().equals(name))
@@ -387,7 +379,27 @@ public class CSGData implements AppDataComponent {
         }
     }
     
-    // Add remove for ScheduleItem here
+    public void removeScheduleItem(String title, Date date) {
+        if (containsScheduleItem(title, date)) {
+            scheduleItems.remove(getScheduleItem(title, date));
+        }
+    }
+    
+    public boolean containsScheduleItem(String title, Date d) {
+        for (ScheduleItem s: scheduleItems) {
+            if (s.getTitle().equals(title) &&  s.getDate().equals(d))
+                return true;
+        }
+        return false;
+    }
+    
+    public ScheduleItem getScheduleItem(String title, Date date) {
+        for (ScheduleItem s: scheduleItems) {
+            if (s.getTitle().equals(title) && s.getDate().equals(date))
+                return s;
+        }
+        return null;
+    }
     
     public void addProjectTeam(String name, Color c, Color t, String link) {
         ProjectTeam p = new ProjectTeam(name, c, t, link);
