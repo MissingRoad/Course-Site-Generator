@@ -10,8 +10,10 @@ import djf.components.AppDataComponent;
 import djf.components.AppWorkspaceComponent;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import properties_manager.PropertiesManager;
 import csg.CSGProp;
+import static csg.CSGProp.DEFAULT_BANNER_SCHOOL_IMAGE;
+import static csg.CSGProp.DEFAULT_LEFT_FOOTER_IMAGE;
+import static csg.CSGProp.DEFAULT_RIGHT_FOOTER_IMAGE;
 //import csg.data.CSGData;
 //import csg.data.TAData;
 import java.util.ArrayList;
@@ -44,12 +46,30 @@ import csg.data.Recitation;
 import csg.data.ScheduleItem;
 import csg.data.TeachingAssistant;
 import csg.style.CSGStyle;
+import djf.components.AppFileComponent;
+import djf.settings.AppPropertyType;
+import static djf.settings.AppPropertyType.LOAD_ERROR_MESSAGE;
+import static djf.settings.AppPropertyType.LOAD_ERROR_TITLE;
+import static djf.settings.AppPropertyType.LOAD_WORK_TITLE;
+import static djf.settings.AppPropertyType.SAVE_WORK_TITLE;
+import static djf.settings.AppPropertyType.WORK_FILE_EXT;
+import static djf.settings.AppPropertyType.WORK_FILE_EXT_DESC;
+import static djf.settings.AppStartupConstants.FILE_PROTOCOL;
+import static djf.settings.AppStartupConstants.PATH_DEFAULT_IMAGES;
+import static djf.settings.AppStartupConstants.PATH_WORK;
+import djf.ui.AppMessageDialogSingleton;
+import java.io.File;
+import java.io.IOException;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import properties_manager.PropertiesManager;
 //import tam.data.TAData;
 
 /**
@@ -102,9 +122,9 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     Button selectTemplateDirButton;
     Label sitePagesLabel;
     // For the site pages table, maybe use generics later on for your datatypes here
-    
+
     CourseSite courseSite;
-    
+
     TableView sitePages;
     TableColumn useColumn;
     TableColumn navbarTitleColumn;
@@ -235,6 +255,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     Button clearScheduleItemButton;
 
     //Components for projectDataTab
+    boolean addProjectTeam;
     Label projectsLabel;
     VBox projectDataVBox;
     VBox projectTeamsVBox;
@@ -258,8 +279,11 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     TextField teamLinkTextField;
     Button addEditTeamButton;
     Button clearTeamButton;
+    ProjectTeam currentTeam;
+
     VBox projectTeamStudentsVBox;
     HBox projectTeamStudentsTopBox;
+    boolean addStudent;
     Label studentsLabel;
     Button deleteStudentsButton;
     TableView teamMembers;
@@ -312,12 +336,14 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         scheduleDataTab.setClosable(false);
         projectDataTab.setClosable(false);
         courseDataTabVBox = new VBox();
-        
+
         //ComboBox Lists
         ObservableList subjectValues = FXCollections.observableArrayList(props.getProperty(CSGProp.CSE_LABEL), props.getProperty(CSGProp.ISE_LABEL));
         ObservableList semesterValues = FXCollections.observableArrayList(props.getProperty(CSGProp.FALL_SEMESTER), props.getProperty(CSGProp.SPRING_SEMESTER));
 
         //Stuff for the top VBox, Course Information
+        courseSite = new CourseSite();
+
         topCourseDataBox = new GridPane();
         subjectComboBox = new ComboBox(subjectValues);
         numberComboBox = new ComboBox();
@@ -362,6 +388,30 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         topCourseDataBox.add(exportDirTextView, 1, 6);
         topCourseDataBox.add(changeExportDirButton, 2, 6);
 
+        //EVENT HANDLERS FOR COURSE INFO PANEL
+        subjectComboBox.setOnAction(e -> {
+            courseSite.setCourseSubject(subjectComboBox.getSelectionModel().getSelectedItem().toString());
+        });
+        semesterComboBox.setOnAction(e -> {
+            courseSite.setCourseSemester(subjectComboBox.getSelectionModel().getSelectedItem().toString());
+        });
+        numberComboBox.setOnAction(e -> {
+            courseSite.setCourseNumber((Integer) subjectComboBox.getSelectionModel().getSelectedItem());
+        });
+        yearComboBox.setOnAction(e -> {
+            courseSite.setCourseYear((Integer) yearComboBox.getSelectionModel().getSelectedItem());
+        });
+
+        // ADD UPDATE PROVISION FOR THE TEXTFIELDS HERE
+        changeExportDirButton.setOnAction(e -> {
+            try {
+                changeExportDir();
+            } catch (IOException ioe) {
+                AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+                dialog.show(props.getProperty(LOAD_ERROR_TITLE), props.getProperty(LOAD_ERROR_MESSAGE));
+            }
+        });
+
         topCourseDataBox.setStyle("-fx-background-color: bisque;-fx-border: 5px; -fx-border-color: black;");
 
         //Middle box content, the Site Template
@@ -385,7 +435,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         navbarTitleColumn = new TableColumn(navbarTitleLabelText);
         fileNameColumn = new TableColumn(filenameLabelText);
         scriptColumn = new TableColumn(scriptLabelText);
-        
+
         useColumn.setCellValueFactory(
                 new PropertyValueFactory<CourseSitePage, CheckBox>("exists")
         );
@@ -399,51 +449,30 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         scriptColumn.setCellValueFactory(
                 new PropertyValueFactory<CourseSitePage, String>("script")
         );
-        
-        courseSite = new CourseSite();
+
         CourseSitePage homePage = courseSite.getHomePage();
         CourseSitePage syllabusPage = courseSite.getSyllabusPage();
         CourseSitePage schedulePage = courseSite.getSchedulePage();
         CourseSitePage hwPage = courseSite.getHwPage();
         CourseSitePage projectsPage = courseSite.getProjectsPage();
-        
+
         ObservableList courseSitePages = FXCollections.observableArrayList();
         courseSitePages.addAll(homePage, syllabusPage, schedulePage, hwPage, projectsPage);
         sitePages.setItems(courseSitePages);
         sitePages.setEditable(true);
 
-        /*homePageRow = new TableRow();
-        TableCell hasHomePage = new TableCell();
-        CheckBox hasHomePageBox = new CheckBox();
-        hasHomePage.setGraphic(hasHomePageBox);
-        TableCell homeLabel = new TableCell();
-        Label homePageLabel = new Label("Home"); // XML!!!!!!
-        homeLabel.setGraphic(homePageLabel);
-        TableCell homeHtml = new TableCell();
-        Label homeHtmlLabel = new Label("index.html"); //REPLACE WITH XML STUFF
-        homeHtml.setGraphic(homeHtmlLabel);
-        TableCell homeScript = new TableCell();
-        Label homeScriptLabel = new Label("HomeBuilder.js");
-        homeScript.setGraphic(homeScriptLabel);
-        //homePageRow.getChildren().addAll(hasHomePage, homeLabel, homeHtml, homeScript); // HOW TO SET THE TABLE CELLS TO THE RIGHT PLACE IN THE TABLEVIEW????
-        syllabusPageRow = new TableRow();
-        schedulePageRow = new TableRow();
-        hwPageRow = new TableRow();
-        projectsPageRow = new TableRow();*/
-
-        /**
-         * taIsUndergradColumn.setCellValueFactory( new
-         * PropertyValueFactory<TeachingAssistant, CheckBox>("isUndergrad") );
-         * taIsUndergradColumn.setCellFactory(column -> new
-         * CheckBoxTableCell()); taInformation.setEditable(true);
-         * taNameColumn.setCellValueFactory( new
-         * PropertyValueFactory<TeachingAssistant, String>("name") );
-         * taEmailColumn.setCellValueFactory( new
-         * PropertyValueFactory<TeachingAssistant, String>("email") );
-         *
-         */
         sitePages.getColumns().add(useColumn);
         sitePages.getColumns().addAll(navbarTitleColumn, fileNameColumn, scriptColumn);
+
+        // EVENT HANDLERS FOR SITE TEMPLATE PANE
+        selectTemplateDirButton.setOnAction(e -> {
+            try {
+                changeTemplateDir();
+            } catch (IOException ioe) {
+                AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+                dialog.show(props.getProperty(LOAD_ERROR_TITLE), props.getProperty(LOAD_ERROR_MESSAGE));
+            }
+        });
 
         //add everything to the courseDataMiddleBox
         courseDataMiddleBox.getChildren().addAll(siteTemplateLabel, siteTemplateDescriptionLabel, templateDir, selectTemplateDirButton, sitePagesLabel, sitePages);
@@ -456,14 +485,45 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         leftFooterLabel = new Label(props.getProperty(CSGProp.COURSE_LEFT_FOOTER_LABEL).toString());
         rightFooterLabel = new Label(props.getProperty(CSGProp.COURSE_RIGHT_FOOTER_LABEL).toString());
         stylesheetLabel = new Label(props.getProperty(CSGProp.COURSE_STYLESHEET_LABEL).toString());
-        bannerSchoolImage = new ImageView();
-        leftFooterImage = new ImageView();
-        rightFooterImage = new ImageView();
+        bannerSchoolImage = new ImageView(FILE_PROTOCOL + PATH_DEFAULT_IMAGES + props.getProperty(DEFAULT_BANNER_SCHOOL_IMAGE.toString()));
+        leftFooterImage = new ImageView(FILE_PROTOCOL + PATH_DEFAULT_IMAGES + props.getProperty(DEFAULT_LEFT_FOOTER_IMAGE.toString()));
+        rightFooterImage = new ImageView(FILE_PROTOCOL + PATH_DEFAULT_IMAGES + props.getProperty(DEFAULT_RIGHT_FOOTER_IMAGE.toString()));
         changeBannerSchoolImageButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
         changeLeftFooterImageButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
         changeRightFooterImageButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
         stylesheetSelect = new ComboBox();
         stylesheetNote = new Label(props.getProperty(CSGProp.COURSE_STYLESHEET_NOTE_LABEL).toString());
+        
+        // EVENT HANDLERS FOR THE INDIVIDUAL COMPONENTS - PAGE STYLE PORTION
+        changeBannerSchoolImageButton.setOnAction(e -> {
+            try {
+                changeBannerSchoolImage();
+            }
+            catch(IOException ioe) {
+                AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+                dialog.show(props.getProperty(LOAD_ERROR_TITLE), props.getProperty(LOAD_ERROR_MESSAGE));
+            }
+        });
+        
+        changeLeftFooterImageButton.setOnAction(e -> {
+            try {
+                changeLeftFooterImage();
+            }
+            catch(IOException ioe) {
+                AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+                dialog.show(props.getProperty(LOAD_ERROR_TITLE), props.getProperty(LOAD_ERROR_MESSAGE));
+            }
+        });
+        
+        changeRightFooterImageButton.setOnAction(e -> {
+            try {
+                changeLeftFooterImage();
+            }
+            catch(IOException ioe) {
+                AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+                dialog.show(props.getProperty(LOAD_ERROR_TITLE), props.getProperty(LOAD_ERROR_MESSAGE));
+            }
+        });
 
         pageStyleDataBox.add(pageStyleLabel, 0, 0);
         pageStyleDataBox.add(bannerSchoolLabel, 0, 1);
@@ -714,9 +774,11 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         locationTextField = new TextField();
         supervisingTa1Label = new Label(props.getProperty(CSGProp.REC_TA1_LABEL.toString()));
         supervisingTa1Box = new ComboBox();
+        supervisingTa1Box.setItems(data.getTeachingAssistants());
         supervisingTa2Label = new Label(props.getProperty(CSGProp.REC_TA1_LABEL.toString()));
         supervisingTa2Box = new ComboBox();
-        addUpdateButton = new Button(props.getProperty(CSGProp.ADD_UPDATE_BUTTON_LABEL.toString()));
+        supervisingTa2Box.setItems(data.getTeachingAssistants());
+        addUpdateButton = new Button(props.getProperty(CSGProp.ADD_BUTTON_LABEL.toString()));
         clearButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL.toString()));
         addEditGridPane.add(sectionLabel, 0, 0);
         addEditGridPane.add(sectionTextField, 1, 0);
@@ -732,47 +794,56 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         addEditGridPane.add(supervisingTa2Box, 1, 5);
         addEditGridPane.add(addUpdateButton, 0, 6);
         addEditGridPane.add(clearButton, 1, 6);
-        
+
         // Recitation Tab Controls
-        /*recitationNameTextField.setOnAction(e -> {
-            if (!addTA) {
-                controller.changeExistTA();
+        sectionTextField.setOnAction(e -> {
+            if (!addRecitation) {
+                controller.handleEditRecitation();
             } else {
-                controller.handleAddTA();
+                controller.handleAddRecitation();
             }
         });
-        taEmailTextField.setOnAction(e -> {
-            if (!addTA) {
-                controller.changeExistTA();
+        instructorTextField.setOnAction(e -> {
+            if (!addRecitation) {
+                controller.handleEditRecitation();
             } else {
-                controller.handleAddTA();
+                controller.handleAddRecitation();
             }
         });
-        addTAButton.setOnAction(e -> {
-            if (!addTA) {
-                controller.changeExistTA();
+        addUpdateButton.setOnAction(e -> {
+            if (!addRecitation) {
+                controller.handleEditRecitation();
             } else {
-                controller.handleAddTA();
+                controller.handleAddRecitation();
             }
         });
-        clearTAButton.setOnAction(e -> {
-            addTAButton.setText(props.getProperty(CSGProp.ADD_BUTTON_LABEL.toString()));
-            addTA = true;
-            taNameTextField.clear();
-            taEmailTextField.clear();
-            taInformation.getSelectionModel().select(null);
+        clearButton.setOnAction(e -> {
+            addUpdateButton.setText(props.getProperty(CSGProp.ADD_BUTTON_LABEL.toString()));
+            addRecitation = true;
+            sectionTextField.clear();
+            instructorTextField.clear();
+            dayTimeTextField.clear();
+            locationTextField.clear();
+            supervisingTa1Box.getSelectionModel().selectFirst();
+            supervisingTa2Box.getSelectionModel().selectFirst();
+            recitationData.getSelectionModel().select(null);
         });
 
-        taInformation.setFocusTraversable(true);
-        taInformation.setOnKeyPressed(e -> {
-            controller.handleKeyPress(e.getCode());
+        recitationData.setFocusTraversable(true);
+        recitationData.setOnKeyPressed(e -> {
+            //controller.handleKeyPress(e.getCode()); //MUST FIX TO DELETE FROM RECITATION TABLE
         });
-        taInformation.setOnMouseClicked(e -> {
-            addTAButton.setText(props.getProperty(CSGProp.ADD_EDIT_LABEL.toString()));
-            addTA = false;
-            controller.loadTAtotext();
-        });*/
-
+        recitationData.setOnMouseClicked(e -> {
+            addUpdateButton.setText(props.getProperty(CSGProp.EDIT_BUTTON_LABEL.toString()));
+            addRecitation = false;
+            controller.loadRecitationtotext();
+        });
+        
+        // For DELETING a Recitation
+        deleteRecitationButton.setOnAction(e -> {
+            
+        });
+        
         recitationDataVBox.getChildren().addAll(recitationTopBox, recitationData, addEditGridPane);
         recitationDataVBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
 
@@ -787,6 +858,9 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         calendarBoundariesLabel = new Label(props.getProperty(CSGProp.CALENDAR_BOUNDARIES_LABEL.toString()));
         startingMondayLabel = new Label(props.getProperty(CSGProp.STARTING_MONDAY_LABEL.toString()));
         startingMondayPicker = new DatePicker();
+        /*startingMondayPicker.valueProperty().addListener(new ChangeListener<Date>() {
+            
+        });*/
         endingFridayLabel = new Label(props.getProperty(CSGProp.ENDING_FRIDAY_LABEL.toString()));
         endingFridayPicker = new DatePicker();
         //Constructing the top box ("Calendar Boundaries")
@@ -907,6 +981,56 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         teamLinkTextField = new TextField();
         addEditTeamButton = new Button(props.getProperty(CSGProp.ADD_EDIT_LABEL.toString()));
         clearTeamButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL.toString()));
+        
+        // EVENT HANDLING, PROJECT TEAMS PANE
+        teamNameTextField.setOnAction(e -> {
+            if (!addProjectTeam) {
+                controller.handleEditProjectTeam();
+            } else {
+                controller.handleAddProjectTeam();
+            }
+        });
+        teamColorPicker.setOnAction(e -> {
+            if (!addProjectTeam) {
+                controller.handleEditProjectTeam();
+            } else {
+                controller.handleAddProjectTeam();
+            }
+        });
+        teamTextColorPicker.setOnAction(e -> {
+            if (!addProjectTeam) {
+                controller.handleEditProjectTeam();
+            } else {
+                controller.handleAddProjectTeam();
+            }
+        });
+        teamLinkTextField.setOnAction(e -> {
+            if (!addProjectTeam) {
+                controller.handleEditProjectTeam();
+            } else {
+                controller.handleAddProjectTeam();
+            }
+        });
+        clearTeamButton.setOnAction(e -> {
+            addEditTeamButton.setText(props.getProperty(CSGProp.ADD_BUTTON_LABEL.toString()));
+            addProjectTeam = true;
+            teamNameTextField.clear();
+            // SET DEFAULT VALUES FOR THE COLOR PICKERS
+            teamLinkTextField.clear();
+            projectTeams.getSelectionModel().select(null);
+        });
+
+        projectTeams.setFocusTraversable(true);
+        projectTeams.setOnKeyPressed(e -> {
+            //controller.handleKeyPress(e.getCode()); //MUST FIX TO DELETE FROM RECITATION TABLE
+        });
+        projectTeams.setOnMouseClicked(e -> {
+            addEditTeamButton.setText(props.getProperty(CSGProp.EDIT_BUTTON_LABEL.toString()));
+            addProjectTeam = false;
+            //controller.loadProjectTeamtotext();
+        });
+         
+        
         addEditProjectGridPane.add(addEditProjectLabel, 0, 0);
         addEditProjectGridPane.add(teamNameLabel, 0, 1);
         addEditProjectGridPane.add(teamNameTextField, 1, 1);
@@ -934,8 +1058,11 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         teamMemberTeam = new TableColumn(props.getProperty(CSGProp.STUDENT_TEAM_LABEL.toString()));
         teamMemberRole = new TableColumn(props.getProperty(CSGProp.STUDENT_ROLE_LABEL.toString()));
         teamMembers.getColumns().addAll(teamMemberFirstName, teamMemberLastName, teamMemberTeam, teamMemberRole);
+        if (currentTeam != null) { // DOES THIS WORK???
+            teamMembers.setItems(currentTeam.getTeamMembers());
+        }
 
-        addEditStudentsLabel = new Label(props.getProperty(CSGProp.ADD_EDIT_LABEL.toString()));
+        addEditStudentsLabel = new Label(props.getProperty(CSGProp.ADD_BUTTON_LABEL.toString()));
 
         addEditStudentsPane = new GridPane();
         firstNameLabel = new Label(props.getProperty(CSGProp.STUDENT_FIRST_NAME_LABEL.toString()));
@@ -944,10 +1071,57 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         lastNameTextField = new TextField();
         teamLabel = new Label(props.getProperty(CSGProp.STUDENT_TEAM_LABEL.toString()));
         teamBox = new ComboBox();
+        teamBox.setItems(data.getProjectTeams());
         roleLabel = new Label(props.getProperty(CSGProp.STUDENT_ROLE_LABEL.toString()));
         roleTextField = new TextField();
         addUpdateStudentsButton = new Button(props.getProperty(CSGProp.ADD_UPDATE_BUTTON_LABEL.toString()));
         clearStudentsButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL.toString()));
+        
+        // EVENT HANDLING, ADD/EDIT STUDENTS PANE
+        /**
+         * // Recitation Tab Controls
+        firstNameTextField.setOnAction(e -> {
+            if (!addStudent) {
+                controller.handleEditStudent();
+            } else {
+                controller.handleAddStudent();
+            }
+        });
+        lastNameTextField.setOnAction(e -> {
+            if (!addRecitation) {
+                controller.handleEditStudent();
+            } else {
+                controller.handleAddStudent();
+            }
+        });
+        addUpdateStudentsButton.setOnAction(e -> {
+            if (!addStudent) {
+                controller.handleEditStudent();
+            } else {
+                controller.handleAddStudent();
+            }
+        });
+        clearStudentsButton.setOnAction(e -> {
+            addUpdateStudentsButton.setText(props.getProperty(CSGProp.ADD_BUTTON_LABEL.toString()));
+            addStudent = true;
+            firstNameTextField.clear();
+            lastNameTextField.clear();
+            teamBox.getSelectionModel().selectFirst();
+            roleTextField.clear();
+            teamMembers.getSelectionModel().select(null);
+        });
+
+        recitationData.setFocusTraversable(true);
+        recitationData.setOnKeyPressed(e -> {
+            //controller.handleKeyPress(e.getCode()); //MUST FIX TO DELETE FROM RECITATION TABLE
+        });
+        recitationData.setOnMouseClicked(e -> {
+            addUpdateButton.setText(props.getProperty(CSGProp.EDIT_BUTTON_LABEL.toString()));
+            addRecitation = false;
+            controller.loadRecitationtotext();
+        });
+         */
+        
         addEditStudentsPane.add(firstNameLabel, 0, 0);
         addEditStudentsPane.add(firstNameTextField, 1, 0);
         addEditStudentsPane.add(lastNameLabel, 2, 0);
@@ -1796,6 +1970,84 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
     public TableView getTAInformationTable() {
         return taInformation;
+    }
+    
+    public CourseSite getCourseSite() {
+        return courseSite;
+    }
+
+    public void setCourseSite(CourseSite courseSite) {
+        this.courseSite = courseSite;
+    }
+
+    public ProjectTeam getCurrentTeam() {
+        return currentTeam;
+    }
+
+    public void setCurrentTeam(ProjectTeam currentTeam) {
+        this.currentTeam = currentTeam;
+    }
+
+    public void changeExportDir() throws IOException {
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        AppFileComponent fileComponent = app.getFileComponent();
+
+        DirectoryChooser dc = new DirectoryChooser();
+        dc.setInitialDirectory(new File(PATH_WORK));
+        dc.setTitle(props.getProperty(AppPropertyType.EXPORT_WORK_TITLE));
+        /*dc.getExtensionFilters().addAll(
+                    new ExtensionFilter(props.getProperty(WORK_FILE_EXT_DESC), props.getProperty(WORK_FILE_EXT)));
+         */
+        File selectedFile = dc.showDialog(app.getGUI().getWindow()); //wrong dialog?
+        exportDirTextView.setText(selectedFile.getParent());
+    }
+
+    public void changeTemplateDir() throws IOException {
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        AppFileComponent fileComponent = app.getFileComponent();
+
+        DirectoryChooser dc = new DirectoryChooser();
+        dc.setInitialDirectory(new File(PATH_WORK));
+        dc.setTitle(props.getProperty(AppPropertyType.EXPORT_WORK_TITLE));
+        /*dc.getExtensionFilters().addAll(
+                    new ExtensionFilter(props.getProperty(WORK_FILE_EXT_DESC), props.getProperty(WORK_FILE_EXT)));
+         */
+        File selectedFile = dc.showDialog(app.getGUI().getWindow()); //wrong dialog?
+        templateDir.setText(selectedFile.getParent());
+    }
+
+    public void changeBannerSchoolImage() throws IOException {
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+
+        // AND NOW ASK THE USER FOR THE FILE TO OPEN
+        FileChooser fc = new FileChooser();
+        fc.setInitialDirectory(new File(PATH_WORK));
+        fc.setTitle(props.getProperty(LOAD_WORK_TITLE));
+        File selectedFile = fc.showOpenDialog(app.getGUI().getWindow());
+        bannerSchoolImage.setImage(new Image(selectedFile.getParent()));
+    }
+
+    public void changeLeftFooterImage() throws IOException{
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+
+        // AND NOW ASK THE USER FOR THE FILE TO OPEN
+        FileChooser fc = new FileChooser();
+        fc.setInitialDirectory(new File(PATH_WORK));
+        fc.setTitle(props.getProperty(LOAD_WORK_TITLE));
+        File selectedFile = fc.showOpenDialog(app.getGUI().getWindow());
+        leftFooterImage.setImage(new Image(selectedFile.getParent()));
+    }
+
+    public void changeRightFooterImage() throws IOException {
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+
+        // AND NOW ASK THE USER FOR THE FILE TO OPEN
+        FileChooser fc = new FileChooser();
+        fc.setInitialDirectory(new File(PATH_WORK));
+        fc.setTitle(props.getProperty(LOAD_WORK_TITLE));
+        File selectedFile = fc.showOpenDialog(app.getGUI().getWindow());
+        
+        rightFooterImage.setImage(new Image(selectedFile.getParent()));
     }
 
     public String getCellKey(Pane testPane) {

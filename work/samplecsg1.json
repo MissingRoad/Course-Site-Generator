@@ -1,0 +1,50 @@
+
+{
+    "course_info":{
+        "course_subject":"",
+        "course_number":"219",
+        "course_semester":"",
+        "course_year":"2017",
+        "course_title":"",
+        "course_instructor_name":"",
+        "course_instructor_home":"",
+        "course_export_dir":"",
+        "course_has_home":"false",
+        "course_has_syllabus":"false",
+        "course_has_schedule":"false",
+        "course_has_hw":"false",
+        "course_has_project":"false"
+    },
+    "startHour":"0",
+    "endHour":"23",
+    "undergrad_tas":[
+        {
+            "name":"David Li",
+            "email":"david.li@stonybrook.edu",
+            "is_undergrad_ta":"true"
+        },
+        {
+            "name":"Jacob Evans",
+            "email":"jacob.evans@stonybrook.edu",
+            "is_undergrad_ta":"true"
+        }
+    ],
+    "officeHours":[
+    ],
+    "recitations":[
+        {
+            "recitation_section":"R01",
+            "recitation_instructor":"McKenna",
+            "recitation_day_time":"Mondays 3:30pm",
+            "recitation_location":"New CS 115",
+            "recitation_ta1":"David Li",
+            "recitation_ta2":"Jacob Evans"
+        }
+    ],
+    "schedule_items":[
+    ],
+    "project_teams":[
+    ],
+    "students":[
+    ]
+}

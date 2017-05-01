@@ -24,6 +24,12 @@
 	  <property name="REDO_ICON"	value = "Redo.png"> </property>
 	  <property name="EXPORT_ICON"	value = "Export.png"> </property>
 
+<!-- DEFAULT IMAGES -->
+	  <property name = "DEFAULT_BANNER_SCHOOL_IMAGE" value = "SBUDarkRedShieldLogo.png"></property>
+	<property name = "DEFAULT_LEFT_FOOTER_IMAGE" value = "SBUWhiteShieldLogo.jpg"></property>
+	<property name = "DEFAULT_RIGHT_FOOTER_IMAGE" value = "CSLogo.png"></property>
+
+
         
         <!-- TOOLTIPS FOR BUTTONS -->
         <property name="NEW_TOOLTIP"		value="Construir una nueva cuadricula TA"></property>
@@ -81,6 +87,8 @@
 	  <!-- UNIVERSAL CSG BUTTON LABELS -->
 	  <property name = "CHANGE_BUTTON_LABEL" value = "Cambiar"></property>
 	  <property name = "ADD_BUTTON_LABEL" value = "Anadir"></property>
+<property name = "EDIT_BUTTON_LABEL" value = "Edit"></property>
+
 	  <property name = "ADD_UPDATE_BUTTON_LABEL" value = "Anadir/Actualizar"></property>
 	  <property name = "DELETE_SYMBOL" value = "-"></property>
 	  <property name = "ADD_EDIT_LABEL" value = "Anadir/Editar"></property>

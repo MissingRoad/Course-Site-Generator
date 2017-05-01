@@ -30,7 +30,11 @@ import javafx.scene.control.ComboBox;
 import csg.data.CSGData;
 import csg.data.Recitation;
 import csg.file.TimeSlot;
+import csg.jtps.ProjectTeamAdderUR;
+import csg.jtps.ProjectTeamReplaceUR;
 import csg.jtps.RecitationAdderUR;
+import csg.jtps.RecitationDeleteUR;
+import csg.jtps.RecitationReplaceUR;
 import static csg.style.CSGStyle.CLASS_HIGHLIGHTED_GRID_CELL;
 import static csg.style.CSGStyle.CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN;
 import static csg.style.CSGStyle.CLASS_OFFICE_HOURS_GRID_TA_CELL_PANE;
@@ -189,8 +193,30 @@ public class CSGController {
             
         }
         else {
-            // PROJECT TEAM ADD CODE --> INSERT HERE
+            jTPS_Transaction addTeamUR = new ProjectTeamAdderUR(app);
+            jTPS.addTransaction(addTeamUR);
+            markWorkAsEdited();
         }
+    }
+    
+    public void handleEditProjectTeam() {
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        CSGData data = (CSGData)app.getDataComponent();
+        
+        TableView projectTeams = workspace.getProjectTeams();
+        TextField teamNameTextField = workspace.getTeamNameTextField();
+        ColorPicker teamColorPicker = workspace.getTeamColorPicker();
+        ColorPicker teamTextColorPicker = workspace.getTeamTextColorPicker();
+        TextField teamLinkTextField = workspace.getTeamLinkTextField();
+        
+        String teamName = teamNameTextField.getText();
+        Color teamColor = teamColorPicker.getValue();
+        Color teamTextColor = teamTextColorPicker.getValue();
+        String teamLink = teamLinkTextField.getText();
+        
+        jTPS_Transaction replaceTeamUR = new ProjectTeamReplaceUR(app);
+        jTPS.addTransaction(replaceTeamUR);
+        markWorkAsEdited();
     }
     
     private void markWorkAsEdited() {
@@ -349,6 +375,19 @@ public class CSGController {
         markWorkAsEdited();
     }
     
+    public void loadTAtotext(){
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        TableView taTable = workspace.getTAInformationTable();
+        Object selectedItem = taTable.getSelectionModel().getSelectedItem();
+        if(selectedItem != null){
+            TeachingAssistant ta = (TeachingAssistant)selectedItem;
+            String name = ta.getName();
+            String email = ta.getEmail();
+            workspace.getTANameTextField().setText(name);
+            workspace.getTAEmailTextField().setText(email);
+        }
+    }
+    
     public void handleEditRecitation() {
         CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
         CSGData data = (CSGData)app.getDataComponent();
@@ -361,19 +400,43 @@ public class CSGController {
         String location = recitation.getLocation();
         TeachingAssistant ta1 = recitation.getSupervisingTA1();
         TeachingAssistant ta2 = recitation.getSupervisingTA2();
+        
+        jTPS_Transaction editRecitationUR = new RecitationReplaceUR(app);
+        jTPS.addTransaction(editRecitationUR);
+        markWorkAsEdited();
     }
     
-    public void loadTAtotext(){
+    public void loadRecitationtotext(){
         CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
-        TableView taTable = workspace.getTAInformationTable();
-        Object selectedItem = taTable.getSelectionModel().getSelectedItem();
+        TableView recitationData = workspace.getRecitationData();
+        Object selectedItem = recitationData.getSelectionModel().getSelectedItem();
         if(selectedItem != null){
-            TeachingAssistant ta = (TeachingAssistant)selectedItem;
-            String name = ta.getName();
-            String email = ta.getEmail();
-            workspace.getTANameTextField().setText(name);
-            workspace.getTAEmailTextField().setText(email);
+            Recitation r = (Recitation)selectedItem;
+            String section = r.getSection();
+            String instructor = r.getInstructor();
+            String dayTime = r.getDayTime();
+            String location = r.getLocation();
+            TeachingAssistant ta1 = r.getSupervisingTA1();
+            TeachingAssistant ta2 = r.getSupervisingTA2();
+            workspace.getSectionTextField().setText(section);
+            workspace.getInstructorTextField().setText(instructor);
+            workspace.getDayTimeTextField().setText(dayTime);
+            workspace.getLocationTextField().setText(location);
+            workspace.getSupervisingTa1Box().getSelectionModel().select(ta1);
+            workspace.getSupervisingTa2Box().getSelectionModel().select(ta2);
         }
+    }
+    
+    public void handleRemoveRecitationRequest() {
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        TableView recitationData = workspace.getRecitationData();
+        Object selectedItem = recitationData.getSelectionModel().getSelectedItem();
+        Recitation r = (Recitation)selectedItem;
+        String section = r.getSection();
+        String instructor = r.getInstructor();
+        jTPS_Transaction deleteRecitationUR = new RecitationDeleteUR(app, section, instructor);
+        jTPS.addTransaction(deleteRecitationUR);
+        markWorkAsEdited();
     }
     
     public void Undo(){

@@ -31,7 +31,7 @@ public class TAAdderUR implements jTPS_Transaction{
 
     @Override
     public void doTransaction() {
-        ((CSGData)app.getDataComponent()).addTA(TAName, TAEmail, false);
+        ((CSGData)app.getDataComponent()).addTA(TAName, TAEmail, true);
     }
 
     @Override
