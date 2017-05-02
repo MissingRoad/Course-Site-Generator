@@ -711,7 +711,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
         taInformation.setFocusTraversable(true);
         taInformation.setOnKeyPressed(e -> {
-            controller.handleKeyPress(e.getCode());
+            controller.handleKeyPressTAInformation(e.getCode());
         });
         taInformation.setOnMouseClicked(e -> {
             addTAButton.setText(props.getProperty(CSGProp.ADD_EDIT_LABEL.toString()));
@@ -2173,7 +2173,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         for (Pane p : taDataOfficeHoursGridTACellPanes.values()) {
             p.setFocusTraversable(true);
             p.setOnKeyPressed(e -> {
-                controller.handleKeyPress(e.getCode());
+                controller.handleKeyPressTAInformation(e.getCode());
             });
             p.setOnMouseClicked(e -> {
                 controller.handleCellToggle((Pane) e.getSource());

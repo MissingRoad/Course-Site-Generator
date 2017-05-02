@@ -30,8 +30,10 @@ import javafx.scene.control.ComboBox;
 import csg.data.CSGData;
 import csg.data.ProjectTeam;
 import csg.data.Recitation;
+import csg.data.Student;
 import csg.file.TimeSlot;
 import csg.jtps.ProjectTeamAdderUR;
+import csg.jtps.ProjectTeamDeleteUR;
 import csg.jtps.ProjectTeamReplaceUR;
 import csg.jtps.RecitationAdderUR;
 import csg.jtps.RecitationDeleteUR;
@@ -278,10 +280,16 @@ public class CSGController {
      * 
      * @param code The keyboard code pressed.
      */
-    public void handleKeyPress(KeyCode code) {
+    public void handleKeyPressTAInformation(KeyCode code) {
         // DID THE USER PRESS THE DELETE KEY?
         if (code == KeyCode.DELETE) {
-            // GET THE TABLE
+            deleteTAFromTAInformation();
+        }
+    }
+    
+    // How to handle the DELETE button being pressed
+    public void deleteTAFromTAInformation() {
+        // GET THE TABLE
             CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
             TableView taTable = workspace.getTAInformationTable();
             
@@ -300,7 +308,130 @@ public class CSGController {
                 // WE'VE CHANGED STUFF
                 markWorkAsEdited();
             }
+    }
+    
+    // Handling DELETE for RecitationData TableView
+    public void handleKeyPressRecitationData(KeyCode code) {
+        // DID THE USER PRESS THE DELETE KEY?
+        if (code == KeyCode.DELETE) {
+            deleteRecitationFromRecitationData();
         }
+    }
+    
+    public void deleteRecitationFromRecitationData() {
+        // GET THE TABLE
+            CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+            TableView recitationData = workspace.getRecitationData();
+            
+            // IS A TA SELECTED IN THE TABLE?
+            Object selectedItem = recitationData.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                // GET THE TA AND REMOVE IT
+                Recitation r = (Recitation)selectedItem;
+                String recitationSection = r.getSection();
+                String recitationInstructor = r.getInstructor();
+                CSGData data = (CSGData)app.getDataComponent();
+                
+                jTPS_Transaction deletUR = new RecitationDeleteUR(app, recitationSection, recitationInstructor);
+                jTPS.addTransaction(deletUR);
+                
+                // AND BE SURE TO REMOVE ALL THE TA'S OFFICE HOURS
+                // WE'VE CHANGED STUFF
+                markWorkAsEdited();
+            }
+    }
+    
+    // Handling DELETE for ScheduleItem TableView - NOT COMPLETE, NEED TO DO THE JTPS FOR SCHEDULEITEMS
+    public void handleKeyPressScheduleItems(KeyCode code) {
+        // DID THE USER PRESS THE DELETE KEY?
+        if (code == KeyCode.DELETE) {
+            deleteScheduleItemFromScheduleItems();
+        }
+    }
+    
+    public void deleteScheduleItemFromScheduleItems() {
+        // GET THE TABLE
+            CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+            TableView scheduleItems = workspace.getScheduleItems();
+            
+            // IS A TA SELECTED IN THE TABLE?
+            Object selectedItem = scheduleItems.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                // GET THE TA AND REMOVE IT
+                /*ScheduleItem s = (ScheduleItem)selectedItem;
+                String recitationSection = r.getSection();
+                String recitationInstructor = r.getInstructor();
+                CSGData data = (CSGData)app.getDataComponent();
+                
+                jTPS_Transaction deletUR = new RecitationDeleteUR(app, recitationSection, recitationInstructor);
+                jTPS.addTransaction(deletUR);
+                
+                // AND BE SURE TO REMOVE ALL THE TA'S OFFICE HOURS
+                // WE'VE CHANGED STUFF
+                markWorkAsEdited();*/
+            }
+    }
+    
+    // Handling DELETE for ScheduleItem TableView - NOT COMPLETE, NEED TO DO THE JTPS FOR SCHEDULEITEMS
+    public void handleKeyPressProjectTeams(KeyCode code) {
+        // DID THE USER PRESS THE DELETE KEY?
+        if (code == KeyCode.DELETE) {
+            deleteProjectTeamFromProjectTeams();
+        }
+    }
+    
+    public void deleteProjectTeamFromProjectTeams() {
+        // GET THE TABLE
+            CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+            TableView projectTeams = workspace.getProjectTeams();
+            
+            // IS A TA SELECTED IN THE TABLE?
+            Object selectedItem = projectTeams.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                // GET THE TA AND REMOVE IT
+                ProjectTeam pt = (ProjectTeam)selectedItem;
+                String teamName = pt.getName();
+                
+                CSGData data = (CSGData)app.getDataComponent();
+                
+                jTPS_Transaction deletUR = new ProjectTeamDeleteUR(app, teamName);
+                jTPS.addTransaction(deletUR);
+                
+                // AND BE SURE TO REMOVE ALL THE TA'S OFFICE HOURS
+                // WE'VE CHANGED STUFF
+                markWorkAsEdited();
+            }
+    }
+    
+    // Handling DELETE for ScheduleItem TableView - NOT COMPLETE, NEED TO DO THE JTPS FOR SCHEDULEITEMS
+    public void handleKeyPressStudents(KeyCode code) {
+        // DID THE USER PRESS THE DELETE KEY?
+        if (code == KeyCode.DELETE) {
+            deleteStudentFromTeamMembers();
+        }
+    }
+    
+    public void deleteStudentFromTeamMembers() {
+        // GET THE TABLE
+            CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+            TableView teamMembers = workspace.getTeamMembers();
+            
+            // IS A TA SELECTED IN THE TABLE?
+            Object selectedItem = teamMembers.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                // GET THE TA AND REMOVE IT
+                Student s = (Student)selectedItem;
+                String firstName = s.getFirstName();
+                String lastName = s.getLastName();
+                CSGData data = (CSGData)app.getDataComponent();
+                
+                jTPS_Transaction deletUR = new RecitationDeleteUR(app, firstName, lastName);
+                jTPS.addTransaction(deletUR);
+                
+                // AND BE SURE TO REMOVE ALL THE TA'S OFFICE HOURS
+                // WE'VE CHANGED STUFF
+                markWorkAsEdited();
+            }
     }
     
     void handleGridCellMouseExited(Pane pane) {
