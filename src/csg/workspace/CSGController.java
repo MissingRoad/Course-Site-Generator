@@ -28,6 +28,7 @@ import djf.ui.AppYesNoCancelDialogSingleton;
 import java.util.ArrayList;
 import javafx.scene.control.ComboBox;
 import csg.data.CSGData;
+import csg.data.ProjectTeam;
 import csg.data.Recitation;
 import csg.file.TimeSlot;
 import csg.jtps.ProjectTeamAdderUR;
@@ -35,6 +36,7 @@ import csg.jtps.ProjectTeamReplaceUR;
 import csg.jtps.RecitationAdderUR;
 import csg.jtps.RecitationDeleteUR;
 import csg.jtps.RecitationReplaceUR;
+import csg.jtps.StudentAdderUR;
 import static csg.style.CSGStyle.CLASS_HIGHLIGHTED_GRID_CELL;
 import static csg.style.CSGStyle.CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN;
 import static csg.style.CSGStyle.CLASS_OFFICE_HOURS_GRID_TA_CELL_PANE;
@@ -216,6 +218,50 @@ public class CSGController {
         
         jTPS_Transaction replaceTeamUR = new ProjectTeamReplaceUR(app);
         jTPS.addTransaction(replaceTeamUR);
+        markWorkAsEdited();
+    }
+    
+    public void handleAddStudent() {
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        
+        TableView projectTeams = workspace.getProjectTeams();
+        Object selectProjectTeam = projectTeams.getSelectionModel().getSelectedItem();
+        ProjectTeam projectTeam = (ProjectTeam)selectProjectTeam;
+        
+        TextField firstNameTextField = workspace.getFirstNameTextField();
+        TextField lastNameTextField = workspace.getLastNameTextField();
+        ComboBox teamBox = workspace.getTeamBox();
+        TextField roleTextField = workspace.getRoleTextField();
+        
+        String firstName = firstNameTextField.getText();
+        String lastName = lastNameTextField.getText();
+        ProjectTeam team = (ProjectTeam)teamBox.getSelectionModel().getSelectedItem();
+        String role = roleTextField.getText();
+        
+        jTPS_Transaction addStudentUR = new StudentAdderUR(app);
+        jTPS.addTransaction(addStudentUR);
+        markWorkAsEdited();
+    }
+    
+    public void handleEditStudent() {
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        
+        TableView projectTeams = workspace.getProjectTeams();
+        Object selectProjectTeam = projectTeams.getSelectionModel().getSelectedItem();
+        ProjectTeam projectTeam = (ProjectTeam)selectProjectTeam;
+        
+        TextField firstNameTextField = workspace.getFirstNameTextField();
+        TextField lastNameTextField = workspace.getLastNameTextField();
+        ComboBox teamBox = workspace.getTeamBox();
+        TextField roleTextField = workspace.getRoleTextField();
+        
+        String firstName = firstNameTextField.getText();
+        String lastName = lastNameTextField.getText();
+        ProjectTeam team = (ProjectTeam)teamBox.getSelectionModel().getSelectedItem();
+        String role = roleTextField.getText();
+        
+        jTPS_Transaction addStudentUR = new StudentAdderUR(app);
+        jTPS.addTransaction(addStudentUR);
         markWorkAsEdited();
     }
     

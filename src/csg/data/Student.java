@@ -58,4 +58,12 @@ public class Student {
     public void setRole(String newRole) {
         this.role.set(newRole);
     }
+    
+    public ProjectTeam getTeam() {
+        return team;
+    }
+
+    public void setTeam(ProjectTeam team) {
+        this.team = team;
+    }
 }

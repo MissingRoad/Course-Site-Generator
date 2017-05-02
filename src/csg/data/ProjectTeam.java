@@ -41,6 +41,23 @@ public class ProjectTeam {
         }
     }
     
+    public void removeStudent(String name) {
+        Student s = findStudent(name);
+        if (s != null) {
+            this.teamMembers.remove(s);
+        }
+    }
+    
+    public Student findStudent(String name) {
+        for (Student s: teamMembers) {
+            String fullName = s.getFirstName() + s.getLastName();
+            if (name.equals(fullName)) {
+                return s;
+            }
+        }
+        return null;
+    }
+    
     public ObservableList<Student> getTeamMembers() {
         return teamMembers;
     }
@@ -78,4 +95,8 @@ public class ProjectTeam {
     }
     
     // Compare and toString methods to be implemented later
+    @Override
+    public String toString() {
+        return this.name.get();
+    }
 }

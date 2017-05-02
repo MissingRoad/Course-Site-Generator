@@ -105,6 +105,71 @@ public class CSGFiles implements AppFileComponent {
     static final String JSON_PROJECT_TEAMS = "project_teams";
     static final String JSON_STUDENTS = "students";
     
+    // CONSTANTS FOR EXPORTING
+    //Start and end hour
+    static final String JSON_START_HOUR_EXPORT = "startHour";
+    static final String JSON_END_HOUR_EXPORT = "endHour";
+    // Course Details - FIX
+    static final String JSON_COURSE_SUBJECT_EXPORT = "course_subject";
+    static final String JSON_COURSE_NUMBER_EXPORT = "course_number";
+    static final String JSON_COURSE_SEMESTER_EXPORT = "course_semester";
+    static final String JSON_COURSE_YEAR_EXPORT = "course_year";
+    static final String JSON_COURSE_TITLE_EXPORT = "course_title";
+    static final String JSON_INSTRUCTOR_NAME_EXPORT = "course_instructor_name";
+    static final String JSON_INSTRUCTOR_HOME_EXPORT = "course_instructor_home";
+    static final String JSON_EXPORT_DIR_EXPORT = "course_export_dir";
+    static final String JSON_HAS_HOME_EXPORT = "course_has_home";
+    static final String JSON_HAS_SYLLABUS_EXPORT = "course_has_syllabus";
+    static final String JSON_HAS_SCHEDULE_EXPORT = "course_has_schedule";
+    static final String JSON_HAS_HW_EXPORT = "course_has_hw";
+    static final String JSON_HAS_PROJECT_EXPORT = "course_has_project";
+    // ScheduleBuilder.json
+    static final String JSON_OFFICE_HOURS_EXPORT = "officeHours";
+    static final String JSON_DAY_EXPORT = "day";
+    static final String JSON_MONTH_EXPORT = "month";
+    static final String JSON_LINK_EXPORT = "link";
+    static final String JSON_TIME_EXPORT = "time";
+    static final String JSON_NAME_EXPORT = "name";
+    static final String JSON_TITLE_EXPORT = "title";
+    static final String JSON_TOPIC_EXPORT = "topic";
+    // OfficeHoursGridData.json
+    static final String JSON_UNDERGRAD_TAS_EXPORT = "undergrad_tas"; // FOR ALL TA's, NOT JUST UNDERGRAD
+    static final String JSON_IS_UNDERGRAD_TA_EXPORT = "is_undergrad_ta";
+    static final String JSON_EMAIL_EXPORT = "email";
+    static final String JSON_RECITATION_SECTION_EXPORT = "section";
+    static final String JSON_RECITATION_INSTRUCTOR_EXPORT = "instructor";
+    static final String JSON_RECITATION_DAY_TIME_EXPORT = "day_time";
+    static final String JSON_RECITATION_LOCATION_EXPORT = "location";
+    static final String JSON_RECITATION_TA1_EXPORT = "ta_1";
+    static final String JSON_RECITATION_TA2_EXPORT = "ta_2";
+    static final String JSON_START_DATE_EXPORT = "startDate";
+    static final String JSON_END_DATE_EXPORT = "endDate";
+    static final String JSON_SCHEDULE_TYPE_EXPORT = "type";
+    static final String JSON_SCHEDULE_ITEM_DATE_EXPORT = "schedule_item_date";
+    static final String JSON_SCHEDULE_ITEM_TITLE_EXPORT = "title";
+    static final String JSON_SCHEDULE_ITEM_LINK_EXPORT = "link";
+    static final String JSON_SCHEDULE_ITEM_TOPIC_EXPORT = "schedule_item_topic";
+    static final String JSON_PROJECT_TEAM_NAME_EXPORT = "project_team_name";
+    static final String JSON_PROJECT_TEAM_RED_COLOR_EXPORT = "project_team_red_color";
+    static final String JSON_PROJECT_TEAM_GREEN_COLOR_EXPORT = "project_team_green_color";
+    static final String JSON_PROJECT_TEAM_BLUE_COLOR_EXPORT = "project_team_blue_color";
+    static final String JSON_PROJECT_TEAM_COLOR_OPACITY_EXPORT = "project_team_color_opacity";
+    static final String JSON_PROJECT_TEAM_TEXT_RED_COLOR_EXPORT = "project_team_text_red_color";
+    static final String JSON_PROJECT_TEAM_TEXT_GREEN_COLOR_EXPORT = "project_team_text_green_color";
+    static final String JSON_PROJECT_TEAM_TEXT_BLUE_COLOR_EXPORT = "project_team_text_blue_color";
+    static final String JSON_PROJECT_TEAM_TEXT_COLOR_OPACITY_EXPORT = "project_team_text_color_opacity";
+    static final String JSON_PROJECT_TEAM_LINK_EXPORT = "project_team_link";
+    static final String JSON_STUDENT_FIRST_NAME_EXPORT = "first_name";
+    static final String JSON_STUDENT_LAST_NAME_EXPORT = "last_name";
+    static final String JSON_STUDENT_TEAM_EXPORT = "team";
+    static final String JSON_STUDENT_ROLE_EXPORT = "role";
+    // Data types regarding various types for the various JSON arrays
+    static final String JSON_COURSE_INFO_EXPORT = "course_info";
+    static final String JSON_RECITATIONS_EXPORT = "recitations";
+    static final String JSON_SCHEDULE_ITEMS_EXPORT = "schedule_items";
+    static final String JSON_PROJECT_TEAMS_EXPORT = "project_teams";
+    static final String JSON_STUDENTS_EXPORT = "students";
+    
     public CSGFiles(CourseSiteGeneratorApp initApp) {
         app = initApp;
     }
@@ -396,9 +461,9 @@ public class CSGFiles implements AppFileComponent {
 	ObservableList<TeachingAssistant> tas = dataManager.getTeachingAssistants();
 	for (TeachingAssistant ta : tas) {	    
 	    JsonObject taJson = Json.createObjectBuilder()
-		    .add(JSON_NAME, ta.getName())
-		    .add(JSON_EMAIL, ta.getEmail())
-                    .add(JSON_IS_UNDERGRAD_TA, ta.isUndergrad() + "").build(); // What will this line print for a String?
+		    .add(JSON_NAME_EXPORT, ta.getName())
+		    .add(JSON_EMAIL_EXPORT, ta.getEmail())
+                    .add(JSON_IS_UNDERGRAD_TA_EXPORT, ta.isUndergrad() + "").build(); // What will this line print for a String?
 	    taArrayBuilder.add(taJson);
 	}
 	JsonArray undergradTAsArray = taArrayBuilder.build();
@@ -408,18 +473,18 @@ public class CSGFiles implements AppFileComponent {
 	ArrayList<TimeSlot> officeHours = TimeSlot.buildOfficeHoursList(dataManager);
 	for (TimeSlot ts : officeHours) {	    
 	    JsonObject tsJson = Json.createObjectBuilder()
-		    .add(JSON_DAY, ts.getDay())
-		    .add(JSON_TIME, ts.getTime())
-		    .add(JSON_NAME, ts.getName()).build();
+		    .add(JSON_DAY_EXPORT, ts.getDay())
+		    .add(JSON_TIME_EXPORT, ts.getTime())
+		    .add(JSON_NAME_EXPORT, ts.getName()).build();
 	    timeSlotArrayBuilder.add(tsJson);
 	}
         
 	JsonArray timeSlotsArray = timeSlotArrayBuilder.build();
         
         JsonObject taDataJSO = Json.createObjectBuilder()
-		.add(JSON_START_HOUR, "" + dataManager.getStartHour())
-		.add(JSON_END_HOUR, "" + dataManager.getEndHour())
-                .add(JSON_UNDERGRAD_TAS, undergradTAsArray)
+		.add(JSON_START_HOUR_EXPORT, "" + dataManager.getStartHour())
+		.add(JSON_END_HOUR_EXPORT, "" + dataManager.getEndHour())
+                .add(JSON_UNDERGRAD_TAS_EXPORT, undergradTAsArray)
                 .add(JSON_OFFICE_HOURS, timeSlotsArray).build();
         
         // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING

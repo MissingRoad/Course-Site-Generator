@@ -8,7 +8,9 @@ package csg.jtps;
 import csg.CourseSiteGeneratorApp;
 import csg.data.CSGData;
 import csg.data.ProjectTeam;
+import csg.data.Student;
 import csg.workspace.CSGWorkspace;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
 import javafx.scene.paint.Color;
 import jtps.jTPS_Transaction;
@@ -20,6 +22,8 @@ import jtps.jTPS_Transaction;
 public class ProjectTeamDeleteUR implements jTPS_Transaction {
     private CourseSiteGeneratorApp app;
     private CSGData data;
+    private ProjectTeam team;
+    private ObservableList<Student> teamMembers;
     
     private String name;
     private Color teamColor;
@@ -31,7 +35,8 @@ public class ProjectTeamDeleteUR implements jTPS_Transaction {
         this.data = (CSGData)app.getDataComponent();
         CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
         TableView projectTeamData = workspace.getProjectTeams();
-        ProjectTeam team = data.findProjectTeam(name);
+        this.team = data.findProjectTeam(name);
+        this.teamMembers = team.getTeamMembers();
         this.name = name;
         this.teamColor = team.getColor();
         this.teamTextColor = team.getTextColor();
@@ -40,11 +45,17 @@ public class ProjectTeamDeleteUR implements jTPS_Transaction {
     
     @Override
     public void doTransaction() {
+        for (Student s: teamMembers) {
+            this.data.removeStudent(s);
+        }
         this.data.removeProjectTeam(name);
     }
     
     @Override
     public void undoTransaction() {
-        this.data.addProjectTeam(name, teamColor, teamColor, link);
+        this.data.addProjectTeam(team);
+        for (Student s: teamMembers) {
+            this.team.addStudent(s);
+        }
     }
 }

@@ -18,7 +18,7 @@ import javafx.beans.property.StringProperty;
  */
 public class CourseSite {
     private final StringProperty courseSubject;
-    private final IntegerProperty courseNumber;
+    private final StringProperty courseNumber;
     private final StringProperty courseSemester;
     private final IntegerProperty courseYear;
     private final StringProperty courseTitle;
@@ -38,7 +38,7 @@ public class CourseSite {
     
     public CourseSite() {
         this.courseSubject = new SimpleStringProperty("");
-        this.courseNumber = new SimpleIntegerProperty(219);
+        this.courseNumber = new SimpleStringProperty(219 + "");
         this.courseSemester = new SimpleStringProperty("");
         this.courseYear = new SimpleIntegerProperty(2017);
         this.courseTitle = new SimpleStringProperty("");
@@ -86,11 +86,11 @@ public class CourseSite {
         return this.courseSubject.get();
     }
     
-    public void setCourseNumber(int newCourseNumber) {
+    public void setCourseNumber(String newCourseNumber) {
         this.courseNumber.set(newCourseNumber);
     }
     
-    public int getCourseNumber() {
+    public String getCourseNumber() {
         return this.courseNumber.get();
     }
     

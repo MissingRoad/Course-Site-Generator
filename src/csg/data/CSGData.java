@@ -408,10 +408,58 @@ public class CSGData implements AppDataComponent {
             projectTeams.add(p);
     }
     
+    public void addProjectTeam(ProjectTeam team) {
+        if (!containsProjectTeam(team.getName())) {
+            projectTeams.add(team);
+        }
+    }
+    
     public void removeProjectTeam(String name) {
         for (ProjectTeam p: projectTeams) {
             if (!containsProjectTeam(name))
                 projectTeams.remove(p);
+        }
+    }
+    
+    public void addStudent(String firstName, String lastName, ProjectTeam t, String role) {
+        Student s = new Student(firstName, lastName, t, role);
+        students.add(s);
+    }
+    
+    public void addStudent(Student s) {
+        students.add(s);
+    }
+    
+    public void editStudent(String firstName, String lastName, ProjectTeam team, String role) {
+        Student s = getStudent(firstName, lastName);
+        if (s != null) {
+            s.setFirstName(firstName);
+            s.setLastName(lastName);
+            s.getTeam().removeStudent(s);
+            team.addStudent(s);
+            s.setRole(role);
+        }
+    }
+    
+    public Student getStudent(String firstName, String lastName) {
+        for (Student s: students) {
+            if (s.getFirstName().equals(firstName) && s.getLastName().equals(lastName)) {
+                return s;
+            }
+        }
+        return null;
+    }
+    
+    public void removeStudent(String firstName, String lastName) {
+        Student s = getStudent(firstName, lastName);
+        if (s != null) {
+            students.remove(s);
+        }
+    }
+    
+    public void removeStudent(Student s) {
+        if (students.contains(s)) {
+            students.remove(s);
         }
     }
 
