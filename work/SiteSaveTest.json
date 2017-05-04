@@ -45,14 +45,20 @@
         {
             "type":"Holiday",
             "schedule_item_date":"Fri Mar 17 00:00:00 EDT 2017",
+            "schedule_item_time":"Snow Day",
+            "schedule_item_title":"",
             "schedule_item_topic":"",
-            "schedule_item_title":"Snow Day"
+            "schedule_item_link":"",
+            "schedule_item_criteria":""
         },
         {
             "type":"Lecture",
             "schedule_item_date":"Fri Mar 17 00:00:00 EDT 2017",
-            "schedule_item_topic":"Event Programming",
-            "schedule_item_title":"Lecture 3"
+            "schedule_item_time":"Lecture 3",
+            "schedule_item_title":"Event Programming",
+            "schedule_item_topic":"",
+            "schedule_item_link":"",
+            "schedule_item_criteria":""
         }
     ],
     "project_teams":[

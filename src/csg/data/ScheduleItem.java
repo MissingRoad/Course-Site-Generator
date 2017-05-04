@@ -13,17 +13,23 @@ import javafx.beans.property.StringProperty;
  *
  * @author dsli
  */
-public class ScheduleItem {
+public class ScheduleItem implements Comparable {
     private final StringProperty type;
     private Date date;
+    private final StringProperty time;
     private final StringProperty title;
     private final StringProperty topic;
+    private final StringProperty link;
+    private final StringProperty criteria;
     
-    public ScheduleItem(String type, Date date, String title, String topic) {
+    public ScheduleItem(String type, Date date, String time, String title, String topic, String link, String criteria) {
         this.type = new SimpleStringProperty(type);
         this.date = date;
+        this.time = new SimpleStringProperty(time);
         this.title = new SimpleStringProperty(title);
         this.topic = new SimpleStringProperty(topic);
+        this.link = new SimpleStringProperty(link);
+        this.criteria = new SimpleStringProperty(criteria);
     }
 
     public Date getDate() {
@@ -58,5 +64,34 @@ public class ScheduleItem {
         this.topic.set(newTopic);
     }
     
+    public String getTime() {
+        return time.get();
+    }
+    
+    public void setTime(String newTimeString) {
+        this.time.set(newTimeString);
+    }
+    
+    public String getLink() {
+        return link.get();
+    }
+    
+    public void setLink(String newLink) {
+        this.link.set(newLink);
+    }
+    
+    public String getCriteria() {
+        return criteria.get();
+    }
+    
+    public void setCriteria(String newCriteria) {
+        this.criteria.set(newCriteria);
+    }
+    
     //Implement compare(Object o) and toString() eventually
+    @Override
+    public int compareTo(Object o) {
+        Date datePickerDate = (Date)o;
+        return this.date.compareTo(date);
+    }
 }

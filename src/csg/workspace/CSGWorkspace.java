@@ -219,6 +219,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     Button clearButton;
 
     //Components for scheduleDataTab
+    boolean addScheduleItem;
     VBox scheduleDataVBox;
     Label scheduleLabel;
     GridPane startEndGridPane;
@@ -493,33 +494,30 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         changeRightFooterImageButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
         stylesheetSelect = new ComboBox();
         stylesheetNote = new Label(props.getProperty(CSGProp.COURSE_STYLESHEET_NOTE_LABEL).toString());
-        
+
         // EVENT HANDLERS FOR THE INDIVIDUAL COMPONENTS - PAGE STYLE PORTION
         changeBannerSchoolImageButton.setOnAction(e -> {
             try {
                 changeBannerSchoolImage();
-            }
-            catch(IOException ioe) {
+            } catch (IOException ioe) {
                 AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
                 dialog.show(props.getProperty(LOAD_ERROR_TITLE), props.getProperty(LOAD_ERROR_MESSAGE));
             }
         });
-        
+
         changeLeftFooterImageButton.setOnAction(e -> {
             try {
                 changeLeftFooterImage();
-            }
-            catch(IOException ioe) {
+            } catch (IOException ioe) {
                 AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
                 dialog.show(props.getProperty(LOAD_ERROR_TITLE), props.getProperty(LOAD_ERROR_MESSAGE));
             }
         });
-        
+
         changeRightFooterImageButton.setOnAction(e -> {
             try {
                 changeLeftFooterImage();
-            }
-            catch(IOException ioe) {
+            } catch (IOException ioe) {
                 AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
                 dialog.show(props.getProperty(LOAD_ERROR_TITLE), props.getProperty(LOAD_ERROR_MESSAGE));
             }
@@ -718,6 +716,9 @@ public class CSGWorkspace extends AppWorkspaceComponent {
             addTA = false;
             controller.loadTAtotext();
         });
+        deleteTAButton.setOnAction(e -> {
+            controller.deleteTAFromTAInformation();
+        });
 
         // Workspace handler goes at the end, handler organized by tab
         //Assembling the whole taDataTab
@@ -838,12 +839,12 @@ public class CSGWorkspace extends AppWorkspaceComponent {
             addRecitation = false;
             controller.loadRecitationtotext();
         });
-        
+
         // For DELETING a Recitation
         deleteRecitationButton.setOnAction(e -> {
-            
+
         });
-        
+
         recitationDataVBox.getChildren().addAll(recitationTopBox, recitationData, addEditGridPane);
         recitationDataVBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
 
@@ -857,17 +858,19 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         startEndGridPane = new GridPane();
         // Format for the DatePickers, to set their default Date
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        
+
         calendarBoundariesLabel = new Label(props.getProperty(CSGProp.CALENDAR_BOUNDARIES_LABEL.toString()));
         startingMondayLabel = new Label(props.getProperty(CSGProp.STARTING_MONDAY_LABEL.toString()));
         //LocalDate defaultMonday = formatter.
         //startingMondayPicker.setValue(LocalDate.MAX);
         startingMondayPicker = new DatePicker();
+        initStartingMondayDatePicker();
         /*startingMondayPicker.valueProperty().addListener(new ChangeListener<Date>() {
             
         });*/
         endingFridayLabel = new Label(props.getProperty(CSGProp.ENDING_FRIDAY_LABEL.toString()));
         endingFridayPicker = new DatePicker();
+        initEndingFridayDatePicker();
         //Constructing the top box ("Calendar Boundaries")
         startEndGridPane.add(calendarBoundariesLabel, 0, 0);
         startEndGridPane.add(startingMondayLabel, 0, 1);
@@ -875,6 +878,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         startEndGridPane.add(endingFridayLabel, 2, 1);
         startEndGridPane.add(endingFridayPicker, 3, 1);
         //The bottom box ("Schedule Items")
+        addScheduleItem = true;
         scheduleItemsVBox = new VBox();
         topScheduleItemsBox = new HBox();
         scheduleItemsLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEMS_LABEL.toString()));
@@ -902,7 +906,10 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         scheduleItems.getColumns().addAll(scheduleItemType, scheduleItemDate, scheduleItemTitle, scheduleItemTopic);
         addEditSchedulePane = new GridPane();
         typeLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEM_TYPE_LABEL.toString()));
-        typeBox = new ComboBox();
+        ObservableList scheduleItemTypes = FXCollections.observableArrayList(
+                props.getProperty(CSGProp.HOLIDAY_EVENT), props.getProperty(CSGProp.LECTURE_EVENT), props.getProperty(CSGProp.EXAMINATION_EVENT)
+        );
+        typeBox = new ComboBox(scheduleItemTypes);
         dateLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEM_DATE_LABEL.toString()));
         datePicker = new DatePicker();
         timeLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEM_TIME_LABEL.toString()));
@@ -917,6 +924,92 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         criteriaTextField = new TextField();
         addUpdateScheduleItemButton = new Button(props.getProperty(CSGProp.ADD_UPDATE_BUTTON_LABEL.toString()));
         clearScheduleItemButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL.toString()));
+
+        // SET UP THE EVENT HANDLING, SCHEDULE ITEMS TAB
+        /*typeBox.setOnAction(e -> {
+            if (!addScheduleItem) {
+                controller.handleEditScheduleItem();
+            } else {
+                controller.handleAddScheduleItem();
+            }
+        });
+        datePicker.setOnAction(e -> {
+            if (!addScheduleItem) {
+                controller.handleEditScheduleItem();
+            } else {
+                controller.handleAddScheduleItem();
+            }
+        });*/
+        timeTextField.setOnAction(e -> {
+            if (!addScheduleItem) {
+                controller.handleEditScheduleItem();
+            } else {
+                controller.handleAddScheduleItem();
+            }
+        });
+        scheduleItemTitleTextField.setOnAction(e -> {
+            if (!addScheduleItem) {
+                controller.handleEditScheduleItem();
+            } else {
+                controller.handleAddScheduleItem();
+            }
+        });
+        topicTextField.setOnAction(e -> {
+            if (!addScheduleItem) {
+                controller.handleEditScheduleItem();
+            } else {
+                controller.handleAddScheduleItem();
+            }
+        });
+        linkTextField.setOnAction(e -> {
+            if (!addScheduleItem) {
+                controller.handleEditScheduleItem();
+            } else {
+                controller.handleAddScheduleItem();
+            }
+        });
+        criteriaTextField.setOnAction(e -> {
+            if (!addScheduleItem) {
+                controller.handleEditScheduleItem();
+            } else {
+                controller.handleAddScheduleItem();
+            }
+        });
+        addUpdateScheduleItemButton.setOnAction(e -> {
+            if (!addScheduleItem) {
+                controller.handleEditScheduleItem();
+            } else {
+                controller.handleAddScheduleItem();
+            }
+        });
+        clearScheduleItemButton.setOnAction(e -> {
+            typeBox.getSelectionModel().selectFirst();
+            // SET THE DEFAULT VALUE FOR THE DATEPICKER
+            timeTextField.clear();
+            scheduleItemTitleTextField.clear();
+            topicTextField.clear();
+            linkTextField.clear();
+            criteriaTextField.clear();
+            addScheduleItem = true;
+            addUpdateScheduleItemButton.setText(CSGProp.ADD_BUTTON_LABEL.toString());
+        });
+
+        scheduleItems.setFocusTraversable(true);
+
+        scheduleItems.setOnKeyPressed(e -> {
+            //controller.handleKeyPress(e.getCode()); //MUST FIX TO DELETE FROM RECITATION TABLE
+        });
+        scheduleItems.setOnMouseClicked(e -> {
+            addUpdateScheduleItemButton.setText(props.getProperty(CSGProp.EDIT_BUTTON_LABEL.toString()));
+            addScheduleItem = false;
+            //controller.loadScheduleItemtotext();
+        });
+
+        // For DELETING a ScheduleItem
+        deleteScheduleItemButton.setOnAction(e -> {
+            controller.handleRemoveScheduleItem();
+        });
+
         //add the components to addEditSchedulePane
         addEditSchedulePane.add(typeLabel, 0, 1);
         addEditSchedulePane.add(typeBox, 1, 1);
@@ -986,10 +1079,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         teamLinkTextField = new TextField();
         addEditTeamButton = new Button(props.getProperty(CSGProp.ADD_EDIT_LABEL.toString()));
         clearTeamButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL.toString()));
-        
-       
-         
-        
+
         addEditProjectGridPane.add(addEditProjectLabel, 0, 0);
         addEditProjectGridPane.add(teamNameLabel, 0, 1);
         addEditProjectGridPane.add(teamNameTextField, 1, 1);
@@ -1034,7 +1124,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         roleTextField = new TextField();
         addUpdateStudentsButton = new Button(props.getProperty(CSGProp.ADD_UPDATE_BUTTON_LABEL.toString()));
         clearStudentsButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL.toString()));
-        
+
         // EVENT HANDLING, PROJECT TEAMS PANE
         teamNameTextField.setOnAction(e -> {
             if (!addProjectTeam) {
@@ -1080,15 +1170,14 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         projectTeams.setOnMouseClicked(e -> {
             addEditTeamButton.setText(props.getProperty(CSGProp.EDIT_BUTTON_LABEL.toString()));
             addProjectTeam = false;
-            currentTeam = (ProjectTeam)projectTeams.getSelectionModel().getSelectedItem();
+            currentTeam = (ProjectTeam) projectTeams.getSelectionModel().getSelectedItem();
             /*if (currentTeam != null) {
                 teamMembers.setItems(currentTeam.getTeamMembers());
             }*/
             //controller.loadProjectTeamtotext();
         });
-        
+
         // EVENT HANDLING, ADD/EDIT STUDENTS PANE
-        // Recitation Tab Controls
         /*firstNameTextField.setOnAction(e -> {
             if (!addStudent) {
                 controller.handleEditStudent();
@@ -1129,8 +1218,6 @@ public class CSGWorkspace extends AppWorkspaceComponent {
             addStudent = false;
             //controller.loadStudenttotext();
         });*/
-         
-        
         addEditStudentsPane.add(firstNameLabel, 0, 0);
         addEditStudentsPane.add(firstNameTextField, 1, 0);
         addEditStudentsPane.add(lastNameLabel, 2, 0);
@@ -1980,7 +2067,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     public TableView getTAInformationTable() {
         return taInformation;
     }
-    
+
     public CourseSite getCourseSite() {
         return courseSite;
     }
@@ -2037,7 +2124,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         bannerSchoolImage.setImage(newBannerSchoolImage);
     }
 
-    public void changeLeftFooterImage() throws IOException{
+    public void changeLeftFooterImage() throws IOException {
         PropertiesManager props = PropertiesManager.getPropertiesManager();
 
         // AND NOW ASK THE USER FOR THE FILE TO OPEN
@@ -2059,6 +2146,18 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         File selectedFile = fc.showOpenDialog(app.getGUI().getWindow());
         Image newRightFooter = new Image(selectedFile.toURI().toURL().toString());
         rightFooterImage.setImage(newRightFooter);
+    }
+
+    public void initStartingMondayDatePicker() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate localDate = LocalDate.parse("02-01-2017", formatter);
+        startingMondayPicker.setValue(localDate);
+    }
+    
+    public void initEndingFridayDatePicker() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate localDate = LocalDate.parse("26-05-2017", formatter);
+        endingFridayPicker.setValue(localDate);
     }
 
     public String getCellKey(Pane testPane) {

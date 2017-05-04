@@ -11,6 +11,7 @@ import csg.workspace.CSGWorkspace;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
+import javafx.scene.control.DatePicker;
 import jtps.jTPS_Transaction;
 
 /**
@@ -23,8 +24,11 @@ public class ScheduleItemAdderUR implements jTPS_Transaction {
     
     private String type;
     private Date date;
+    private String time;
     private String title;
     private String topic;
+    private String link;
+    private String criteria;
     
     public ScheduleItemAdderUR(CourseSiteGeneratorApp app) {
         this.app = app;
@@ -38,14 +42,19 @@ public class ScheduleItemAdderUR implements jTPS_Transaction {
         Calendar c = Calendar.getInstance();
         c.set(ld.getYear(), ld.getMonthValue(), ld.getDayOfMonth());
         this.date = c.getTime();
-        
+        this.time = workspace.getTimeTextField().getText();
         this.title = workspace.getScheduleItemTitleTextField().getText();
         this.topic = workspace.getTopicTextField().getText();
+        this.link = workspace.getLinkTextField().getText();
+        this.criteria = workspace.getCriteriaTextField().getText();
     }
     
     @Override
     public void doTransaction() {
-        data.addScheduleItem(type, date, title, topic);
+        data.addScheduleItem(type, date, time, title, topic, link, criteria);
+        
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        
     }
     
     @Override

@@ -111,8 +111,8 @@ public class TestSave {
         dataComponent.getRecitations().add(new Recitation("R01", "McKenna", "Monday 5:30 - 6:23 PM", "Old CS 2120", jacobEvans, jamesHoffman));
         GregorianCalendar g = new GregorianCalendar(2017, 2, 17);
         Date testDate = g.getTime();
-        dataComponent.getScheduleItems().add(new ScheduleItem("Holiday", testDate, "Snow Day", ""));
-        dataComponent.getScheduleItems().add(new ScheduleItem("Lecture", testDate, "Lecture 3", "Event Programming"));
+        dataComponent.getScheduleItems().add(new ScheduleItem("Holiday", testDate, "Snow Day", "", "", "", ""));
+        dataComponent.getScheduleItems().add(new ScheduleItem("Lecture", testDate, "Lecture 3", "Event Programming", "", "", ""));
         Color c1 = Color.BLACK;
         Color c2 = Color.BLUE;
         ProjectTeam sampleProjectTeam = new ProjectTeam("Team 1", c1, c2, "www.team1.com");

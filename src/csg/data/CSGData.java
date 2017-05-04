@@ -10,14 +10,17 @@ import csg.CourseSiteGeneratorApp;
 import csg.file.TimeSlot;
 import csg.workspace.CSGWorkspace;
 import djf.components.AppDataComponent;
+import java.time.LocalDate;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.DatePicker;
 import javafx.scene.layout.Pane;
 import properties_manager.PropertiesManager;
 
@@ -39,25 +42,28 @@ public class CSGData implements AppDataComponent {
     // TO UI LABELS, WHICH MEANS IF WE CHANGE VALUES IN THESE
     // PROPERTIES IT CHANGES WHAT APPEARS IN THOSE LABELS
     HashMap<String, StringProperty> officeHours;
-    
+
     // THESE ARE THE LANGUAGE-DEPENDENT VALUES FOR
     // THE OFFICE HOURS GRID HEADERS. NOTE THAT WE
     // LOAD THESE ONCE AND THEN HANG ON TO THEM TO
     // INITIALIZE OUR OFFICE HOURS GRID
     ArrayList<String> gridHeaders;
-    
+
     // THIS DATA STRUCTURE STORES THE COURSE INFORMATION
     CourseSite courseSiteInfo;
-    
+
     // THIS DATA STRUCTURE WILL STORE THE DATA FOR THE RECITATIONS
     ObservableList<Recitation> recitations;
-    
+
     // THE SCHEDULE ITEMS
     ObservableList<ScheduleItem> scheduleItems;
-    
+
+    // THE OBSERVABLE SCHEDULE ITEMS (ITEMS WHOSE DATES FALL WITHIN THE RANGE OF THE DATEPICKERS)
+    ObservableList<ScheduleItem> observableScheduleItems;
+
     // THE PROJECT TEAMS
     ObservableList<ProjectTeam> projectTeams;
-    
+
     // AND THE STUDENTS
     ObservableList<Student> students;
 
@@ -67,21 +73,21 @@ public class CSGData implements AppDataComponent {
     // NO MEANS FOR CHANGING THESE VALUES
     int startHour;
     int endHour;
-    
+
     // DEFAULT VALUES FOR START AND END HOURS IN MILITARY HOURS
     public static final int MIN_START_HOUR = 0;
     public static final int MAX_END_HOUR = 23;
-    
+
     // THESE ARE THE VALUES FOR THE CALENDAR BOUNDARY DATEPICKERS
     Date startDate;
     Date endDate;
 
     /**
-     * This constructor will setup the required data structures for
-     * use, but will have to wait on the office hours grid, since
-     * it receives the StringProperty objects from the Workspace.
-     * 
-     * @param initApp The application this data manager belongs to. 
+     * This constructor will setup the required data structures for use, but
+     * will have to wait on the office hours grid, since it receives the
+     * StringProperty objects from the Workspace.
+     *
+     * @param initApp The application this data manager belongs to.
      */
     public CSGData(CourseSiteGeneratorApp initApp) {
         // KEEP THIS FOR LATER
@@ -92,16 +98,17 @@ public class CSGData implements AppDataComponent {
         teachingAssistants = FXCollections.observableArrayList();
         recitations = FXCollections.observableArrayList();
         scheduleItems = FXCollections.observableArrayList();
+        observableScheduleItems = FXCollections.observableArrayList();
         projectTeams = FXCollections.observableArrayList();
         students = FXCollections.observableArrayList();
 
         // THESE ARE THE DEFAULT OFFICE HOURS
         startHour = MIN_START_HOUR;
         endHour = MAX_END_HOUR;
-        
+
         //THIS WILL STORE OUR OFFICE HOURS
         officeHours = new HashMap();
-        
+
         // THESE ARE THE LANGUAGE-DEPENDENT OFFICE HOURS GRID HEADERS
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         ArrayList<String> timeHeaders = props.getPropertyOptionsList(CSGProp.OFFICE_HOURS_TABLE_HEADERS);
@@ -110,12 +117,10 @@ public class CSGData implements AppDataComponent {
         gridHeaders.addAll(timeHeaders);
         gridHeaders.addAll(dowHeaders);
     }
-    
-    
-    
+
     /**
-     * Called each time new work is created or loaded, it resets all data
-     * and data structures such that they can be used for new values.
+     * Called each time new work is created or loaded, it resets all data and
+     * data structures such that they can be used for new values.
      */
     @Override
     public void resetData() {
@@ -123,17 +128,16 @@ public class CSGData implements AppDataComponent {
         endHour = MAX_END_HOUR;
         teachingAssistants.clear();
         officeHours.clear();
-        
-        CSGWorkspace workspaceComponent = (CSGWorkspace)app.getWorkspaceComponent();
-        
+
+        CSGWorkspace workspaceComponent = (CSGWorkspace) app.getWorkspaceComponent();
+
         workspaceComponent.getOfficeHour(true).getSelectionModel().select(null);
         workspaceComponent.getOfficeHour(true).getSelectionModel().select(startHour);
         workspaceComponent.getOfficeHour(false).getSelectionModel().select(null);
         workspaceComponent.getOfficeHour(false).getSelectionModel().select(endHour);
     }
-    
-    // ACCESSOR METHODS
 
+    // ACCESSOR METHODS
     public int getStartHour() {
         return startHour;
     }
@@ -141,7 +145,7 @@ public class CSGData implements AppDataComponent {
     public int getEndHour() {
         return endHour;
     }
-    
+
     public ArrayList<String> getGridHeaders() {
         return gridHeaders;
     }
@@ -149,27 +153,27 @@ public class CSGData implements AppDataComponent {
     public CourseSite getCourseSiteInfo() {
         return courseSiteInfo;
     }
-    
+
     public ObservableList getTeachingAssistants() {
         return teachingAssistants;
     }
-    
+
     public ObservableList getRecitations() {
         return recitations;
     }
-    
+
     public ObservableList getScheduleItems() {
         return scheduleItems;
     }
-    
+
     public ObservableList getProjectTeams() {
         return projectTeams;
     }
-    
+
     public ObservableList getStudents() {
         return students;
     }
-    
+
     public String getCellKey(int col, int row) {
         return col + "_" + row;
     }
@@ -182,7 +186,7 @@ public class CSGData implements AppDataComponent {
     public HashMap<String, StringProperty> getOfficeHours() {
         return officeHours;
     }
-    
+
     public int getNumRows() {
         return ((endHour - startHour) * 2) + 1;
     }
@@ -206,23 +210,26 @@ public class CSGData implements AppDataComponent {
         }
         return cellText;
     }
-    
+
     public String getCellKey(String day, String time) {
         int col = gridHeaders.indexOf(day);
         int row = 1;
         int hour = Integer.parseInt(time.substring(0, time.indexOf("_")));
         int milHour = hour;
 //        if (hour < startHour)
-        if(time.contains("pm"))
+        if (time.contains("pm")) {
             milHour += 12;
-        if(time.contains("12"))
+        }
+        if (time.contains("12")) {
             milHour -= 12;
+        }
         row += (milHour - startHour) * 2;
-        if (time.contains("_30"))
+        if (time.contains("_30")) {
             row += 1;
+        }
         return getCellKey(col, row);
     }
-    
+
     public TeachingAssistant getTA(String testName) {
         for (TeachingAssistant ta : teachingAssistants) {
             if (ta.getName().equals(testName)) {
@@ -231,45 +238,42 @@ public class CSGData implements AppDataComponent {
         }
         return null;
     }
-    
+
     /**
-     * This method is for giving this data manager the string property
-     * for a given cell.
+     * This method is for giving this data manager the string property for a
+     * given cell.
      */
     public void setCellProperty(int col, int row, StringProperty prop) {
         String cellKey = getCellKey(col, row);
         officeHours.put(cellKey, prop);
-    }    
-    
+    }
+
     /**
      * This method is for setting the string property for a given cell.
      */
     public void setGridProperty(ArrayList<ArrayList<StringProperty>> grid,
-                                int column, int row, StringProperty prop) {
+            int column, int row, StringProperty prop) {
         grid.get(row).set(column, prop);
     }
-    
 
-    
     private void initOfficeHours(int initStartHour, int initEndHour) {
         // NOTE THAT THESE VALUES MUST BE PRE-VERIFIED
         startHour = initStartHour;
         endHour = initEndHour;
-        
+
         // EMPTY THE CURRENT OFFICE HOURS VALUES
         officeHours.clear();
-            
+
         // WE'LL BUILD THE USER INTERFACE COMPONENT FOR THE
         // OFFICE HOURS GRID AND FEED THEM TO OUR DATA
         // STRUCTURE AS WE GO
-        CSGWorkspace workspaceComponent = (CSGWorkspace)app.getWorkspaceComponent();
+        CSGWorkspace workspaceComponent = (CSGWorkspace) app.getWorkspaceComponent();
         workspaceComponent.reloadOfficeHoursGrid(this);
-        
+
         workspaceComponent.getOfficeHour(true).getSelectionModel().select(startHour);
         workspaceComponent.getOfficeHour(false).getSelectionModel().select(endHour);
     }
-    
-    
+
     public void initHours(String startHourText, String endHourText) {
         int initStartHour = Integer.parseInt(startHourText);
         int initEndHour = Integer.parseInt(endHourText);
@@ -280,13 +284,12 @@ public class CSGData implements AppDataComponent {
             initOfficeHours(initStartHour, initEndHour);
         }
     }
-    
+
     //This method is for initializing the boolean value of isUndergrad for each TA
     public boolean initIsUndergradTA(String isUndergradString) {
-        
+
         return (isUndergradString.equalsIgnoreCase("true") ? true : false);
     }
-
 
     public boolean containsTA(String testName, String testEmail) {
         for (TeachingAssistant ta : teachingAssistants) {
@@ -299,27 +302,30 @@ public class CSGData implements AppDataComponent {
         }
         return false;
     }
-    
+
     public Recitation findRecitation(String recNum, String instructor) {
-        for (Recitation r: recitations) {
-            if (r.getInstructor().equals(instructor) && r.getSection().equals(recNum))
+        for (Recitation r : recitations) {
+            if (r.getInstructor().equals(instructor) && r.getSection().equals(recNum)) {
                 return r;
+            }
         }
         return null;
     }
 
     public boolean containsRecitation(String recNum, String instructor) {
-        for (Recitation r: recitations) {
-            if (r.getInstructor().equals(instructor) && r.getSection().equals(recNum))
+        for (Recitation r : recitations) {
+            if (r.getInstructor().equals(instructor) && r.getSection().equals(recNum)) {
                 return true;
+            }
         }
         return false;
     }
-    
+
     public boolean containsProjectTeam(String name) {
-        for (ProjectTeam p: projectTeams) {
-            if (p.getName().equals(name))
+        for (ProjectTeam p : projectTeams) {
+            if (p.getName().equals(name)) {
                 return true;
+            }
         }
         return false;
     }
@@ -345,91 +351,115 @@ public class CSGData implements AppDataComponent {
             }
         }
     }
-    
+
     public void addOfficeHoursReservation(String day, String time, String taName) {
         String cellKey = getCellKey(day, time);
         toggleTAOfficeHours(cellKey, taName);
     }
-    
+
     public void addRecitation(String section, String instructor, String dayTime, String location, TeachingAssistant ta1, TeachingAssistant ta2) {
         Recitation recitation = new Recitation(section, instructor, dayTime, location, ta1, ta2);
-        
+
         // ADD THE RECITATION
         if (!containsRecitation(section, instructor)) {
             recitations.add(recitation);
         }
-        
+
         // Provision for sorting here...
     }
-    
+
     public void removeRecitation(String section, String instructor) {
-        
+
         if (containsRecitation(section, instructor)) {
             recitations.remove(findRecitation(section, instructor));
         }
     }
-    
+
     // Overloading the removeRecitaion method?
-    
-    public void addScheduleItem(String type, Date date, String title, String topic) {
-        ScheduleItem s = new ScheduleItem(type, date, title, topic);
-        
+    public void addScheduleItem(String type, Date date, String time, String title, String topic, String link, String criteria) {
+
+        ScheduleItem s = new ScheduleItem(type, date, time, title, topic, link, criteria);
+
         if (!containsScheduleItem(title, date)) {
             scheduleItems.add(s);
+            CSGWorkspace workspace = (CSGWorkspace) app.getWorkspaceComponent();
+            DatePicker startMondayDatePicker = workspace.getStartingMondayPicker();
+            LocalDate ldStartMonday = startMondayDatePicker.getValue();
+            Calendar c1 = Calendar.getInstance();
+            c1.set(ldStartMonday.getYear(), ldStartMonday.getMonthValue(), ldStartMonday.getDayOfMonth());
+            Date startingMondayDate = c1.getTime();
+
+            DatePicker endingFridayDatePicker = workspace.getEndingFridayPicker();
+            LocalDate ldEndFriday = endingFridayDatePicker.getValue();
+            Calendar c2 = Calendar.getInstance();
+            c2.set(ldEndFriday.getYear(), ldEndFriday.getMonthValue(), ldEndFriday.getDayOfMonth());
+            Date endingFridayDate = c2.getTime();
+            
+            if (s.compareTo(startingMondayDate) >= 0 && s.compareTo(endingFridayDate) <= 0) {
+                observableScheduleItems.add(s);
+            }
         }
     }
-    
+
     public void removeScheduleItem(String title, Date date) {
         if (containsScheduleItem(title, date)) {
-            scheduleItems.remove(getScheduleItem(title, date));
+            ScheduleItem s = getScheduleItem(title, date);
+            scheduleItems.remove(s);
+            if (observableScheduleItems.contains(s))
+                observableScheduleItems.remove(s);
         }
+        
     }
-    
+
     public boolean containsScheduleItem(String title, Date d) {
-        for (ScheduleItem s: scheduleItems) {
-            if (s.getTitle().equals(title) &&  s.getDate().equals(d))
+        for (ScheduleItem s : scheduleItems) {
+            if (s.getTitle().equals(title) && s.getDate().equals(d)) {
                 return true;
+            }
         }
         return false;
     }
-    
+
     public ScheduleItem getScheduleItem(String title, Date date) {
-        for (ScheduleItem s: scheduleItems) {
-            if (s.getTitle().equals(title) && s.getDate().equals(date))
+        for (ScheduleItem s : scheduleItems) {
+            if (s.getTitle().equals(title) && s.getDate().equals(date)) {
                 return s;
+            }
         }
         return null;
     }
-    
+
     public void addProjectTeam(String name, Color c, Color t, String link) {
         ProjectTeam p = new ProjectTeam(name, c, t, link);
-        
-        if (!containsProjectTeam(name))
+
+        if (!containsProjectTeam(name)) {
             projectTeams.add(p);
+        }
     }
-    
+
     public void addProjectTeam(ProjectTeam team) {
         if (!containsProjectTeam(team.getName())) {
             projectTeams.add(team);
         }
     }
-    
+
     public void removeProjectTeam(String name) {
-        for (ProjectTeam p: projectTeams) {
-            if (!containsProjectTeam(name))
+        for (ProjectTeam p : projectTeams) {
+            if (!containsProjectTeam(name)) {
                 projectTeams.remove(p);
+            }
         }
     }
-    
+
     public void addStudent(String firstName, String lastName, ProjectTeam t, String role) {
         Student s = new Student(firstName, lastName, t, role);
         students.add(s);
     }
-    
+
     public void addStudent(Student s) {
         students.add(s);
     }
-    
+
     public void editStudent(String firstName, String lastName, ProjectTeam team, String role) {
         Student s = getStudent(firstName, lastName);
         if (s != null) {
@@ -440,23 +470,23 @@ public class CSGData implements AppDataComponent {
             s.setRole(role);
         }
     }
-    
+
     public Student getStudent(String firstName, String lastName) {
-        for (Student s: students) {
+        for (Student s : students) {
             if (s.getFirstName().equals(firstName) && s.getLastName().equals(lastName)) {
                 return s;
             }
         }
         return null;
     }
-    
+
     public void removeStudent(String firstName, String lastName) {
         Student s = getStudent(firstName, lastName);
         if (s != null) {
             students.remove(s);
         }
     }
-    
+
     public void removeStudent(Student s) {
         if (students.contains(s)) {
             students.remove(s);
@@ -464,9 +494,8 @@ public class CSGData implements AppDataComponent {
     }
 
     /**
-     * This function toggles the taName in the cell represented
-     * by cellKey. Toggle means if it's there it removes it, if
-     * it's not there it adds it.
+     * This function toggles the taName in the cell represented by cellKey.
+     * Toggle means if it's there it removes it, if it's not there it adds it.
      */
     public void toggleTAOfficeHours(String cellKey, String taName) {
         StringProperty cellProp = officeHours.get(cellKey);
@@ -482,10 +511,10 @@ public class CSGData implements AppDataComponent {
             cellProp.setValue(cellText + "\n" + taName);
         }
     }
-    
+
     /**
-     * This method removes taName from the office grid cell
-     * represented by cellProp.
+     * This method removes taName from the office grid cell represented by
+     * cellProp.
      */
     public void removeTAFromCell(StringProperty cellProp, String taName) {
         // GET THE CELL TEXT
@@ -493,31 +522,28 @@ public class CSGData implements AppDataComponent {
         // IS IT THE ONLY TA IN THE CELL?
         if (cellText.equals(taName)) {
             cellProp.setValue("");
-        }
-        // IS IT THE FIRST TA IN A CELL WITH MULTIPLE TA'S?
+        } // IS IT THE FIRST TA IN A CELL WITH MULTIPLE TA'S?
         else if (cellText.indexOf(taName) == 0) {
             int startIndex = cellText.indexOf("\n") + 1;
             cellText = cellText.substring(startIndex);
             cellProp.setValue(cellText);
-        }
-        // IS IT IN THE MIDDLE OF A LIST OF TAs
+        } // IS IT IN THE MIDDLE OF A LIST OF TAs
         else if (cellText.indexOf(taName) < cellText.indexOf("\n", cellText.indexOf(taName))) {
             int startIndex = cellText.indexOf("\n" + taName);
             int endIndex = startIndex + taName.length() + 1;
             cellText = cellText.substring(0, startIndex) + cellText.substring(endIndex);
             cellProp.setValue(cellText);
-        }
-        // IT MUST BE THE LAST TA
+        } // IT MUST BE THE LAST TA
         else {
             int startIndex = cellText.indexOf("\n" + taName);
             cellText = cellText.substring(0, startIndex);
             cellProp.setValue(cellText);
         }
     }
-    
-    public void replaceTAName(String name, String newName){
-        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
-        for(Pane p : workspace.getTADataOfficeHoursGridTACellPanes().values()){
+
+    public void replaceTAName(String name, String newName) {
+        CSGWorkspace workspace = (CSGWorkspace) app.getWorkspaceComponent();
+        for (Pane p : workspace.getTADataOfficeHoursGridTACellPanes().values()) {
             String cellKey = p.getId();
             StringProperty cellProp = officeHours.get(cellKey);
             String cellText = cellProp.getValue();
@@ -527,40 +553,45 @@ public class CSGData implements AppDataComponent {
             }
         }
     }
-    
-    public void changeTime(int startTime, int endTime, ArrayList<TimeSlot> officeHours){
+
+    public void changeTime(int startTime, int endTime, ArrayList<TimeSlot> officeHours) {
         initHours("" + startTime, "" + endTime);
-        for(TimeSlot ts : officeHours){
+        for (TimeSlot ts : officeHours) {
             String temp = ts.getTime();
             int tempint = Integer.parseInt(temp.substring(0, temp.indexOf('_')));
-            if(temp.contains("pm"))
+            if (temp.contains("pm")) {
                 tempint += 12;
-            if(temp.contains("12"))
+            }
+            if (temp.contains("12")) {
                 tempint -= 12;
-            if(tempint >= startTime && tempint <= endTime)
+            }
+            if (tempint >= startTime && tempint <= endTime) {
                 addOfficeHoursReservation(ts.getDay(), ts.getTime(), ts.getName());
+            }
         }
     }
-    
+
     public void changeDate(Date startDate, Date endDate) {
-        
+
     }
-    
+
     public TeachingAssistant findTeachingAssistant(String name) {
-        for (TeachingAssistant ta: teachingAssistants) {
+        for (TeachingAssistant ta : teachingAssistants) {
             if (ta.getName().equals(name)) {
                 return ta;
             }
-            if (ta.getName().contains(name))
+            if (ta.getName().contains(name)) {
                 return ta;
+            }
         }
         return null;
     }
-    
+
     public ProjectTeam findProjectTeam(String teamName) {
-        for (ProjectTeam p: projectTeams) {
-            if (p.getName().equals(teamName))
+        for (ProjectTeam p : projectTeams) {
+            if (p.getName().equals(teamName)) {
                 return p;
+            }
         }
         return null;
     }

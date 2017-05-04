@@ -82,8 +82,11 @@ public class CSGFiles implements AppFileComponent {
     static final String JSON_END_DATE = "endDate";
     static final String JSON_SCHEDULE_TYPE = "type";
     static final String JSON_SCHEDULE_ITEM_DATE = "schedule_item_date";
+    static final String JSON_SCHEDULE_ITEM_TIME = "schedule_item_time";
     static final String JSON_SCHEDULE_ITEM_TITLE = "schedule_item_title";
     static final String JSON_SCHEDULE_ITEM_TOPIC = "schedule_item_topic";
+    static final String JSON_SCHEDULE_ITEM_LINK = "schedule_item_link";
+    static final String JSON_SCHEDULE_ITEM_CRITERIA = "schedule_item_criteria";
     static final String JSON_PROJECT_TEAM_NAME = "project_team_name";
     static final String JSON_PROJECT_TEAM_RED_COLOR = "project_team_red_color";
     static final String JSON_PROJECT_TEAM_GREEN_COLOR = "project_team_green_color";
@@ -233,11 +236,14 @@ public class CSGFiles implements AppFileComponent {
             JsonObject jsonScheduleItem = jsonScheduleItemArray.getJsonObject(i);
             String type = jsonScheduleItem.getString(JSON_SCHEDULE_TYPE);
             String date = jsonScheduleItem.getString(JSON_SCHEDULE_ITEM_DATE);
+            String time = jsonScheduleItem.getString(JSON_SCHEDULE_ITEM_TIME);
             String title = jsonScheduleItem.getString(JSON_SCHEDULE_ITEM_TITLE);
             String topic = jsonScheduleItem.getString(JSON_SCHEDULE_ITEM_TOPIC);
+            String link = jsonScheduleItem.getString(JSON_SCHEDULE_ITEM_LINK);
+            String criteria = jsonScheduleItem.getString(JSON_SCHEDULE_ITEM_CRITERIA);
             SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd hh:mm:ss zzz YYYY");
             Date scheduleItemDate = sdf.parse(date);
-            dataManager.addScheduleItem(type, scheduleItemDate, title, topic);
+            dataManager.addScheduleItem(type, scheduleItemDate, time, title, topic, link, criteria);
         }
         
         //Project Teams
@@ -360,8 +366,11 @@ public class CSGFiles implements AppFileComponent {
             JsonObject scheduleItem = Json.createObjectBuilder()
                     .add(JSON_SCHEDULE_TYPE, s.getType())
                     .add(JSON_SCHEDULE_ITEM_DATE, s.getDate().toString())
-                    .add(JSON_SCHEDULE_ITEM_TOPIC, s.getTopic())
+                    .add(JSON_SCHEDULE_ITEM_TIME, s.getTime())
                     .add(JSON_SCHEDULE_ITEM_TITLE, s.getTitle())
+                    .add(JSON_SCHEDULE_ITEM_TOPIC, s.getTopic())
+                    .add(JSON_SCHEDULE_ITEM_LINK, s.getLink())
+                    .add(JSON_SCHEDULE_ITEM_CRITERIA, s.getCriteria())
                     .build();
             scheduleItemArrayBuilder.add(scheduleItem);
         }
