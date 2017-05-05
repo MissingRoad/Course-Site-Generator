@@ -10,7 +10,7 @@ import csg.data.CSGData;
 import csg.data.ProjectTeam;
 import csg.data.Student;
 import csg.workspace.CSGWorkspace;
-import javafx.scene.control.TableView;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import jtps.jTPS_Transaction;
 
@@ -29,8 +29,9 @@ public class StudentAdderUR implements jTPS_Transaction {
     public StudentAdderUR(CourseSiteGeneratorApp app) {
         CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
         this.data = (CSGData)app.getDataComponent();
-        TableView projectTeams = workspace.getProjectTeams();
-        this.p = (ProjectTeam)projectTeams.getSelectionModel().getSelectedItem();
+        ComboBox projectTeamBox = workspace.getTeamBox();
+        Object selectedItem = projectTeamBox.getSelectionModel().getSelectedItem();
+        this.p = (ProjectTeam)selectedItem;
         TextField firstNameTextField = workspace.getFirstNameTextField();
         TextField lastNameTextField = workspace.getLastNameTextField();
         TextField roleTextField = workspace.getRoleTextField();

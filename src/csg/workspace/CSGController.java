@@ -67,6 +67,7 @@ import static csg.style.CSGStyle.CLASS_OFFICE_HOURS_GRID_TA_CELL_PANE;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.DatePicker;
 import javafx.scene.paint.Color;
@@ -493,6 +494,7 @@ public class CSGController {
             // WE'VE CHANGED STUFF
             markWorkAsEdited();
         }
+        projectTeams.refresh();
     }
 
     // Handling DELETE for ScheduleItem TableView - NOT COMPLETE, NEED TO DO THE JTPS FOR SCHEDULEITEMS
@@ -771,5 +773,39 @@ public class CSGController {
         jTPS.addTransaction(changeTimeUR);
 
         markWorkAsEdited();
+    }
+    
+    public void handleStartEndDatePickerChange() {
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        CSGData data = (CSGData)app.getDataComponent();
+        TableView scheduleItems = workspace.getScheduleItems();
+        
+        DatePicker startMondayPicker = workspace.getStartingMondayPicker();
+        DatePicker endFridayPicker = workspace.getEndingFridayPicker();
+        
+        LocalDate ldMonday = startMondayPicker.getValue();
+        LocalDate ldFriday = endFridayPicker.getValue();
+        
+        Calendar c1 = Calendar.getInstance();
+        Calendar c2 = Calendar.getInstance();
+        
+        c1.set(ldMonday.getYear(), ldMonday.getMonthValue(), ldMonday.getDayOfMonth());
+        c2.set(ldFriday.getYear(), ldFriday.getMonthValue(), ldFriday.getDayOfMonth());
+        
+        Date startMondayDate = c1.getTime();
+        Date endFridayDate = c2.getTime();
+        
+        data.clearObservableScheduleItemsList();
+        
+        ObservableList<ScheduleItem> scheduleItemsList = data.getScheduleItems();
+        
+        for (ScheduleItem s: scheduleItemsList) {
+            int a = s.compareTo(startMondayDate);
+            int b = s.compareTo(endFridayDate);
+            if (a >= 0 && b <= 0)
+                data.addObservableScheduleItem(s);
+        }
+        
+        scheduleItems.refresh();
     }
 }

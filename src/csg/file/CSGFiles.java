@@ -284,6 +284,7 @@ public class CSGFiles implements AppFileComponent {
             ProjectTeam projectTeam = dataManager.findProjectTeam(team);
             Student s = new Student(firstName, lastName, projectTeam, role);
             projectTeam.addStudent(s);
+            dataManager.addStudent(s);
         }
     }
       

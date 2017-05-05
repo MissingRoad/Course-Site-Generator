@@ -492,7 +492,8 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         changeBannerSchoolImageButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
         changeLeftFooterImageButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
         changeRightFooterImageButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
-        stylesheetSelect = new ComboBox();
+        ObservableList stylesheetOptions = FXCollections.observableArrayList(props.getProperty(CSGProp.CSG_SEA_WOLF_CSS.toString()), props.getProperty(CSGProp.COURSE_HOMEPAGE_LAYOUT.toString()));
+        stylesheetSelect = new ComboBox(stylesheetOptions);
         stylesheetNote = new Label(props.getProperty(CSGProp.COURSE_STYLESHEET_NOTE_LABEL).toString());
 
         // EVENT HANDLERS FOR THE INDIVIDUAL COMPONENTS - PAGE STYLE PORTION
@@ -922,7 +923,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         linkTextField = new TextField();
         criteriaLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEM_CRITERIA_LABEL.toString()));
         criteriaTextField = new TextField();
-        addUpdateScheduleItemButton = new Button(props.getProperty(CSGProp.ADD_UPDATE_BUTTON_LABEL.toString()));
+        addUpdateScheduleItemButton = new Button(props.getProperty(CSGProp.ADD_BUTTON_LABEL.toString()));
         clearScheduleItemButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL.toString()));
 
         // SET UP THE EVENT HANDLING, SCHEDULE ITEMS TAB
@@ -991,7 +992,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
             linkTextField.clear();
             criteriaTextField.clear();
             addScheduleItem = true;
-            addUpdateScheduleItemButton.setText(CSGProp.ADD_BUTTON_LABEL.toString());
+            addUpdateScheduleItemButton.setText(props.getProperty(CSGProp.ADD_BUTTON_LABEL));
         });
 
         scheduleItems.setFocusTraversable(true);
@@ -1008,6 +1009,14 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         // For DELETING a ScheduleItem
         deleteScheduleItemButton.setOnAction(e -> {
             controller.handleRemoveScheduleItem();
+        });
+        
+        // HANDLING FOR THE DATEPICKERS
+        startingMondayPicker.setOnAction(e -> {
+            controller.handleStartEndDatePickerChange();
+        });
+        endingFridayPicker.setOnAction(e -> {
+            controller.handleStartEndDatePickerChange();
         });
 
         //add the components to addEditSchedulePane
@@ -1106,6 +1115,18 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         teamMemberLastName = new TableColumn(props.getProperty(CSGProp.STUDENT_LAST_NAME_LABEL.toString()));
         teamMemberTeam = new TableColumn(props.getProperty(CSGProp.STUDENT_TEAM_LABEL.toString()));
         teamMemberRole = new TableColumn(props.getProperty(CSGProp.STUDENT_ROLE_LABEL.toString()));
+        teamMemberFirstName.setCellValueFactory(
+                new PropertyValueFactory<ProjectTeam, String>("firstName")
+        );
+        teamMemberLastName.setCellValueFactory(
+                new PropertyValueFactory<ProjectTeam, String>("lastName")
+        );
+        teamMemberTeam.setCellValueFactory(
+                new PropertyValueFactory<ProjectTeam, String>("team")
+        );
+        teamMemberRole.setCellValueFactory(
+                new PropertyValueFactory<ProjectTeam, String>("role")
+        );
         teamMembers.getColumns().addAll(teamMemberFirstName, teamMemberLastName, teamMemberTeam, teamMemberRole);
         ObservableList<Student> students = data.getStudents();
         teamMembers.setItems(students);
@@ -1122,7 +1143,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         teamBox.setItems(data.getProjectTeams());
         roleLabel = new Label(props.getProperty(CSGProp.STUDENT_ROLE_LABEL.toString()));
         roleTextField = new TextField();
-        addUpdateStudentsButton = new Button(props.getProperty(CSGProp.ADD_UPDATE_BUTTON_LABEL.toString()));
+        addUpdateStudentsButton = new Button(props.getProperty(CSGProp.ADD_BUTTON_LABEL.toString()));
         clearStudentsButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL.toString()));
 
         // EVENT HANDLING, PROJECT TEAMS PANE
@@ -1154,6 +1175,13 @@ public class CSGWorkspace extends AppWorkspaceComponent {
                 controller.handleAddProjectTeam();
             }
         });
+        addEditTeamButton.setOnAction(e ->{
+            if (!addProjectTeam) {
+                controller.handleEditProjectTeam();
+            } else {
+                controller.handleAddProjectTeam();
+            }
+        });
         clearTeamButton.setOnAction(e -> {
             addEditTeamButton.setText(props.getProperty(CSGProp.ADD_BUTTON_LABEL.toString()));
             addProjectTeam = true;
@@ -1162,7 +1190,9 @@ public class CSGWorkspace extends AppWorkspaceComponent {
             teamLinkTextField.clear();
             projectTeams.getSelectionModel().select(null);
         });
-
+        deleteProjectButton.setOnAction(e -> {
+            controller.deleteProjectTeamFromProjectTeams();
+        });
         projectTeams.setFocusTraversable(true);
         projectTeams.setOnKeyPressed(e -> {
             //controller.handleKeyPress(e.getCode()); //MUST FIX TO DELETE FROM RECITATION TABLE
@@ -1178,7 +1208,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         });
 
         // EVENT HANDLING, ADD/EDIT STUDENTS PANE
-        /*firstNameTextField.setOnAction(e -> {
+        firstNameTextField.setOnAction(e -> {
             if (!addStudent) {
                 controller.handleEditStudent();
             } else {
@@ -1186,6 +1216,13 @@ public class CSGWorkspace extends AppWorkspaceComponent {
             }
         });
         lastNameTextField.setOnAction(e -> {
+            if (!addStudent) {
+                controller.handleEditStudent();
+            } else {
+                controller.handleAddStudent();
+            }
+        });
+        roleTextField.setOnAction(e -> {
             if (!addStudent) {
                 controller.handleEditStudent();
             } else {
@@ -1208,26 +1245,30 @@ public class CSGWorkspace extends AppWorkspaceComponent {
             roleTextField.clear();
             teamMembers.getSelectionModel().select(null);
         });
+        deleteStudentsButton.setOnAction(e -> {
+            controller.deleteStudentFromTeamMembers();
+        });
 
         teamMembers.setFocusTraversable(true);
         teamMembers.setOnKeyPressed(e -> {
-            //controller.handleKeyPress(e.getCode()); //MUST FIX TO DELETE FROM RECITATION TABLE
+            controller.handleKeyPressRecitationData(e.getCode()); //MUST FIX TO DELETE FROM RECITATION TABLE
         });
         teamMembers.setOnMouseClicked(e -> {
             addUpdateStudentsButton.setText(props.getProperty(CSGProp.EDIT_BUTTON_LABEL.toString()));
             addStudent = false;
             //controller.loadStudenttotext();
-        });*/
+        });
+        
         addEditStudentsPane.add(firstNameLabel, 0, 0);
         addEditStudentsPane.add(firstNameTextField, 1, 0);
         addEditStudentsPane.add(lastNameLabel, 2, 0);
         addEditStudentsPane.add(lastNameTextField, 3, 0);
         addEditStudentsPane.add(teamLabel, 0, 1);
-        addEditStudentsPane.add(teamBox, 1, 2);
-        addEditStudentsPane.add(roleLabel, 2, 2);
-        addEditStudentsPane.add(roleTextField, 3, 2);
-        addEditStudentsPane.add(addUpdateStudentsButton, 4, 2);
-        addEditStudentsPane.add(clearStudentsButton, 5, 2);
+        addEditStudentsPane.add(teamBox, 1, 1);
+        addEditStudentsPane.add(roleLabel, 2, 1);
+        addEditStudentsPane.add(roleTextField, 3, 1);
+        addEditStudentsPane.add(addUpdateStudentsButton, 4, 1);
+        addEditStudentsPane.add(clearStudentsButton, 5, 1);
         projectTeamStudentsVBox.getChildren().addAll(projectTeamStudentsTopBox, teamMembers, addEditStudentsLabel, addEditStudentsPane);
         projectDataVBox.getChildren().addAll(projectTeamsVBox, projectTeamStudentsVBox);
         projectDataTab.setContent(projectDataVBox);
@@ -2312,6 +2353,16 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         // AND FINALLY, GIVE THE TEXT PROPERTY TO THE DATA MANAGER
         // SO IT CAN MANAGE ALL CHANGES
         dataComponent.setCellProperty(col, row, cellLabel.textProperty());
+    }
+    
+    @Override
+    public void handleUndoRequest() {
+        controller.Undo();
+    }
+    
+    @Override
+    public void handleRedoRequest() {
+        controller.Redo();
     }
 
 }

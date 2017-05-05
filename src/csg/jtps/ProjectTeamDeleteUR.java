@@ -21,10 +21,9 @@ import jtps.jTPS_Transaction;
  */
 public class ProjectTeamDeleteUR implements jTPS_Transaction {
     private CourseSiteGeneratorApp app;
-    private CSGData data;
     private ProjectTeam team;
     private ObservableList<Student> teamMembers;
-    
+    private CSGData data;
     private String name;
     private Color teamColor;
     private Color teamTextColor;
@@ -56,6 +55,7 @@ public class ProjectTeamDeleteUR implements jTPS_Transaction {
         this.data.addProjectTeam(team);
         for (Student s: teamMembers) {
             this.team.addStudent(s);
+            this.data.addStudent(s);
         }
     }
 }

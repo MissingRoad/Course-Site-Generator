@@ -16,6 +16,7 @@ import javafx.collections.ObservableList;
  * @author dsli
  */
 public class ProjectTeam {
+
     private final StringProperty name;
     private Color color;
     private Color textColor;
@@ -32,7 +33,9 @@ public class ProjectTeam {
     }
     
     public void addStudent(Student s) {
-        this.teamMembers.add(s);
+        if (!(teamMembers.contains(s))) {
+            this.teamMembers.add(s);
+        }
     }
     
     public void removeStudent(Student s) {
@@ -49,7 +52,7 @@ public class ProjectTeam {
     }
     
     public Student findStudent(String name) {
-        for (Student s: teamMembers) {
+        for (Student s : teamMembers) {
             String fullName = s.getFirstName() + s.getLastName();
             if (name.equals(fullName)) {
                 return s;
@@ -93,7 +96,7 @@ public class ProjectTeam {
     public void setLink(String newLink) {
         this.link.set(newLink);
     }
-    
+
     // Compare and toString methods to be implemented later
     @Override
     public String toString() {

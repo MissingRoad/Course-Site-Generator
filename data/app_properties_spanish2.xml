@@ -12,6 +12,9 @@
 	<property name="APP_LOGO"	    value="TAManagerLogo.png"></property>
 	<property name="APP_PATH_CSS"	    value="style/"></property>
 	<property name="APP_CSS"	    value="csg_style.css"></property>
+<property name = "CSG_SEA_WOLF_CSS" value = "sea_wolf.css"></property>
+	<property name = "COURSE_HOMEPAGE_LAYOUT" value = "course_homepage_layout.css"></property>
+
         
         <!-- PROGRAM ICON FILES -->
         <property name="NEW_ICON"	    value="New.png"></property>

@@ -1,0 +1,306 @@
+{
+    "startingMondayMonth":  "1",
+    "startingMondayDay":    "23",
+    "endingFridayMonth":    "5",
+    "endingFridayDay":      "19",
+    "holidays": [
+        { "month": "2",     "day": "9",     "title": "SNOW DAY<br /><img src='./images/SnowDay.gif' />", "link": "http://funnybizblog.com/funny-stuff/calvin-hobbes-snowman-cartoons" },
+        { "month": "3",   "day": "13",     "title": "SPRING BREAK<br /><br /><br />",                 "link": "http://www.dol.gov/laborday/history.htm" }, 
+        { "month": "3",   "day": "14",     "title": "SPRING BREAK<br /><br /><br />",               "link": "http://www.stonybrook.edu/registrar/calendar-academic.shtml" }, 
+        { "month": "3",  "day": "15",    "title": "SPRING BREAK<br /><br /><br />",                "link": "http://www.travelchannel.com/interests/holidays/articles/thanksgiving-travel-tips" }, 
+        { "month": "3",  "day": "16",    "title": "SPRING BREAK<br /><br /><br />",              "link": "https://www.youtube.com/watch?v=wKGX8EbYarU" },
+        { "month": "3",  "day": "17",    "title": "SPRING BREAK<br /><br /><br />",              "link": "http://blackfridaydeathcount.com" },
+        { "month": "5",  "day": "8",    "title": "READING DAY<br /><br /><br />",               "link": "http://www.stonybrook.edu/commcms/registrar/calendars/academic_calendars.html" },
+        { "month": "5",  "day": "9",    "title": "<br /><br /><br /><br />",                          "link": "" },
+        { "month": "5",  "day": "10",    "title": "<br /><br /><br /><br />",                          "link": "" },
+        { "month": "5",  "day": "11",    "title": "<br /><br /><br /><br />",                          "link": "" },
+        { "month": "5",  "day": "12",    "title": "<br /><br /><br /><br />",                          "link": "" },
+        { "month": "5",  "day": "15",    "title": "<br />",                          "link": "" },
+        { "month": "5",  "day": "16",    "title": "<br /><br /><br /><br />",                          "link": "" },
+        { "month": "5",  "day": "17",    "title": "<br /><br /><br /><br />",                          "link": "" }
+    ],
+    "lectures": [
+        {
+            "month": "1",
+            "day": "24",
+            "title": "Lecture 1",
+            "topic": "Introduction<br /><br /><br /><br />",
+            "link": "https://blackboard.stonybrook.edu/bbcswebdav/pid-3846442-dt-content-rid-24761641_1/xid-24761641_1"
+        },
+        {
+            "month": "1",
+            "day": "26",
+            "title": "Lecture 2",
+            "topic": "Google App Engine<br />Applications<br />(<a href='http://prezi.com/mkjw83mxxj06/google-app-engine-setup-deployment/'>setup</a>) (<a href='https://prezi.com/83n1ftuyou2-/google-app-engine-development/'>dev</a>)<br /><br />",
+            "link": "none"
+        },
+        {
+            "month": "1",
+            "day": "31",
+            "title": "Lecture 3",
+            "topic": "<a href='https://prezi.com/jcteoel300yw/javaee-servlets-jsps/'>Servlets &amp; JSPs</a><br /><br />",
+            "link": "none"
+        },
+        {
+            "month": "2",
+            "day": "2",
+            "title": "Lecture 4",
+            "topic": "<a href='http://prezi.com/4k-6n0ekkae8/javascript-intro/'>JavaScript</a>,<br /><a href='http://prezi.com/4bm3oqfw6q1w/intro-to-jquery/'>jQuery</a>,&amp;<br /><a href='http://prezi.com/m39dksf3oql9/the-dom/'>The DOM</a><br /><br /><br />",
+            "link": "none"
+        },
+        {
+            "month": "2",
+            "day": "7",
+            "title": "Lecture 5",
+            "topic": "Front-End<br />Development<br /><br /><br />",
+            "link": "https://blackboard.stonybrook.edu/bbcswebdav/pid-4026100-dt-content-rid-26311401_1/xid-26311401_1"
+        },
+        {
+            "month": "2",
+            "day": "14",
+            "title": "Lecture 7",
+            "topic": "Formal Project<br />Introduction<br /><br /><br /><br />",
+            "link": "https://blackboard.stonybrook.edu/bbcswebdav/pid-4029599-dt-content-rid-26375765_1/xid-26375765_1"
+        },
+        {
+            "month": "2",
+            "day": "16",
+            "title": "Lecture 8",
+            "topic": "Software<br />Engineering<br />Strategies<br /><br />",
+            "link": "https://blackboard.stonybrook.edu/bbcswebdav/pid-4031261-dt-content-rid-26398258_1/xid-26398258_1"
+        },
+        {
+            "month": "2",
+            "day": "21",
+            "title": "Lecture 9",
+            "topic": "Use-Case<br />Modeling<br /><br />",
+            "link": "https://blackboard.stonybrook.edu/bbcswebdav/pid-4032856-dt-content-rid-26425441_1/xid-26425441_1"
+        },
+        {
+            "month": "2",
+            "day": "23",
+            "title": "Lecture 10",
+            "topic": "Surprise<br />Project<br />Presentations<br /><br />",
+            "link": "none"
+        },
+        {
+            "month": "2",
+            "day": "28",
+            "title": "Lecture 11",
+            "topic": "Use-Case<br />Modeling<br />(continued)<br /><br />",
+            "link": "none"
+        },
+        {
+            "month": "3",
+            "day": "2",
+            "title": "Lecture 12",
+            "topic": "Progressive<br />Web Apps",
+            "link": "https://blackboard.stonybrook.edu/bbcswebdav/pid-4036971-dt-content-rid-26506529_1/xid-26506529_1"
+        },
+        {
+            "month": "3",
+            "day": "7",
+            "title": "Lecture 13",
+            "topic": "Project<br />Management<br /><br />",
+            "link": "https://blackboard.stonybrook.edu/bbcswebdav/pid-4042687-dt-content-rid-26629513_1/xid-26629513_1"
+        },
+        {
+            "month": "3",
+            "day": "9",
+            "title": "NO LECTURE",
+            "topic": "Project Meeting Day<br /><br />",
+            "link": "none"
+        },
+        {
+            "month": "3",
+            "day": "21",
+            "title": "Lecture 15",
+            "topic": "Project Meetings<br /><br />",
+            "link": "none"
+        },
+        {
+            "month": "3",
+            "day": "23",
+            "title": "NO LECTURE<br />",
+            "topic": "",
+            "link": "none"
+        },
+        {
+            "month": "3",
+            "day": "28",
+            "title": "Lecture 17",
+            "topic": "Object-Oriented<br />Design &amp; Analysis<br /><br />",
+            "link": "https://blackboard.stonybrook.edu/bbcswebdav/pid-4036970-dt-content-rid-26506528_1/xid-26506528_1"
+        },
+        {
+            "month": "3",
+            "day": "30",
+            "title": "Lecture 17",
+            "topic": "Test<br />Planning<br /><br />",
+            "link": "https://blackboard.stonybrook.edu/bbcswebdav/pid-4054902-dt-content-rid-26863515_1/xid-26863515_1"
+
+        },
+        {
+            "month": "4",
+            "day": "4",
+            "title": "Lecture 19",
+            "topic": "Object-Oriented<br />Design &amp; Analyis<br />(continued)<br /><br />",
+            "link": "none"
+        },
+        {
+            "month": "4",
+            "day": "6",
+            "title": "NO LECTURE",
+            "topic": "<br />",
+            "link": "none"
+        },
+        {
+            "month": "4",
+            "day": "11",
+            "title": "Lecture 21",
+            "topic": "Ethics",
+            "link": "https://blackboard.stonybrook.edu/bbcswebdav/pid-4062636-dt-content-rid-26985788_1/xid-26985788_1"
+        },
+        {
+            "month": "4",
+            "day": "13",
+            "title": "MIDTERM EXAM<br />(Lectures 1-21)<br />",
+            "topic": "<br /><br />",
+            "link": "none"
+        },
+        {
+            "month": "4",
+            "day": "18",
+            "title": "NO LECTURE",
+            "topic": "(Code Reviews)",
+            "link": "none"
+        },
+        {
+            "month": "4",
+            "day": "20",
+            "title": "NO LECTURE<br />",
+            "topic": "",
+            "link": "none"
+        },
+        {
+            "month": "4",
+            "day": "25",
+            "title": "NO LECTURE",
+            "topic": "(Code Reviews)",
+            "link": "https://docs.google.com/spreadsheets/d/1Cf8cRfNoRjl7FLzo_Z9F8Wu2jJQdsQjwVF6Fcev2vec/edit#gid=182041960"
+        },
+        {
+            "month": "4",
+            "day": "27",
+            "title": "NO LECTURE",
+            "topic": "(Code Reviews)",
+            "link": "https://docs.google.com/spreadsheets/d/1Cf8cRfNoRjl7FLzo_Z9F8Wu2jJQdsQjwVF6Fcev2vec/edit#gid=182041960"
+        },
+        {
+            "month": "5",
+            "day": "2",
+            "title": "NO LECTURE",
+            "topic": "",
+            "link": "none"
+        },
+        {
+            "month": "5",
+            "day": "4",
+            "title": "NO LECTURE",
+            "topic": "<br />",
+            "link": "none"
+        }
+    ],
+    "references": [
+        { "month": "1",     "day": "26",     "title": "Reference:",      "topic": "-Google App Engine",    "link": "https://developers.google.com/appengine/" },
+        { "month": "1",     "day": "31",     "title": "Reference:",      "topic": "JavaEE 5 Tutorial<br /><br />",   "link": "https://docs.oracle.com/javaee/5/tutorial/doc/" },
+        { "month": "9",     "day": "8",     "title": "Reference:",      "topic": "w3schools.com<br /><br />",   "link": "http://www.w3schools.com/" },
+        { "month": "9",     "day": "13",    "title": "Reference:",      "topic": "JavaEE5 Tutorial<br />", "link": "https://docs.oracle.com/javaee/5/tutorial/doc/"},
+        { "month": "9",     "day": "13",    "title": "Reference:",      "topic": "Google App Engine<br /><br />",   "link": "https://developers.google.com/appengine/" },
+        { "month": "9",     "day": "15",    "title": "Reference:",      "topic": "Web Starter Kit", "link": "https://developers.google.com/web/tools/starter-kit/" },
+        { "month": "9",     "day": "15",    "title": "Reference:",      "topic": "Visual Style Guide", "link": "http://google.github.io/web-starter-kit/hello-world/styleguide.html"},
+        { "month": "9",     "day": "15",    "title": "Reference:",          "topic": "Progressive<br />Web Apps", "link": "https://www.youtube.com/watch?v=MyQ8mtR9WxI" },
+        { "month": "9",     "day": "15",    "title": "Reference:",      "topic": "Code Lab:<br />Your First Progressive<br />Web App<br />", "link": "https://codelabs.developers.google.com/codelabs/your-first-pwapp/#0" },
+        { 
+            "month": "9",
+            "day": "22",
+            "title": "Reference",
+            "topic": "IEEE SRS",
+            "link": "./hw/IEEE-SW.pdf"
+        },
+        {
+            "month": "9",
+            "day": "22",
+            "title": "Reference",
+            "topic": "Example SRS",
+            "link": "./hw/jClassDesignerSRS.pdf"
+        }
+    ],
+    "recitations": [
+    ],
+    "hws": [
+        {
+            "month": "2",
+            "day": "14",
+            "title": "Team Building Exercise",
+            "topic": "due @ 11:59pm<br />(GAE w/ Spring)",
+            "link": "./hw/TeamBuildingExercise.html",
+            "time": "11:59pm",
+            "criteria": "none"
+        },
+        {
+            "month": "2",
+            "day": "27",
+            "title": "<span class=\"hw\">Group Project</span><br />Grant Proposal",
+            "topic": "due @ 11:59pm<br />",
+            "link": "./hw/GroupProjectGrantProposal.html",
+            "time": "11:59pm",
+            "criteria": "none"
+        },
+        {
+            "month": "3",
+            "day": "23",
+            "title": "<span class=\"hw\">Group Project<br />Presentation</span><br />SRS",
+            "topic": "by Appointment<br />(Requirements)",
+            "link": "./hw/GroupProjectSRS.html",
+            "time": "by Appointment",
+            "criteria": "none"
+        },
+        {
+            "month": "4",
+            "day": "6",
+            "title": "<span class=\"hw\">Group Project</span><br />Build #1",
+            "topic": "by Appointment<br />(Progress Review)",
+            "link": "./hw/GroupProjectProgressReviews.html",
+            "time": "by <a href='https://docs.google.com/spreadsheets/d/1Cf8cRfNoRjl7FLzo_Z9F8Wu2jJQdsQjwVF6Fcev2vec/edit#gid=1164858799'>Appointment</a>",
+            "criteria": "none"
+        },
+        {
+            "month": "4",
+            "day": "20",
+            "title": "<span class=\"hw\">Group Project</span><br />Build #2",
+            "topic": "by Appointment<br />(Progress Review)",
+            "link": "./hw/GroupProjectProgressReviews.html",
+            "time": "by <a href='https://docs.google.com/spreadsheets/d/1Cf8cRfNoRjl7FLzo_Z9F8Wu2jJQdsQjwVF6Fcev2vec/edit#gid=1407911801'>Appointment</a>",
+            "criteria": "none"
+        },
+        {
+            "month": "5",
+            "day": "4",
+            "title": "<span class=\"hw\">Group Project</span><br />Build #3",
+            "topic": "by Appointment<br />(Progress Review)",
+            "link": "./hw/GroupProjectProgressReviews.html",
+            "time": "by <a href='https://docs.google.com/spreadsheets/d/1Cf8cRfNoRjl7FLzo_Z9F8Wu2jJQdsQjwVF6Fcev2vec/edit#gid=1349187412'>Appointment</a>",
+            "criteria": "none"
+        },
+        {
+            "month": "5",
+            "day": "15",
+            "title": "<span class=\"hw\">Group Project</span><br />Final Build",
+            "topic": "by Appointment<br />(Final Prresentation)",
+            "link": "./hw/GroupProjectFinalPresentation.html",
+            "time": "by <a href='https://docs.google.com/spreadsheets/d/1Cf8cRfNoRjl7FLzo_Z9F8Wu2jJQdsQjwVF6Fcev2vec/edit#gid=1259679078'>Appointment</a>",
+            "criteria": "none"
+        }
+    ]
+}

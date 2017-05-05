@@ -394,7 +394,7 @@ public class CSGData implements AppDataComponent {
             Calendar c2 = Calendar.getInstance();
             c2.set(ldEndFriday.getYear(), ldEndFriday.getMonthValue(), ldEndFriday.getDayOfMonth());
             Date endingFridayDate = c2.getTime();
-            
+
             if (s.compareTo(startingMondayDate) >= 0 && s.compareTo(endingFridayDate) <= 0) {
                 observableScheduleItems.add(s);
             }
@@ -405,10 +405,11 @@ public class CSGData implements AppDataComponent {
         if (containsScheduleItem(title, date)) {
             ScheduleItem s = getScheduleItem(title, date);
             scheduleItems.remove(s);
-            if (observableScheduleItems.contains(s))
+            if (observableScheduleItems.contains(s)) {
                 observableScheduleItems.remove(s);
+            }
         }
-        
+
     }
 
     public boolean containsScheduleItem(String title, Date d) {
@@ -442,12 +443,19 @@ public class CSGData implements AppDataComponent {
             projectTeams.add(team);
         }
     }
+    
+    public ProjectTeam getProjectTeam(String name) {
+        for (ProjectTeam p: projectTeams) {
+            if (p.getName().equals(name))
+                return p;
+        }
+        return null;
+    }
 
     public void removeProjectTeam(String name) {
-        for (ProjectTeam p : projectTeams) {
-            if (!containsProjectTeam(name)) {
-                projectTeams.remove(p);
-            }
+        ProjectTeam p = getProjectTeam(name);
+        if (p != null) {
+            projectTeams.remove(p);
         }
     }
 
@@ -491,6 +499,20 @@ public class CSGData implements AppDataComponent {
         if (students.contains(s)) {
             students.remove(s);
         }
+    }
+    
+    /**
+     * This function CLEARS the OBSERVABLE ScheduleItems List, to prepare for any changes in the DatePicker values
+     **/
+    public void clearObservableScheduleItemsList() {
+        observableScheduleItems.clear();
+    }
+    
+    /**
+     * This function ADDS ScheduleItem Objects within the Date range of the DatePickers to the ObservableList for viewing
+     **/
+    public void addObservableScheduleItem(ScheduleItem s) {
+        observableScheduleItems.add(s);
     }
 
     /**
