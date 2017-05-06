@@ -1,17 +1,29 @@
 
 {
-    "schedule_items":[
+    "startingMondayMonth":"1",
+    "startingMondayDay":"2",
+    "endingFridayMonth":"5",
+    "endingFridayDay":"25",
+    "holidays":[
         {
-            "type":"Holiday",
-            "schedule_item_date":"Thu Jan 05 23:00:00 EST 2017",
-            "schedule_item_topic":"",
-            "schedule_item_title":"Snow Day"
+            "month":"1",
+            "day":"5",
+            "title":"Sample Holiday",
+            "link":""
         },
         {
-            "type":"Lecture",
-            "schedule_item_date":"Thu Jan 05 23:00:00 EST 2017",
-            "schedule_item_topic":"Event Programming",
-            "schedule_item_title":"Lecture 3"
+            "month":"5",
+            "day":"15",
+            "title":"Memorial Day",
+            "link":""
         }
+    ],
+    "lectures":[
+    ],
+    "references":[
+    ],
+    "recitations":[
+    ],
+    "hws":[
     ]
 }

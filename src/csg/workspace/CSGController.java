@@ -335,7 +335,7 @@ public class CSGController {
         String type = typeBox.getSelectionModel().getSelectedItem().toString();
         LocalDate scheduleItemDate = scheduleItemDatePicker.getValue();
         Calendar c = Calendar.getInstance();
-        c.set(scheduleItemDate.getYear(), scheduleItemDate.getMonthValue(), scheduleItemDate.getDayOfMonth());
+        c.set(scheduleItemDate.getYear(), scheduleItemDate.getMonthValue() - 1, scheduleItemDate.getDayOfMonth());
         Date date = c.getTime();
         String time = timeTextField.getText();
         String title = titleTextField.getText();
@@ -345,6 +345,7 @@ public class CSGController {
         
         jTPS_Transaction editScheduleItemUR = new ScheduleItemEditUR(app);
         jTPS.addTransaction(editScheduleItemUR);
+        workspace.getScheduleItems().refresh();
         markWorkAsEdited();
     }
 
@@ -789,11 +790,14 @@ public class CSGController {
         Calendar c1 = Calendar.getInstance();
         Calendar c2 = Calendar.getInstance();
         
-        c1.set(ldMonday.getYear(), ldMonday.getMonthValue(), ldMonday.getDayOfMonth());
-        c2.set(ldFriday.getYear(), ldFriday.getMonthValue(), ldFriday.getDayOfMonth());
+        c1.set(ldMonday.getYear(), ldMonday.getMonthValue() - 1, ldMonday.getDayOfMonth());
+        c2.set(ldFriday.getYear(), ldFriday.getMonthValue() - 1, ldFriday.getDayOfMonth());
         
         Date startMondayDate = c1.getTime();
         Date endFridayDate = c2.getTime();
+        
+        data.setStartDate(startMondayDate);
+        data.setEndDate(endFridayDate);
         
         data.clearObservableScheduleItemsList();
         

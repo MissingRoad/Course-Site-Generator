@@ -890,7 +890,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         scheduleItemDate = new TableColumn(props.getProperty(CSGProp.SCHEDULE_ITEM_DATE_LABEL.toString()));
         scheduleItemTitle = new TableColumn(props.getProperty(CSGProp.SCHEDULE_ITEM_TITLE_LABEL.toString()));
         scheduleItemTopic = new TableColumn(props.getProperty(CSGProp.SCHEDULE_ITEM_TOPIC_LABEL.toString()));
-        ObservableList<ScheduleItem> scheduleItemsData = data.getScheduleItems();
+        ObservableList<ScheduleItem> scheduleItemsData = data.getObservableScheduleItems();
         scheduleItems.setItems(scheduleItemsData);
         scheduleItemType.setCellValueFactory(
                 new PropertyValueFactory<ScheduleItem, String>("type")
@@ -908,7 +908,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         addEditSchedulePane = new GridPane();
         typeLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEM_TYPE_LABEL.toString()));
         ObservableList scheduleItemTypes = FXCollections.observableArrayList(
-                props.getProperty(CSGProp.HOLIDAY_EVENT), props.getProperty(CSGProp.LECTURE_EVENT), props.getProperty(CSGProp.EXAMINATION_EVENT)
+                props.getProperty(CSGProp.HOLIDAY_EVENT), props.getProperty(CSGProp.LECTURE_EVENT), props.getProperty(CSGProp.REFERENCE_EVENT), props.getProperty(CSGProp.HOMEWORK_EVENT)
         );
         typeBox = new ComboBox(scheduleItemTypes);
         dateLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEM_DATE_LABEL.toString()));
@@ -2136,7 +2136,9 @@ public class CSGWorkspace extends AppWorkspaceComponent {
                     new ExtensionFilter(props.getProperty(WORK_FILE_EXT_DESC), props.getProperty(WORK_FILE_EXT)));
          */
         File selectedFile = dc.showDialog(app.getGUI().getWindow()); //wrong dialog?
-        exportDirTextView.setText(selectedFile.getParent());
+        String exportDir = selectedFile.getPath();
+        exportDirTextView.setText(exportDir);
+        app.getGUI().changeExportDir(exportDir);
     }
 
     public void changeTemplateDir() throws IOException {
@@ -2150,7 +2152,8 @@ public class CSGWorkspace extends AppWorkspaceComponent {
                     new ExtensionFilter(props.getProperty(WORK_FILE_EXT_DESC), props.getProperty(WORK_FILE_EXT)));
          */
         File selectedFile = dc.showDialog(app.getGUI().getWindow()); //wrong dialog?
-        templateDir.setText(selectedFile.getParent());
+        templateDir.setText(selectedFile.getPath());
+        
     }
 
     public void changeBannerSchoolImage() throws IOException {
@@ -2193,6 +2196,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate localDate = LocalDate.parse("02-01-2017", formatter);
         startingMondayPicker.setValue(localDate);
+        
     }
     
     public void initEndingFridayDatePicker() {
@@ -2246,6 +2250,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
     @Override
     public void resetWorkspace() {
+        // TA DATA TAB
         // CLEAR OUT THE GRID PANE
         taDataOfficeHoursGridPane.getChildren().clear();
 
@@ -2258,6 +2263,9 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         taDataOfficeHoursGridTimeCellLabels.clear();
         taDataOfficeHoursGridTACellPanes.clear();
         taDataOfficeHoursGridTACellLabels.clear();
+        
+        // RECITATION DATA TAB
+        
     }
 
     @Override

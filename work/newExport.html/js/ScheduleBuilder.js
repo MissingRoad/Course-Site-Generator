@@ -40,7 +40,7 @@ function loadData(jsonFile) {
 function initDateData() {
     var currentYear = new Date().getFullYear();
     daysInMonth = new Array();
-    if ((currentYear %4) == 0) {
+    if ((currentYear %4) === 0) {
         isLeapYear = true;
         daysInMonth[2] = 29;
     }

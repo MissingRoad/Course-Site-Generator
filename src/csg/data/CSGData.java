@@ -11,6 +11,7 @@ import csg.file.TimeSlot;
 import csg.workspace.CSGWorkspace;
 import djf.components.AppDataComponent;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,6 +62,8 @@ public class CSGData implements AppDataComponent {
     // THE OBSERVABLE SCHEDULE ITEMS (ITEMS WHOSE DATES FALL WITHIN THE RANGE OF THE DATEPICKERS)
     ObservableList<ScheduleItem> observableScheduleItems;
 
+    
+
     // THE PROJECT TEAMS
     ObservableList<ProjectTeam> projectTeams;
 
@@ -77,6 +80,10 @@ public class CSGData implements AppDataComponent {
     // DEFAULT VALUES FOR START AND END HOURS IN MILITARY HOURS
     public static final int MIN_START_HOUR = 0;
     public static final int MAX_END_HOUR = 23;
+    
+    // DEFAULT VALUE STRINGS FOR START AND END DATES
+    public static final String MIN_START_DATE = "02-01-2017";
+    public static final String MAX_END_DATE = "25-05-2017";
 
     // THESE ARE THE VALUES FOR THE CALENDAR BOUNDARY DATEPICKERS
     Date startDate;
@@ -101,6 +108,20 @@ public class CSGData implements AppDataComponent {
         observableScheduleItems = FXCollections.observableArrayList();
         projectTeams = FXCollections.observableArrayList();
         students = FXCollections.observableArrayList();
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate localDate = LocalDate.parse("02-01-2017", formatter);
+        Calendar c1 = Calendar.getInstance();
+        c1.set(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth());
+        Date d1 = c1.getTime();
+        this.startDate = d1;
+        
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate localDate2 = LocalDate.parse("25-05-2017", formatter2);
+        Calendar c2 = Calendar.getInstance();
+        c2.set(localDate2.getYear(), localDate2.getMonthValue(), localDate2.getDayOfMonth());
+        Date d2 = c2.getTime();
+        this.endDate = d2;
 
         // THESE ARE THE DEFAULT OFFICE HOURS
         startHour = MIN_START_HOUR;
@@ -128,6 +149,11 @@ public class CSGData implements AppDataComponent {
         endHour = MAX_END_HOUR;
         teachingAssistants.clear();
         officeHours.clear();
+        recitations.clear();
+        scheduleItems.clear();
+        observableScheduleItems.clear();
+        projectTeams.clear();
+        students.clear();
 
         CSGWorkspace workspaceComponent = (CSGWorkspace) app.getWorkspaceComponent();
 
@@ -165,6 +191,10 @@ public class CSGData implements AppDataComponent {
     public ObservableList getScheduleItems() {
         return scheduleItems;
     }
+    
+    public ObservableList<ScheduleItem> getObservableScheduleItems() {
+        return observableScheduleItems;
+    }
 
     public ObservableList getProjectTeams() {
         return projectTeams;
@@ -172,6 +202,22 @@ public class CSGData implements AppDataComponent {
 
     public ObservableList getStudents() {
         return students;
+    }
+    
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public String getCellKey(int col, int row) {

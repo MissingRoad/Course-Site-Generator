@@ -9,12 +9,11 @@ var endFridayDate;
 var daysInMonth;
 var isLeapYear;
 
-function ScheduleItem(sType, sDate, sTopic, sTitle) {
-    this.type = sType;
+function ScheduleItem(sDate, sTitle, sTopic, sLink) {
     this.date = sDate;
     this.title = sTitle;
     this.topic = sTopic;
-    //this.link = sLink;
+    this.link = sLink;
 }
 function ScheduleDate(sMonth, sDay) {
     this.month = sMonth;

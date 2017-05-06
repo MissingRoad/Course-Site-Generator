@@ -219,7 +219,9 @@
 <!-- SCHEDULE ITEM TYPES -->
 <property name = "LECTURE_EVENT" value = "Lecture"></property>
 <property name = "HOLIDAY_EVENT" value = "Holiday"></property>
-<property name = "EXAMINATION_EVENT" value = "Exam"></property>
+<property name = "REFERENCE_EVENT" value = "Reference"></property>
+<property name = "HOMEWORK_EVENT" value = "HW"></property>
+<property name = "RECITATION_EVENT" value = "Recitation"> </property>
 
 
         <!-- PROJECT DATA TAB LABELS -->

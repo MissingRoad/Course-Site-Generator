@@ -93,7 +93,7 @@ public class ScheduleItem implements Comparable {
     public int compareTo(Object o) {
         // o should be a DATE parameter, to compare with DatePicker "values" (converted to Date Objects)
         Date datePickerDate = (Date)o;
-        int i = this.date.compareTo(date);
+        int i = this.date.compareTo(datePickerDate);
         return i;
     }
 }

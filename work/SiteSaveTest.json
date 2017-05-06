@@ -36,7 +36,7 @@
             "recitation_section":"R01",
             "recitation_instructor":"McKenna",
             "recitation_day_time":"Monday 5:30 - 6:23 PM",
-            "recitation_location":"Old CS 2120",
+            "recitation_location":"R01",
             "recitation_ta1":"Jacob Evans",
             "recitation_ta2":"James Hoffman"
         }
@@ -44,7 +44,7 @@
     "schedule_items":[
         {
             "type":"Holiday",
-            "schedule_item_date":"Fri Mar 17 00:00:00 EDT 2017",
+            "schedule_item_date":"Thu Jan 05 23:00:00 EST 2017",
             "schedule_item_time":"Snow Day",
             "schedule_item_title":"",
             "schedule_item_topic":"",
@@ -53,9 +53,18 @@
         },
         {
             "type":"Lecture",
-            "schedule_item_date":"Fri Mar 17 00:00:00 EDT 2017",
+            "schedule_item_date":"Thu Jan 05 23:00:00 EST 2017",
             "schedule_item_time":"Lecture 3",
             "schedule_item_title":"Event Programming",
+            "schedule_item_topic":"",
+            "schedule_item_link":"",
+            "schedule_item_criteria":""
+        },
+        {
+            "type":"Holiday",
+            "schedule_item_date":"Thu Jun 15 21:37:48 EDT 2017",
+            "schedule_item_time":"",
+            "schedule_item_title":"Memorial Day",
             "schedule_item_topic":"",
             "schedule_item_link":"",
             "schedule_item_criteria":""
@@ -66,7 +75,7 @@
             "project_team_name":"Team 1",
             "project_team_red_color":"0.0",
             "project_team_green_color":"0.0",
-            "project_team_blue_color":"0.0",
+            "project_team_blue_color":"1.0",
             "project_team_color_opacity":"1.0",
             "project_team_text_red_color":"0.0",
             "project_team_text_green_color":"0.0",

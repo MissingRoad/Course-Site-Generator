@@ -5,6 +5,7 @@
  */
 package csg.file;
 
+import csg.CSGProp;
 import csg.CourseSiteGeneratorApp;
 import csg.data.CSGData;
 import csg.data.CourseSite;
@@ -39,16 +40,19 @@ import javafx.scene.paint.Color;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.io.FileUtils;
+import properties_manager.PropertiesManager;
 
 /**
  *
  * @author dsli
  */
 public class CSGFiles implements AppFileComponent {
+
     CourseSiteGeneratorApp app;
-    
+
     // THESE ARE USED FOR IDENTIFYING JSON TYPES
     static final String JSON_START_HOUR = "startHour";
     static final String JSON_END_HOUR = "endHour";
@@ -107,7 +111,7 @@ public class CSGFiles implements AppFileComponent {
     static final String JSON_SCHEDULE_ITEMS = "schedule_items";
     static final String JSON_PROJECT_TEAMS = "project_teams";
     static final String JSON_STUDENTS = "students";
-    
+
     // CONSTANTS FOR EXPORTING
     //Start and end hour
     static final String JSON_START_HOUR_EXPORT = "startHour";
@@ -149,6 +153,13 @@ public class CSGFiles implements AppFileComponent {
     static final String JSON_END_DATE_EXPORT = "endDate";
     static final String JSON_SCHEDULE_TYPE_EXPORT = "type";
     static final String JSON_SCHEDULE_ITEM_DATE_EXPORT = "schedule_item_date";
+    static final String JSON_STARTING_MONDAY_MONTH = "startingMondayMonth";
+    static final String JSON_STARTING_MONDAY_DAY = "startingMondayDay";
+    static final String JSON_ENDING_FRIDAY_MONTH = "endingFridayMonth";
+    static final String JSON_ENDING_FRIDAY_DAY = "endingFridayDay";
+    static final String JSON_SCHEDULE_ITEM_MONTH_EXPORT = "month";
+    static final String JSON_SCHEDULE_ITEM_DAY_EXPORT = "day";
+    static final String JSON_SCHEDULE_ITEM_TIME_EXPORT = "time";
     static final String JSON_SCHEDULE_ITEM_TITLE_EXPORT = "title";
     static final String JSON_SCHEDULE_ITEM_LINK_EXPORT = "link";
     static final String JSON_SCHEDULE_ITEM_TOPIC_EXPORT = "schedule_item_topic";
@@ -169,24 +180,27 @@ public class CSGFiles implements AppFileComponent {
     // Data types regarding various types for the various JSON arrays
     static final String JSON_COURSE_INFO_EXPORT = "course_info";
     static final String JSON_RECITATIONS_EXPORT = "recitations";
-    static final String JSON_SCHEDULE_ITEMS_EXPORT = "schedule_items";
+    static final String JSON_HOLIDAYS_EXPORT = "holidays";
+    static final String JSON_LECTURES_EXPORT = "lectures";
+    static final String JSON_REFERENCES_EXPORT = "references";
+    static final String JSON_HOMEWORKS_EXPORT = "hws";
     static final String JSON_PROJECT_TEAMS_EXPORT = "project_teams";
     static final String JSON_STUDENTS_EXPORT = "students";
-    
+
     public CSGFiles(CourseSiteGeneratorApp initApp) {
         app = initApp;
     }
 
     @Override
     public void loadData(AppDataComponent data, String filePath) throws IOException, ParseException {
-	// CLEAR THE OLD DATA OUT
-	CSGData dataManager = (CSGData)data;
+        // CLEAR THE OLD DATA OUT
+        CSGData dataManager = (CSGData) data;
 
-	// LOAD THE JSON FILE WITH ALL THE DATA
-	JsonObject json = loadJSONFile(filePath);
+        // LOAD THE JSON FILE WITH ALL THE DATA
+        JsonObject json = loadJSONFile(filePath);
 
-	// LOAD THE START AND END HOURS
-	String startHour = json.getString(JSON_START_HOUR);
+        // LOAD THE START AND END HOURS
+        String startHour = json.getString(JSON_START_HOUR);
         String endHour = json.getString(JSON_END_HOUR);
         dataManager.initHours(startHour, endHour);
 
@@ -213,7 +227,7 @@ public class CSGFiles implements AppFileComponent {
             String name = jsonOfficeHours.getString(JSON_NAME);
             dataManager.addOfficeHoursReservation(day, time, name);
         }
-        
+
         //Now the additional components for CSG...
         //Starting with Recitations
         JsonArray jsonRecitationsArray = json.getJsonArray(JSON_RECITATIONS);
@@ -229,7 +243,7 @@ public class CSGFiles implements AppFileComponent {
             TeachingAssistant ta2 = dataManager.findTeachingAssistant(ta2Name);
             dataManager.addRecitation(section, instructor, recDayTime, section, ta1, ta2);
         }
-        
+
         //Schedule Items
         JsonArray jsonScheduleItemArray = json.getJsonArray(JSON_SCHEDULE_ITEMS);
         for (int i = 0; i < jsonScheduleItemArray.size(); i++) {
@@ -245,7 +259,7 @@ public class CSGFiles implements AppFileComponent {
             Date scheduleItemDate = sdf.parse(date);
             dataManager.addScheduleItem(type, scheduleItemDate, time, title, topic, link, criteria);
         }
-        
+
         //Project Teams
         JsonArray projectTeamArray = json.getJsonArray(JSON_PROJECT_TEAMS);
         for (int i = 0; i < projectTeamArray.size(); i++) {
@@ -272,7 +286,7 @@ public class CSGFiles implements AppFileComponent {
             Color textColor = new Color(textColorRedVal, textColorGreenVal, textColorBlueVal, textColorOpacityVal);
             dataManager.addProjectTeam(name, textColor, textColor, link);
         }
-        
+
         // Students - should add each student to their appropriate ProjectTeam
         JsonArray jsonStudentsArray = json.getJsonArray(JSON_STUDENTS);
         for (int i = 0; i < jsonStudentsArray.size(); i++) {
@@ -287,22 +301,22 @@ public class CSGFiles implements AppFileComponent {
             dataManager.addStudent(s);
         }
     }
-      
+
     // HELPER METHOD FOR LOADING DATA FROM A JSON FORMAT
     private JsonObject loadJSONFile(String jsonFilePath) throws IOException {
-	InputStream is = new FileInputStream(jsonFilePath);
-	JsonReader jsonReader = Json.createReader(is);
-	JsonObject json = jsonReader.readObject();
-	jsonReader.close();
-	is.close();
-	return json;
+        InputStream is = new FileInputStream(jsonFilePath);
+        JsonReader jsonReader = Json.createReader(is);
+        JsonObject json = jsonReader.readObject();
+        jsonReader.close();
+        is.close();
+        return json;
     }
 
     @Override
     public void saveData(AppDataComponent data, String filePath) throws IOException {
         // GET THE DATA
-	CSGData dataManager = (CSGData)data;
-        
+        CSGData dataManager = (CSGData) data;
+
         // Build a JsonObject - The CourseSite Information Object
         CourseSite cs = dataManager.getCourseSiteInfo();
         JsonObject csInfo = Json.createObjectBuilder()
@@ -321,34 +335,34 @@ public class CSGFiles implements AppFileComponent {
                 .add(JSON_HAS_HW, cs.getHwPage().getExists() + "")
                 .add(JSON_HAS_PROJECT, cs.getProjectsPage().getExists() + "").build();
 
-	// NOW BUILD THE TA JSON OBJCTS TO SAVE
-	JsonArrayBuilder taArrayBuilder = Json.createArrayBuilder();
-	ObservableList<TeachingAssistant> tas = dataManager.getTeachingAssistants();
-	for (TeachingAssistant ta : tas) {	    
-	    JsonObject taJson = Json.createObjectBuilder()
-		    .add(JSON_NAME, ta.getName())
-		    .add(JSON_EMAIL, ta.getEmail())
+        // NOW BUILD THE TA JSON OBJCTS TO SAVE
+        JsonArrayBuilder taArrayBuilder = Json.createArrayBuilder();
+        ObservableList<TeachingAssistant> tas = dataManager.getTeachingAssistants();
+        for (TeachingAssistant ta : tas) {
+            JsonObject taJson = Json.createObjectBuilder()
+                    .add(JSON_NAME, ta.getName())
+                    .add(JSON_EMAIL, ta.getEmail())
                     .add(JSON_IS_UNDERGRAD_TA, ta.isUndergrad() + "").build(); // What will this line print for a String?
-	    taArrayBuilder.add(taJson);
-	}
-	JsonArray undergradTAsArray = taArrayBuilder.build();
+            taArrayBuilder.add(taJson);
+        }
+        JsonArray undergradTAsArray = taArrayBuilder.build();
 
-	// NOW BUILD THE TIME SLOT JSON OBJCTS TO SAVE
-	JsonArrayBuilder timeSlotArrayBuilder = Json.createArrayBuilder();
-	ArrayList<TimeSlot> officeHours = TimeSlot.buildOfficeHoursList(dataManager);
-	for (TimeSlot ts : officeHours) {	    
-	    JsonObject tsJson = Json.createObjectBuilder()
-		    .add(JSON_DAY, ts.getDay())
-		    .add(JSON_TIME, ts.getTime())
-		    .add(JSON_NAME, ts.getName()).build();
-	    timeSlotArrayBuilder.add(tsJson);
-	}
-	JsonArray timeSlotsArray = timeSlotArrayBuilder.build();
-        
+        // NOW BUILD THE TIME SLOT JSON OBJCTS TO SAVE
+        JsonArrayBuilder timeSlotArrayBuilder = Json.createArrayBuilder();
+        ArrayList<TimeSlot> officeHours = TimeSlot.buildOfficeHoursList(dataManager);
+        for (TimeSlot ts : officeHours) {
+            JsonObject tsJson = Json.createObjectBuilder()
+                    .add(JSON_DAY, ts.getDay())
+                    .add(JSON_TIME, ts.getTime())
+                    .add(JSON_NAME, ts.getName()).build();
+            timeSlotArrayBuilder.add(tsJson);
+        }
+        JsonArray timeSlotsArray = timeSlotArrayBuilder.build();
+
         // Now build the Recitation JSON Objects to SAVE
         JsonArrayBuilder recitationArrayBuilder = Json.createArrayBuilder();
         ObservableList<Recitation> recitations = dataManager.getRecitations();
-        for (Recitation r: recitations) {
+        for (Recitation r : recitations) {
             JsonObject recitationJson = Json.createObjectBuilder()
                     .add(JSON_RECITATION_SECTION, r.getSection())
                     .add(JSON_RECITATION_INSTRUCTOR, r.getInstructor())
@@ -359,11 +373,11 @@ public class CSGFiles implements AppFileComponent {
             recitationArrayBuilder.add(recitationJson);
         }
         JsonArray recitationsArray = recitationArrayBuilder.build();
-        
+
         // Now the Schedule Item Objects
         JsonArrayBuilder scheduleItemArrayBuilder = Json.createArrayBuilder();
         ObservableList<ScheduleItem> scheduleItems = dataManager.getScheduleItems();
-        for (ScheduleItem s: scheduleItems) {
+        for (ScheduleItem s : scheduleItems) {
             JsonObject scheduleItem = Json.createObjectBuilder()
                     .add(JSON_SCHEDULE_TYPE, s.getType())
                     .add(JSON_SCHEDULE_ITEM_DATE, s.getDate().toString())
@@ -376,11 +390,11 @@ public class CSGFiles implements AppFileComponent {
             scheduleItemArrayBuilder.add(scheduleItem);
         }
         JsonArray scheduleItemsArray = scheduleItemArrayBuilder.build();
-        
+
         // And now the ProjectTeam JSON Objects
         JsonArrayBuilder projectTeamArrayBuilder = Json.createArrayBuilder();
         ObservableList<ProjectTeam> projectTeams = dataManager.getProjectTeams();
-        for (ProjectTeam p: projectTeams) {
+        for (ProjectTeam p : projectTeams) {
             JsonObject projectTeamJson = Json.createObjectBuilder()
                     .add(JSON_PROJECT_TEAM_NAME, p.getName())
                     .add(JSON_PROJECT_TEAM_RED_COLOR, p.getColor().getRed() + "")
@@ -395,11 +409,11 @@ public class CSGFiles implements AppFileComponent {
             projectTeamArrayBuilder.add(projectTeamJson);
         }
         JsonArray projectTeamsArray = projectTeamArrayBuilder.build();
-        
+
         // And finally the Student JSON Objects (pertaining to the teams)
         JsonArrayBuilder studentArrayBuilder = Json.createArrayBuilder();
         ObservableList<Student> students = dataManager.getStudents();
-        for (Student s: students) {
+        for (Student s : students) {
             JsonObject studentJson = Json.createObjectBuilder()
                     .add(JSON_STUDENT_FIRST_NAME, s.getFirstName())
                     .add(JSON_STUDENT_LAST_NAME, s.getLastName())
@@ -408,42 +422,41 @@ public class CSGFiles implements AppFileComponent {
             studentArrayBuilder.add(studentJson);
         }
         JsonArray studentsArray = studentArrayBuilder.build();
-        
-	// THEN PUT IT ALL TOGETHER IN A JsonObject
-	JsonObject dataManagerJSO = Json.createObjectBuilder()
+
+        // THEN PUT IT ALL TOGETHER IN A JsonObject
+        JsonObject dataManagerJSO = Json.createObjectBuilder()
                 .add(JSON_COURSE_INFO, csInfo)
-		.add(JSON_START_HOUR, "" + dataManager.getStartHour())
-		.add(JSON_END_HOUR, "" + dataManager.getEndHour())
+                .add(JSON_START_HOUR, "" + dataManager.getStartHour())
+                .add(JSON_END_HOUR, "" + dataManager.getEndHour())
                 .add(JSON_UNDERGRAD_TAS, undergradTAsArray)
                 .add(JSON_OFFICE_HOURS, timeSlotsArray)
                 .add(JSON_RECITATIONS, recitationsArray)
                 .add(JSON_SCHEDULE_ITEMS, scheduleItemsArray)
                 .add(JSON_PROJECT_TEAMS, projectTeamsArray)
                 .add(JSON_STUDENTS, studentsArray)
-		.build();
-	
-	// AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
-	Map<String, Object> properties = new HashMap<>(1);
-	properties.put(JsonGenerator.PRETTY_PRINTING, true);
-	JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
-	StringWriter sw = new StringWriter();
-	JsonWriter jsonWriter = writerFactory.createWriter(sw);
-	jsonWriter.writeObject(dataManagerJSO);
-	jsonWriter.close();
+                .build();
 
-	// INIT THE WRITER
-	OutputStream os = new FileOutputStream(filePath);
-	JsonWriter jsonFileWriter = Json.createWriter(os);
-	jsonFileWriter.writeObject(dataManagerJSO);
-	String prettyPrinted = sw.toString();
-	PrintWriter pw = new PrintWriter(filePath);
-	pw.write(prettyPrinted);
-	pw.close();
+        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
+        Map<String, Object> properties = new HashMap<>(1);
+        properties.put(JsonGenerator.PRETTY_PRINTING, true);
+        JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
+        StringWriter sw = new StringWriter();
+        JsonWriter jsonWriter = writerFactory.createWriter(sw);
+        jsonWriter.writeObject(dataManagerJSO);
+        jsonWriter.close();
+
+        // INIT THE WRITER
+        OutputStream os = new FileOutputStream(filePath);
+        JsonWriter jsonFileWriter = Json.createWriter(os);
+        jsonFileWriter.writeObject(dataManagerJSO);
+        String prettyPrinted = sw.toString();
+        PrintWriter pw = new PrintWriter(filePath);
+        pw.write(prettyPrinted);
+        pw.close();
     }
-    
+
     // IMPORTING/EXPORTING DATA IS USED WHEN WE READ/WRITE DATA IN AN
     // ADDITIONAL FORMAT USEFUL FOR ANOTHER PURPOSE, LIKE ANOTHER APPLICATION
-
     @Override
     public void importData(AppDataComponent data, String filePath) throws IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -451,151 +464,269 @@ public class CSGFiles implements AppFileComponent {
 
     @Override
     public void exportData(AppDataComponent data, String filePath) throws IOException {
-        CSGData dataManager = (CSGData)data;
+        CSGData dataManager = (CSGData) data;
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
         File fileToImport = new File(PATH_PUBLIC_HTML);
-         
+
         File fileToExport = new File(filePath + "/newExport.html");
-        
+
         //What would be the method for copying the file?
         //fileToImport.renameTo(fileToExport);
         //FileUtils.copyFile(fileToImport, fileToExport);
         FileUtils.copyDirectory(fileToImport, fileToExport);
-        
+
         String officeHoursGridDataDirectory = filePath + "/newExport.html/" + "js/OfficeHoursGridData.json";
         String recitationsBuilderDirectory = filePath + "/newExport.html/" + "js/RecitationsData.json";
         String scheduleBuilderDirectory = filePath + "/newExport.html/" + "js/ScheduleData.json";
         String projectTeamsBuilderDirectory = filePath + "/newExport.html/" + "js/TeamsAndStudents.json";
-        
+
         // Saving the file
         JsonArrayBuilder taArrayBuilder = Json.createArrayBuilder();
-	ObservableList<TeachingAssistant> tas = dataManager.getTeachingAssistants();
-	for (TeachingAssistant ta : tas) {	    
-	    JsonObject taJson = Json.createObjectBuilder()
-		    .add(JSON_NAME_EXPORT, ta.getName())
-		    .add(JSON_EMAIL_EXPORT, ta.getEmail())
-                    .add(JSON_IS_UNDERGRAD_TA_EXPORT, ta.isUndergrad() + "").build(); // What will this line print for a String?
-	    taArrayBuilder.add(taJson);
-	}
-	JsonArray undergradTAsArray = taArrayBuilder.build();
+        ObservableList<TeachingAssistant> tas = dataManager.getTeachingAssistants();
+        for (TeachingAssistant ta : tas) {
+            JsonObject taJson = Json.createObjectBuilder()
+                    .add(JSON_NAME_EXPORT, ta.getName())
+                    .add(JSON_EMAIL_EXPORT, ta.getEmail())
+                    .build(); // What will this line print for a String?
+            taArrayBuilder.add(taJson);
+        }
+        JsonArray undergradTAsArray = taArrayBuilder.build();
 
-	// NOW BUILD THE TIME SLOT JSON OBJCTS TO SAVE
-	JsonArrayBuilder timeSlotArrayBuilder = Json.createArrayBuilder();
-	ArrayList<TimeSlot> officeHours = TimeSlot.buildOfficeHoursList(dataManager);
-	for (TimeSlot ts : officeHours) {	    
-	    JsonObject tsJson = Json.createObjectBuilder()
-		    .add(JSON_DAY_EXPORT, ts.getDay())
-		    .add(JSON_TIME_EXPORT, ts.getTime())
-		    .add(JSON_NAME_EXPORT, ts.getName()).build();
-	    timeSlotArrayBuilder.add(tsJson);
-	}
-        
-	JsonArray timeSlotsArray = timeSlotArrayBuilder.build();
-        
+        // NOW BUILD THE TIME SLOT JSON OBJCTS TO SAVE
+        JsonArrayBuilder timeSlotArrayBuilder = Json.createArrayBuilder();
+        ArrayList<TimeSlot> officeHours = TimeSlot.buildOfficeHoursList(dataManager);
+        for (TimeSlot ts : officeHours) {
+            JsonObject tsJson = Json.createObjectBuilder()
+                    .add(JSON_DAY_EXPORT, ts.getDay())
+                    .add(JSON_TIME_EXPORT, ts.getTime())
+                    .add(JSON_NAME_EXPORT, ts.getName()).build();
+            timeSlotArrayBuilder.add(tsJson);
+        }
+
+        JsonArray timeSlotsArray = timeSlotArrayBuilder.build();
+
         JsonObject taDataJSO = Json.createObjectBuilder()
-		.add(JSON_START_HOUR_EXPORT, "" + dataManager.getStartHour())
-		.add(JSON_END_HOUR_EXPORT, "" + dataManager.getEndHour())
+                .add(JSON_START_HOUR_EXPORT, "" + dataManager.getStartHour())
+                .add(JSON_END_HOUR_EXPORT, "" + dataManager.getEndHour())
                 .add(JSON_UNDERGRAD_TAS_EXPORT, undergradTAsArray)
-                .add(JSON_OFFICE_HOURS, timeSlotsArray).build();
-        
-        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
-	Map<String, Object> properties = new HashMap<>(1);
-	properties.put(JsonGenerator.PRETTY_PRINTING, true);
-	JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
-	StringWriter sw = new StringWriter();
-	JsonWriter jsonWriter = writerFactory.createWriter(sw);
-	jsonWriter.writeObject(taDataJSO);
-	jsonWriter.close();
+                .add(JSON_OFFICE_HOURS_EXPORT, timeSlotsArray).build();
 
-	// INIT THE WRITER
+        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
+        Map<String, Object> properties = new HashMap<>(1);
+        properties.put(JsonGenerator.PRETTY_PRINTING, true);
+        JsonWriterFactory writerFactory = Json.createWriterFactory(properties);
+        StringWriter sw = new StringWriter();
+        JsonWriter jsonWriter = writerFactory.createWriter(sw);
+        jsonWriter.writeObject(taDataJSO);
+        jsonWriter.close();
+
+        // INIT THE WRITER
         //String taDataJSOpath = fileToExport + "/js/OfficeHoursGridData.json";
-	OutputStream os = new FileOutputStream(officeHoursGridDataDirectory);
-	JsonWriter jsonFileWriter = Json.createWriter(os);
-	jsonFileWriter.writeObject(taDataJSO);
-	String prettyPrinted = sw.toString();
-	PrintWriter pw = new PrintWriter(officeHoursGridDataDirectory);
-	pw.write(prettyPrinted);
-	pw.close();
-        
+        OutputStream os = new FileOutputStream(officeHoursGridDataDirectory);
+        JsonWriter jsonFileWriter = Json.createWriter(os);
+        jsonFileWriter.writeObject(taDataJSO);
+        String prettyPrinted = sw.toString();
+        PrintWriter pw = new PrintWriter(officeHoursGridDataDirectory);
+        pw.write(prettyPrinted);
+        pw.close();
+
         // RECITATIONS JSON
         JsonArrayBuilder recitationArrayBuilder = Json.createArrayBuilder();
         ObservableList<Recitation> recitations = dataManager.getRecitations();
-        for (Recitation r: recitations) {
+        for (Recitation r : recitations) {
             JsonObject recitationJson = Json.createObjectBuilder()
-                    .add(JSON_RECITATION_SECTION, r.getSection())
-                    .add(JSON_RECITATION_INSTRUCTOR, r.getInstructor())
-                    .add(JSON_RECITATION_DAY_TIME, r.getDayTime())
-                    .add(JSON_RECITATION_LOCATION, r.getLocation())
-                    .add(JSON_RECITATION_TA1, r.getSupervisingTA1().getName())
-                    .add(JSON_RECITATION_TA2, r.getSupervisingTA2().getName()).build();
+                    .add(JSON_RECITATION_SECTION_EXPORT, r.getSection())
+                    .add(JSON_RECITATION_DAY_TIME_EXPORT, r.getDayTime())
+                    .add(JSON_RECITATION_LOCATION_EXPORT, r.getLocation())
+                    .add(JSON_RECITATION_TA1_EXPORT, r.getSupervisingTA1().getName())
+                    .add(JSON_RECITATION_TA2_EXPORT, r.getSupervisingTA2().getName()).build();
             recitationArrayBuilder.add(recitationJson);
         }
         JsonArray recitationsArray = recitationArrayBuilder.build();
-        
+
         // Saving the Recitation JSON
         JsonObject recitationJSO = Json.createObjectBuilder()
                 .add(JSON_RECITATIONS, recitationsArray).build();
-        
-        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
-	Map<String, Object> propertiesR = new HashMap<>(1);
-	propertiesR.put(JsonGenerator.PRETTY_PRINTING, true);
-	JsonWriterFactory writerFactoryR = Json.createWriterFactory(propertiesR);
-	StringWriter swR = new StringWriter();
-	JsonWriter jsonWriterR = writerFactoryR.createWriter(swR);
-	jsonWriterR.writeObject(recitationJSO);
-	jsonWriterR.close();
 
-	// INIT THE WRITER
+        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
+        Map<String, Object> propertiesR = new HashMap<>(1);
+        propertiesR.put(JsonGenerator.PRETTY_PRINTING, true);
+        JsonWriterFactory writerFactoryR = Json.createWriterFactory(propertiesR);
+        StringWriter swR = new StringWriter();
+        JsonWriter jsonWriterR = writerFactoryR.createWriter(swR);
+        jsonWriterR.writeObject(recitationJSO);
+        jsonWriterR.close();
+
+        // INIT THE WRITER
         //String taDataJSOpath = fileToExport + "/js/OfficeHoursGridData.json";
-	OutputStream osR = new FileOutputStream(recitationsBuilderDirectory);
-	JsonWriter jsonFileWriterR = Json.createWriter(osR);
-	jsonFileWriterR.writeObject(recitationJSO);
-	String prettyPrintedR = swR.toString();
-	PrintWriter pwR = new PrintWriter(recitationsBuilderDirectory);
-	pwR.write(prettyPrintedR);
-	pwR.close();
+        OutputStream osR = new FileOutputStream(recitationsBuilderDirectory);
+        JsonWriter jsonFileWriterR = Json.createWriter(osR);
+        jsonFileWriterR.writeObject(recitationJSO);
+        String prettyPrintedR = swR.toString();
+        PrintWriter pwR = new PrintWriter(recitationsBuilderDirectory);
+        pwR.write(prettyPrintedR);
+        pwR.close();
+
+        // Get the start and ending Dates for Schedule
+        Date startMondayDate = dataManager.getStartDate();
+        Date endFridayDate = dataManager.getEndDate();
         
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(startMondayDate);
+        cal2.setTime(endFridayDate);
+        
+        int startMonth = cal1.get(Calendar.MONTH);
+        int startDay = cal1.get(Calendar.DAY_OF_MONTH);
+        int endMonth = cal2.get(Calendar.MONTH);
+        int endDay = cal2.get(Calendar.DAY_OF_MONTH);
         // Now the Schedule Item Objects
-        JsonArrayBuilder scheduleItemArrayBuilder = Json.createArrayBuilder();
+        
+        // Starting with the Holidays
+        JsonArrayBuilder holidayArrayBuilder = Json.createArrayBuilder();
         ObservableList<ScheduleItem> scheduleItems = dataManager.getScheduleItems();
-        for (ScheduleItem s: scheduleItems) {
-            JsonObject scheduleItem = Json.createObjectBuilder()
-                    .add(JSON_SCHEDULE_TYPE, s.getType())
-                    .add(JSON_SCHEDULE_ITEM_DATE, s.getDate().toString())
-                    .add(JSON_SCHEDULE_ITEM_TOPIC, s.getTopic())
-                    .add(JSON_SCHEDULE_ITEM_TITLE, s.getTitle())
-                    .build();
-            scheduleItemArrayBuilder.add(scheduleItem);
+        for (ScheduleItem s : scheduleItems) {
+            if (s.getType().equalsIgnoreCase(props.getProperty(CSGProp.HOLIDAY_EVENT.toString()))) {
+                Date scheduleItemDate = s.getDate();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(scheduleItemDate);
+                int month = cal.get(Calendar.MONTH) + 1;
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                JsonObject scheduleItem = Json.createObjectBuilder()
+                        .add(JSON_SCHEDULE_ITEM_MONTH_EXPORT, month + "")
+                        .add(JSON_SCHEDULE_ITEM_DAY_EXPORT, day + "")
+                        .add(JSON_SCHEDULE_ITEM_TITLE_EXPORT, s.getTitle())
+                        .add(JSON_SCHEDULE_ITEM_LINK_EXPORT, s.getLink())
+                        .build();
+                holidayArrayBuilder.add(scheduleItem);
+            }
         }
-        JsonArray scheduleItemsArray = scheduleItemArrayBuilder.build();
+        JsonArray holidayItemsArray = holidayArrayBuilder.build();
+        
+        // Now the lectures
+        JsonArrayBuilder lectureArrayBuilder = Json.createArrayBuilder();
+        
+        for (ScheduleItem s : scheduleItems) {
+            if (s.getType().equalsIgnoreCase(CSGProp.LECTURE_EVENT.toString())) {
+                Date scheduleItemDate = s.getDate();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(scheduleItemDate);
+                int month = cal.get(Calendar.MONTH) + 1;
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                JsonObject scheduleItem = Json.createObjectBuilder()
+                        .add(JSON_SCHEDULE_ITEM_MONTH_EXPORT, month + "")
+                        .add(JSON_SCHEDULE_ITEM_DAY_EXPORT, day + "")
+                        .add(JSON_SCHEDULE_ITEM_TITLE_EXPORT, s.getTitle())
+                        .add(JSON_SCHEDULE_ITEM_TOPIC_EXPORT, s.getTopic())
+                        .add(JSON_SCHEDULE_ITEM_LINK_EXPORT, s.getLink())
+                        .build();
+                lectureArrayBuilder.add(scheduleItem);
+            }
+        }
+        JsonArray lectureItemsArray = lectureArrayBuilder.build();
+        
+        // Now the REFERENCE ITEMS
+        JsonArrayBuilder referenceArrayBuilder = Json.createArrayBuilder();
+        for (ScheduleItem s : scheduleItems) {
+            if (s.getType().equalsIgnoreCase(CSGProp.REFERENCE_EVENT.toString())) {
+                Date scheduleItemDate = s.getDate();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(scheduleItemDate);
+                int month = cal.get(Calendar.MONTH) + 1;
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                JsonObject scheduleItem = Json.createObjectBuilder()
+                        .add(JSON_SCHEDULE_ITEM_MONTH_EXPORT, month + "")
+                        .add(JSON_SCHEDULE_ITEM_DAY_EXPORT, day + "")
+                        .add(JSON_SCHEDULE_ITEM_TITLE_EXPORT, s.getTitle())
+                        .add(JSON_SCHEDULE_ITEM_TOPIC_EXPORT, s.getTopic())
+                        .add(JSON_SCHEDULE_ITEM_LINK_EXPORT, s.getLink())
+                        .build();
+                referenceArrayBuilder.add(scheduleItem);
+            }
+        }
+        JsonArray referenceItemsArray = referenceArrayBuilder.build();
+        
+        // Now the RECITATION Items
+        
+        JsonArrayBuilder recitationItemsArrayBuilder = Json.createArrayBuilder();
+        for (ScheduleItem s : scheduleItems) {
+            if (s.getType().equalsIgnoreCase(CSGProp.RECITATION_EVENT.toString())) {
+                Date scheduleItemDate = s.getDate();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(scheduleItemDate);
+                int month = cal.get(Calendar.MONTH) + 1;
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                JsonObject scheduleItem = Json.createObjectBuilder()
+                        .add(JSON_SCHEDULE_ITEM_MONTH_EXPORT, month + "")
+                        .add(JSON_SCHEDULE_ITEM_DAY_EXPORT, day + "")
+                        .add(JSON_SCHEDULE_ITEM_TITLE_EXPORT, s.getTitle())
+                        .add(JSON_SCHEDULE_ITEM_TOPIC_EXPORT, s.getTopic())
+                        
+                        .build();
+                recitationItemsArrayBuilder.add(scheduleItem);
+            }
+        }
+        JsonArray recitationItemsArray = recitationItemsArrayBuilder.build();
+        
+        // Now the HOMEWORK items
+        JsonArrayBuilder homeworkArrayBuilder = Json.createArrayBuilder();
+        for (ScheduleItem s : scheduleItems) {
+            if (s.getType().equalsIgnoreCase(CSGProp.HOMEWORK_EVENT.toString())) {
+                Date scheduleItemDate = s.getDate();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(scheduleItemDate);
+                int month = cal.get(Calendar.MONTH) + 1;
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                JsonObject scheduleItem = Json.createObjectBuilder()
+                        .add(JSON_SCHEDULE_ITEM_MONTH_EXPORT, month + "")
+                        .add(JSON_SCHEDULE_ITEM_DAY_EXPORT, day + "")
+                        .add(JSON_SCHEDULE_ITEM_TITLE_EXPORT, s.getTitle())
+                        .add(JSON_SCHEDULE_ITEM_TOPIC_EXPORT, s.getTopic())
+                        .add(JSON_SCHEDULE_ITEM_TIME_EXPORT, s.getTime())
+                        .add(JSON_SCHEDULE_ITEM_LINK_EXPORT, s.getLink())
+                        .build();
+                homeworkArrayBuilder.add(scheduleItem);
+            }
+        }
+        JsonArray homeworkItemsArray = referenceArrayBuilder.build();
         
         // Saving the ScheduleItem JSON
         JsonObject scheduleItemJSO = Json.createObjectBuilder()
-                .add(JSON_SCHEDULE_ITEMS, scheduleItemsArray).build();
-        
-        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
-	Map<String, Object> propertiesS = new HashMap<>(1);
-	propertiesS.put(JsonGenerator.PRETTY_PRINTING, true);
-	JsonWriterFactory writerFactoryS = Json.createWriterFactory(propertiesS);
-	StringWriter swS = new StringWriter();
-	JsonWriter jsonWriterS = writerFactoryS.createWriter(swS);
-	jsonWriterS.writeObject(scheduleItemJSO);
-	jsonWriterS.close();
+                .add(JSON_STARTING_MONDAY_MONTH, startMonth + "")
+                .add(JSON_STARTING_MONDAY_DAY, startDay + "")
+                .add(JSON_ENDING_FRIDAY_MONTH, endMonth + "")
+                .add(JSON_ENDING_FRIDAY_DAY, endDay + "")
+                .add(JSON_HOLIDAYS_EXPORT, holidayItemsArray)
+                .add(JSON_LECTURES_EXPORT, lectureItemsArray)
+                .add(JSON_REFERENCES_EXPORT, referenceItemsArray)
+                .add(JSON_RECITATIONS_EXPORT, recitationItemsArray)
+                .add(JSON_HOMEWORKS_EXPORT, homeworkItemsArray)
+                .build();
 
-	// INIT THE WRITER
+        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
+        Map<String, Object> propertiesS = new HashMap<>(1);
+        propertiesS.put(JsonGenerator.PRETTY_PRINTING, true);
+        JsonWriterFactory writerFactoryS = Json.createWriterFactory(propertiesS);
+        StringWriter swS = new StringWriter();
+        JsonWriter jsonWriterS = writerFactoryS.createWriter(swS);
+        jsonWriterS.writeObject(scheduleItemJSO);
+        jsonWriterS.close();
+
+        // INIT THE WRITER
         //String taDataJSOpath = fileToExport + "/js/OfficeHoursGridData.json";
-	OutputStream osS = new FileOutputStream(scheduleBuilderDirectory);
-	JsonWriter jsonFileWriterS = Json.createWriter(osS);
-	jsonFileWriterS.writeObject(scheduleItemJSO);
-	String prettyPrintedS = swS.toString();
-	PrintWriter pwS = new PrintWriter(scheduleBuilderDirectory);
-	pwS.write(prettyPrintedS);
-	pwS.close();
-        
+        OutputStream osS = new FileOutputStream(scheduleBuilderDirectory);
+        JsonWriter jsonFileWriterS = Json.createWriter(osS);
+        jsonFileWriterS.writeObject(scheduleItemJSO);
+        String prettyPrintedS = swS.toString();
+        PrintWriter pwS = new PrintWriter(scheduleBuilderDirectory);
+        pwS.write(prettyPrintedS);
+        pwS.close();
+
         // ProjectTeams JSON
         // And now the ProjectTeam JSON Objects
         JsonArrayBuilder projectTeamArrayBuilder = Json.createArrayBuilder();
         ObservableList<ProjectTeam> projectTeams = dataManager.getProjectTeams();
-        for (ProjectTeam p: projectTeams) {
+        for (ProjectTeam p : projectTeams) {
             JsonObject projectTeamJson = Json.createObjectBuilder()
                     .add(JSON_PROJECT_TEAM_NAME, p.getName())
                     .add(JSON_PROJECT_TEAM_RED_COLOR, p.getColor().getRed() + "")
@@ -609,30 +740,30 @@ public class CSGFiles implements AppFileComponent {
             projectTeamArrayBuilder.add(projectTeamJson);
         }
         JsonArray projectTeamsArray = projectTeamArrayBuilder.build();
-        
+
         // Saving the ProjectTeam JSON
         JsonObject projectTeamJSO = Json.createObjectBuilder()
                 .add(JSON_PROJECT_TEAMS, projectTeamsArray).build();
-        
-        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
-	Map<String, Object> propertiesPT = new HashMap<>(1);
-	propertiesPT.put(JsonGenerator.PRETTY_PRINTING, true);
-	JsonWriterFactory writerFactoryPT = Json.createWriterFactory(propertiesPT);
-	StringWriter swPT = new StringWriter();
-	JsonWriter jsonWriterPT = writerFactoryPT.createWriter(swPT);
-	jsonWriterPT.writeObject(projectTeamJSO);
-	jsonWriterPT.close();
 
-	// INIT THE WRITER
+        // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
+        Map<String, Object> propertiesPT = new HashMap<>(1);
+        propertiesPT.put(JsonGenerator.PRETTY_PRINTING, true);
+        JsonWriterFactory writerFactoryPT = Json.createWriterFactory(propertiesPT);
+        StringWriter swPT = new StringWriter();
+        JsonWriter jsonWriterPT = writerFactoryPT.createWriter(swPT);
+        jsonWriterPT.writeObject(projectTeamJSO);
+        jsonWriterPT.close();
+
+        // INIT THE WRITER
         //String taDataJSOpath = fileToExport + "/js/OfficeHoursGridData.json";
-	OutputStream osPT = new FileOutputStream(projectTeamsBuilderDirectory);
-	JsonWriter jsonFileWriterPT = Json.createWriter(osPT);
-	jsonFileWriterPT.writeObject(projectTeamJSO);
-	String prettyPrintedPT = swPT.toString();
-	PrintWriter pwPT = new PrintWriter(projectTeamsBuilderDirectory);
-	pwPT.write(prettyPrintedPT);
-	pwPT.close();
-        
+        OutputStream osPT = new FileOutputStream(projectTeamsBuilderDirectory);
+        JsonWriter jsonFileWriterPT = Json.createWriter(osPT);
+        jsonFileWriterPT.writeObject(projectTeamJSO);
+        String prettyPrintedPT = swPT.toString();
+        PrintWriter pwPT = new PrintWriter(projectTeamsBuilderDirectory);
+        pwPT.write(prettyPrintedPT);
+        pwPT.close();
+
         // Students JSON Array - Constructing
         // And finally the Student JSON Objects (pertaining to the teams)
         /*JsonArrayBuilder studentArrayBuilder = Json.createArrayBuilder();

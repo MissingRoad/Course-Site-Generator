@@ -63,7 +63,7 @@ public class ScheduleItemEditUR implements jTPS_Transaction {
         ComboBox typeTextField = workspace.getTypeBox();
         DatePicker datePicker = workspace.getDatePicker();
         TextField timeTextField = workspace.getTimeTextField();
-        TextField titleTextField = workspace.getTitleTextField();
+        TextField titleTextField = workspace.getScheduleItemTitleTextField();
         TextField topicTextField = workspace.getTopicTextField();
         TextField linkTextField = workspace.getLinkTextField();
         TextField criteriaTextField = workspace.getCriteriaTextField();
@@ -73,11 +73,11 @@ public class ScheduleItemEditUR implements jTPS_Transaction {
         Calendar c = Calendar.getInstance();
         c.set(ld.getYear(), ld.getMonthValue(), ld.getDayOfMonth());
         this.newDate = c.getTime();
-        this.time = timeTextField.getText();
-        this.title = titleTextField.getText();
-        this.topic = topicTextField.getText();
-        this.link = linkTextField.getText();
-        this.criteria = criteriaTextField.getText();
+        this.newTime = timeTextField.getText();
+        this.newTitle = titleTextField.getText();
+        this.newTopic = topicTextField.getText();
+        this.newLink = linkTextField.getText();
+        this.newCriteria = criteriaTextField.getText();
     }
     
     @Override
