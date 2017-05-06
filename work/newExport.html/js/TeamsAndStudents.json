@@ -2,14 +2,19 @@
 {
     "project_teams":[
         {
-            "project_team_name":"Team 1",
-            "project_team_red_color":"0.0",
-            "project_team_green_color":"0.0",
-            "project_team_blue_color":"1.0",
-            "project_team_text_red_color":"0.0",
-            "project_team_text_green_color":"0.0",
-            "project_team_text_blue_color":"1.0",
-            "project_team_link":"www.team1.com"
+            "name":"Team 1",
+            "red":"0",
+            "green":"0",
+            "blue":"256",
+            "text_color":"0x0000ffff"
+        }
+    ],
+    "students":[
+        {
+            "lastName":"Li",
+            "firstName":"David",
+            "team":"Team 1",
+            "role":"Lead Developer"
         }
     ]
 }

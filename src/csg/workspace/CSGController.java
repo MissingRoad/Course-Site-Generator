@@ -51,6 +51,7 @@ import csg.data.Recitation;
 import csg.data.ScheduleItem;
 import csg.data.Student;
 import csg.file.TimeSlot;
+import csg.jtps.CourseSiteEditUR;
 import csg.jtps.ProjectTeamAdderUR;
 import csg.jtps.ProjectTeamDeleteUR;
 import csg.jtps.ProjectTeamReplaceUR;
@@ -248,6 +249,7 @@ public class CSGController {
         jTPS_Transaction replaceTeamUR = new ProjectTeamReplaceUR(app);
         jTPS.addTransaction(replaceTeamUR);
         markWorkAsEdited();
+        projectTeams.refresh();
     }
 
     public void handleAddStudent() {
@@ -659,6 +661,31 @@ public class CSGController {
             workspace.getTAEmailTextField().setText(email);
         }
     }
+    
+    public void loadScheduleItemToText() {
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        TableView scheduleItems = workspace.getScheduleItems();
+        Object selectedItem = scheduleItems.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            ScheduleItem s = (ScheduleItem)selectedItem;
+            String type = s.getType();
+            Date date = s.getDate();
+            LocalDate ld = new java.sql.Date(date.getTime()).toLocalDate();
+            String time = s.getTime();
+            String title = s.getTitle();
+            String topic = s.getTopic();
+            String link = s.getLink();
+            String criteria = s.getCriteria();
+            
+            workspace.getTypeBox().getSelectionModel().select(type);
+            workspace.getDatePicker().setValue(ld);
+            workspace.getTimeTextField().setText(time);
+            workspace.getScheduleItemTitleTextField().setText(title);
+            workspace.getTopicTextField().setText(topic);
+            workspace.getLinkTextField().setText(link);
+            workspace.getCriteriaTextField().setText(criteria);
+        }
+    }
 
     public void handleEditRecitation() {
         CSGWorkspace workspace = (CSGWorkspace) app.getWorkspaceComponent();
@@ -811,5 +838,18 @@ public class CSGController {
         }
         
         scheduleItems.refresh();
+    }
+    
+    public void handleCheckBoxChange() {
+        markWorkAsEdited();
+    }
+    
+    public void handleUpdateCourseSiteInformation() {
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        
+        jTPS_Transaction courseEditUR = new CourseSiteEditUR(app);
+        jTPS.addTransaction(courseEditUR);
+        
+        markWorkAsEdited();
     }
 }

@@ -23,6 +23,8 @@ public class TeachingAssistant <E extends Comparable<E>> implements Comparable<E
         this.name = new SimpleStringProperty(initName);
         this.email = new SimpleStringProperty(initEmail);
         this.isUndergrad = new SimpleBooleanProperty(isUndergrad);
+        
+        
     }
     
         // ACCESSORS AND MUTATORS FOR THE PROPERTIES
@@ -45,6 +47,10 @@ public class TeachingAssistant <E extends Comparable<E>> implements Comparable<E
     
     public boolean isUndergrad() {
         return isUndergrad.get();
+    }
+    
+    public BooleanProperty isUndergradProperty() {
+        return isUndergrad;
     }
     
     public void setIsUndergrad(boolean isUndergrad) {

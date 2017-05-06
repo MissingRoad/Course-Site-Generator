@@ -25,6 +25,10 @@ public class CourseSitePage {
         this.navbarTitle = new SimpleStringProperty(navbarTitle);
         this.fileName = new SimpleStringProperty(fileName);
         this.script = new SimpleStringProperty(script);
+        
+        this.exists.addListener(e -> {
+            System.out.println(this.navbarTitle.get() + this.exists.get());
+        });
     }
     
     public void setExists(boolean exists) {
@@ -33,6 +37,10 @@ public class CourseSitePage {
     
     public boolean getExists() {
         return this.exists.get();
+    }
+    
+    public BooleanProperty existsProperty() {
+        return this.exists;
     }
     
     public void setNavbarTitle(String navbarTitle) {

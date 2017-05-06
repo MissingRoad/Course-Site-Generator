@@ -38,9 +38,9 @@ public class CourseSite {
     
     public CourseSite() {
         this.courseSubject = new SimpleStringProperty("");
-        this.courseNumber = new SimpleStringProperty(219 + "");
+        this.courseNumber = new SimpleStringProperty("");
         this.courseSemester = new SimpleStringProperty("");
-        this.courseYear = new SimpleIntegerProperty(2017);
+        this.courseYear = new SimpleIntegerProperty();
         this.courseTitle = new SimpleStringProperty("");
         this.instName = new SimpleStringProperty("");
         this.instHome = new SimpleStringProperty("");

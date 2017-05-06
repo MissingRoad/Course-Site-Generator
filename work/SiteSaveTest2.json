@@ -2,9 +2,9 @@
 {
     "course_info":{
         "course_subject":"",
-        "course_number":"219",
+        "course_number":"",
         "course_semester":"",
-        "course_year":"2017",
+        "course_year":"0",
         "course_title":"",
         "course_instructor_name":"",
         "course_instructor_home":"",
@@ -65,6 +65,15 @@
             "schedule_item_date":"Thu Jan 05 20:37:48 EST 2017",
             "schedule_item_time":"",
             "schedule_item_title":"Memorial Day",
+            "schedule_item_topic":"",
+            "schedule_item_link":"",
+            "schedule_item_criteria":""
+        },
+        {
+            "type":"HW",
+            "schedule_item_date":"Fri Apr 14 02:03:29 EDT 2017",
+            "schedule_item_time":"",
+            "schedule_item_title":"Homework 2 Due",
             "schedule_item_topic":"",
             "schedule_item_link":"",
             "schedule_item_criteria":""

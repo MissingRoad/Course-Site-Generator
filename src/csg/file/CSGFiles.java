@@ -163,20 +163,24 @@ public class CSGFiles implements AppFileComponent {
     static final String JSON_SCHEDULE_ITEM_TITLE_EXPORT = "title";
     static final String JSON_SCHEDULE_ITEM_LINK_EXPORT = "link";
     static final String JSON_SCHEDULE_ITEM_TOPIC_EXPORT = "schedule_item_topic";
-    static final String JSON_PROJECT_TEAM_NAME_EXPORT = "project_team_name";
-    static final String JSON_PROJECT_TEAM_RED_COLOR_EXPORT = "project_team_red_color";
-    static final String JSON_PROJECT_TEAM_GREEN_COLOR_EXPORT = "project_team_green_color";
-    static final String JSON_PROJECT_TEAM_BLUE_COLOR_EXPORT = "project_team_blue_color";
+    static final String JSON_PROJECT_TEAM_NAME_EXPORT = "name";
+    static final String JSON_PROJECT_TEAM_RED_COLOR_EXPORT = "red";
+    static final String JSON_PROJECT_TEAM_GREEN_COLOR_EXPORT = "green";
+    static final String JSON_PROJECT_TEAM_BLUE_COLOR_EXPORT = "blue";
     static final String JSON_PROJECT_TEAM_COLOR_OPACITY_EXPORT = "project_team_color_opacity";
+    static final String JSON_PROJECT_TEAM_TEXT_COLOR_EXPORT = "text_color";
     static final String JSON_PROJECT_TEAM_TEXT_RED_COLOR_EXPORT = "project_team_text_red_color";
     static final String JSON_PROJECT_TEAM_TEXT_GREEN_COLOR_EXPORT = "project_team_text_green_color";
     static final String JSON_PROJECT_TEAM_TEXT_BLUE_COLOR_EXPORT = "project_team_text_blue_color";
     static final String JSON_PROJECT_TEAM_TEXT_COLOR_OPACITY_EXPORT = "project_team_text_color_opacity";
     static final String JSON_PROJECT_TEAM_LINK_EXPORT = "project_team_link";
-    static final String JSON_STUDENT_FIRST_NAME_EXPORT = "first_name";
-    static final String JSON_STUDENT_LAST_NAME_EXPORT = "last_name";
+    static final String JSON_STUDENT_LAST_NAME_EXPORT = "lastName";
+    static final String JSON_STUDENT_FIRST_NAME_EXPORT = "firstName";
     static final String JSON_STUDENT_TEAM_EXPORT = "team";
     static final String JSON_STUDENT_ROLE_EXPORT = "role";
+    static final String JSON_BANNER_IMAGE_EXPORT = "banner_image";
+    static final String JSON_LEFT_FOOTER_IMAGE_EXPORT = "left_footer";
+    static final String JSON_RIGHT_FOOTER_IMAGE_EXPORT = "right_footer";
     // Data types regarding various types for the various JSON arrays
     static final String JSON_COURSE_INFO_EXPORT = "course_info";
     static final String JSON_RECITATIONS_EXPORT = "recitations";
@@ -284,7 +288,7 @@ public class CSGFiles implements AppFileComponent {
             double textColorOpacityVal = Double.parseDouble(textColorOpacity);
             Color teamColor = new Color(teamColorRedVal, teamColorGreenVal, teamColorBlueVal, teamColorOpacityVal);
             Color textColor = new Color(textColorRedVal, textColorGreenVal, textColorBlueVal, textColorOpacityVal);
-            dataManager.addProjectTeam(name, textColor, textColor, link);
+            dataManager.addProjectTeam(name, teamColor, textColor, link);
         }
 
         // Students - should add each student to their appropriate ProjectTeam
@@ -475,20 +479,55 @@ public class CSGFiles implements AppFileComponent {
         //FileUtils.copyFile(fileToImport, fileToExport);
         FileUtils.copyDirectory(fileToImport, fileToExport);
 
+        String courseInfoDirectory = filePath + "/newExport.html/" + "js/CourseInformationData.json";
         String officeHoursGridDataDirectory = filePath + "/newExport.html/" + "js/OfficeHoursGridData.json";
         String recitationsBuilderDirectory = filePath + "/newExport.html/" + "js/RecitationsData.json";
         String scheduleBuilderDirectory = filePath + "/newExport.html/" + "js/ScheduleData.json";
         String projectTeamsBuilderDirectory = filePath + "/newExport.html/" + "js/TeamsAndStudents.json";
 
-        // Saving the file
+        // Building Course Information to Save
+        CourseSite cs = dataManager.getCourseSiteInfo();
+        JsonObject csInfo = Json.createObjectBuilder()
+                .add(JSON_COURSE_SUBJECT, cs.getCourseSubject())
+                .add(JSON_COURSE_NUMBER, "" + cs.getCourseNumber())
+                .add(JSON_COURSE_SEMESTER, cs.getCourseSemester())
+                .add(JSON_COURSE_YEAR, cs.getCourseYear() + "")
+                .add(JSON_COURSE_TITLE, cs.getCourseTitle())
+                .add(JSON_INSTRUCTOR_NAME, cs.getInstName())
+                .add(JSON_INSTRUCTOR_HOME, cs.getInstHome())
+                .add(JSON_EXPORT_DIR, cs.getExportDir())
+                
+                .build();
+        
+        Map<String, Object> propertiesCS = new HashMap<>(1);
+        propertiesCS.put(JsonGenerator.PRETTY_PRINTING, true);
+        JsonWriterFactory writerFactoryCS = Json.createWriterFactory(propertiesCS);
+        StringWriter swCS = new StringWriter();
+        JsonWriter jsonWriterCS = writerFactoryCS.createWriter(swCS);
+        jsonWriterCS.writeObject(csInfo);
+        jsonWriterCS.close();
+
+        // INIT THE WRITER
+        //String taDataJSOpath = fileToExport + "/js/OfficeHoursGridData.json";
+        OutputStream osCS = new FileOutputStream(courseInfoDirectory);
+        JsonWriter jsonFileWriterCS = Json.createWriter(osCS);
+        jsonFileWriterCS.writeObject(csInfo);
+        String prettyPrintedCS = swCS.toString();
+        PrintWriter pwCS = new PrintWriter(courseInfoDirectory);
+        pwCS.write(prettyPrintedCS);
+        pwCS.close();
+        
+        // Building TA Array to Save
         JsonArrayBuilder taArrayBuilder = Json.createArrayBuilder();
         ObservableList<TeachingAssistant> tas = dataManager.getTeachingAssistants();
         for (TeachingAssistant ta : tas) {
+            if (ta.isUndergrad()) {
             JsonObject taJson = Json.createObjectBuilder()
                     .add(JSON_NAME_EXPORT, ta.getName())
                     .add(JSON_EMAIL_EXPORT, ta.getEmail())
                     .build(); // What will this line print for a String?
             taArrayBuilder.add(taJson);
+            }
         }
         JsonArray undergradTAsArray = taArrayBuilder.build();
 
@@ -590,7 +629,7 @@ public class CSGFiles implements AppFileComponent {
                 Date scheduleItemDate = s.getDate();
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(scheduleItemDate);
-                int month = cal.get(Calendar.MONTH) + 1;
+                int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
                 JsonObject scheduleItem = Json.createObjectBuilder()
                         .add(JSON_SCHEDULE_ITEM_MONTH_EXPORT, month + "")
@@ -611,7 +650,7 @@ public class CSGFiles implements AppFileComponent {
                 Date scheduleItemDate = s.getDate();
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(scheduleItemDate);
-                int month = cal.get(Calendar.MONTH) + 1;
+                int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
                 JsonObject scheduleItem = Json.createObjectBuilder()
                         .add(JSON_SCHEDULE_ITEM_MONTH_EXPORT, month + "")
@@ -632,7 +671,7 @@ public class CSGFiles implements AppFileComponent {
                 Date scheduleItemDate = s.getDate();
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(scheduleItemDate);
-                int month = cal.get(Calendar.MONTH) + 1;
+                int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
                 JsonObject scheduleItem = Json.createObjectBuilder()
                         .add(JSON_SCHEDULE_ITEM_MONTH_EXPORT, month + "")
@@ -654,7 +693,7 @@ public class CSGFiles implements AppFileComponent {
                 Date scheduleItemDate = s.getDate();
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(scheduleItemDate);
-                int month = cal.get(Calendar.MONTH) + 1;
+                int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
                 JsonObject scheduleItem = Json.createObjectBuilder()
                         .add(JSON_SCHEDULE_ITEM_MONTH_EXPORT, month + "")
@@ -675,7 +714,7 @@ public class CSGFiles implements AppFileComponent {
                 Date scheduleItemDate = s.getDate();
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(scheduleItemDate);
-                int month = cal.get(Calendar.MONTH) + 1;
+                int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
                 JsonObject scheduleItem = Json.createObjectBuilder()
                         .add(JSON_SCHEDULE_ITEM_MONTH_EXPORT, month + "")
@@ -727,23 +766,40 @@ public class CSGFiles implements AppFileComponent {
         JsonArrayBuilder projectTeamArrayBuilder = Json.createArrayBuilder();
         ObservableList<ProjectTeam> projectTeams = dataManager.getProjectTeams();
         for (ProjectTeam p : projectTeams) {
+            int newRed = (int)(p.getColor().getRed() * 256);
+            int newGreen = (int)(p.getColor().getGreen() * 256);
+            int newBlue = (int)(p.getColor().getBlue() * 256);
+            String textColor = p.getTextColor().toString();
             JsonObject projectTeamJson = Json.createObjectBuilder()
-                    .add(JSON_PROJECT_TEAM_NAME, p.getName())
-                    .add(JSON_PROJECT_TEAM_RED_COLOR, p.getColor().getRed() + "")
-                    .add(JSON_PROJECT_TEAM_GREEN_COLOR, p.getColor().getGreen() + "")
-                    .add(JSON_PROJECT_TEAM_BLUE_COLOR, p.getColor().getBlue() + "")
+                    .add(JSON_PROJECT_TEAM_NAME_EXPORT, p.getName())
+                    .add(JSON_PROJECT_TEAM_RED_COLOR_EXPORT, newRed + "")
+                    .add(JSON_PROJECT_TEAM_GREEN_COLOR_EXPORT, newGreen + "")
+                    .add(JSON_PROJECT_TEAM_BLUE_COLOR_EXPORT, newBlue + "")
                     //.add(JSON_PROJECT_TEAM_COLOR_OPACITY, p.getColor().getTransparency())
-                    .add(JSON_PROJECT_TEAM_TEXT_RED_COLOR, p.getTextColor().getRed() + "")
-                    .add(JSON_PROJECT_TEAM_TEXT_GREEN_COLOR, p.getTextColor().getGreen() + "")
-                    .add(JSON_PROJECT_TEAM_TEXT_BLUE_COLOR, p.getTextColor().getBlue() + "")
-                    .add(JSON_PROJECT_TEAM_LINK, p.getLink()).build();
+                    .add(JSON_PROJECT_TEAM_TEXT_COLOR_EXPORT, textColor)
+                    .build();
             projectTeamArrayBuilder.add(projectTeamJson);
         }
         JsonArray projectTeamsArray = projectTeamArrayBuilder.build();
-
+        
+        // Students Array
+        JsonArrayBuilder studentArrayBuilder = Json.createArrayBuilder();
+        ObservableList<Student> students = dataManager.getStudents();
+        for (Student s: students) {
+            JsonObject studentJson = Json.createObjectBuilder()
+                    .add(JSON_STUDENT_LAST_NAME_EXPORT, s.getLastName())
+                    .add(JSON_STUDENT_FIRST_NAME_EXPORT, s.getFirstName())
+                    .add(JSON_STUDENT_TEAM_EXPORT, s.getTeamName())
+                    .add(JSON_STUDENT_ROLE_EXPORT, s.getRole())
+                    .build();
+            studentArrayBuilder.add(studentJson);
+        }
+        JsonArray studentArray = studentArrayBuilder.build();
+        
         // Saving the ProjectTeam JSON
         JsonObject projectTeamJSO = Json.createObjectBuilder()
-                .add(JSON_PROJECT_TEAMS, projectTeamsArray).build();
+                .add(JSON_PROJECT_TEAMS, projectTeamsArray)
+                .add(JSON_STUDENTS, studentArray).build();
 
         // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
         Map<String, Object> propertiesPT = new HashMap<>(1);

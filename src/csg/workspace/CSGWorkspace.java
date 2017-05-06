@@ -93,6 +93,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     Tab projectDataTab;
 
     //Components for courseDataTab
+    ScrollPane courseDataTabScroll;
     VBox courseDataTabVBox;
     GridPane topCourseDataBox;
     ComboBox<String> subjectComboBox;
@@ -112,8 +113,12 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     TextField titleTextField;
     TextField instructorNameTextField;
     TextField instructorHomeTextField;
+    Label titleValueLabel;
+    Label instructorNameValueLabel;
+    Label instructorHomeValueLabel;
     Label exportDirTextView;
     Button changeExportDirButton;
+    Button updateCourseSiteButton;
 
     VBox courseDataMiddleBox;
     Label siteTemplateLabel;
@@ -126,7 +131,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     CourseSite courseSite;
 
     TableView<CourseSitePage> sitePages;
-    TableColumn useColumn;
+    TableColumn<CourseSitePage, Boolean> useColumn;
     TableColumn navbarTitleColumn;
     TableColumn fileNameColumn;
     TableColumn scriptColumn;
@@ -161,7 +166,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     Button deleteTAButton;
     HBox taDataTableViewTopPane;
     TableView<TeachingAssistant> taInformation;
-    TableColumn<TeachingAssistant, CheckBox> taIsUndergradColumn;
+    TableColumn<TeachingAssistant, Boolean> taIsUndergradColumn;
     TableColumn<TeachingAssistant, String> taNameColumn;
     TableColumn<TeachingAssistant, String> taEmailColumn;
     HBox taDataTextFieldPane;
@@ -343,15 +348,23 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         ObservableList semesterValues = FXCollections.observableArrayList(props.getProperty(CSGProp.FALL_SEMESTER), props.getProperty(CSGProp.SPRING_SEMESTER));
 
         //Stuff for the top VBox, Course Information
-        courseSite = new CourseSite();
+        courseSite = ((CSGData) app.getDataComponent()).getCourseSiteInfo();
 
         topCourseDataBox = new GridPane();
         subjectComboBox = new ComboBox(subjectValues);
-        numberComboBox = new ComboBox<String>();
+        ObservableList numberValues = FXCollections.observableArrayList("219", "308", "380");
+        numberComboBox = new ComboBox<String>(numberValues);
         semesterComboBox = new ComboBox(semesterValues);
-        yearComboBox = new ComboBox();
+        ObservableList yearValues = FXCollections.observableArrayList(2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025);
+        yearComboBox = new ComboBox(yearValues);
+        // Set the ComboBox Objects to their default values
+        subjectComboBox.getSelectionModel().selectFirst();
+        numberComboBox.getSelectionModel().selectFirst();
+        semesterComboBox.getSelectionModel().selectFirst();
+        yearComboBox.getSelectionModel().selectFirst();
 
         courseInfoLabel = new Label(props.getProperty(CSGProp.COURSE_INFO_LABEL).toString());
+        courseInfoLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold");
         subjectLabel = new Label(props.getProperty(CSGProp.COURSE_SUBJECT_LABEL).toString());
         numberLabel = new Label(props.getProperty(CSGProp.COURSE_NUMBER_LABEL).toString());
         semesterLabel = new Label(props.getProperty(CSGProp.COURSE_SEMESTER_LABEL).toString());
@@ -360,12 +373,21 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         instructorNameLabel = new Label(props.getProperty(CSGProp.COURSE_INSTRUCTOR_NAME_LABEL).toString());
         instructorHomeLabel = new Label(props.getProperty(CSGProp.COURSE_INSTRUCTOR_HOME_LABEL).toString());
         exportDirLabel = new Label(props.getProperty(CSGProp.COURSE_EXPORT_DIR_LABEL).toString());
+        Button updateCourseSiteButton = new Button(props.getProperty(CSGProp.ADD_UPDATE_BUTTON_LABEL).toString());
 
         titleTextField = new TextField();
+        titleValueLabel = new Label(courseSite.getCourseTitle());
+        titleValueLabel.setPrefWidth(500);
         instructorNameTextField = new TextField();
         instructorNameTextField.setPromptText(props.getProperty(CSGProp.NAME_PROMPT_TEXT.toString()));
+        instructorNameTextField.setPrefWidth(500);
+        instructorNameValueLabel = new Label(courseSite.getInstName());
+        instructorNameValueLabel.setPrefWidth(500);
         instructorHomeTextField = new TextField();
         instructorHomeTextField.setPromptText(props.getProperty(CSGProp.HOME_PROMPT_TEXT.toString()));
+        instructorHomeTextField.setPrefWidth(500);
+        instructorHomeValueLabel = new Label(courseSite.getInstHome());
+        instructorHomeValueLabel.setPrefWidth(500);
         exportDirTextView = new Label();
         changeExportDirButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
 
@@ -380,11 +402,15 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         topCourseDataBox.add(yearLabel, 2, 2);
         topCourseDataBox.add(yearComboBox, 3, 2);
         topCourseDataBox.add(titleLabel, 0, 3);
-        topCourseDataBox.add(titleTextField, 1, 3);
+        topCourseDataBox.add(titleValueLabel, 1, 3);
+        topCourseDataBox.add(titleTextField, 2, 3);
         topCourseDataBox.add(instructorNameLabel, 0, 4);
-        topCourseDataBox.add(instructorNameTextField, 1, 4);
+        topCourseDataBox.add(instructorNameValueLabel, 1, 4);
+        topCourseDataBox.add(instructorNameTextField, 2, 4);
         topCourseDataBox.add(instructorHomeLabel, 0, 5);
-        topCourseDataBox.add(instructorHomeTextField, 1, 5);
+        topCourseDataBox.add(instructorHomeValueLabel, 1, 5);
+        topCourseDataBox.add(instructorHomeTextField, 2, 5);
+        topCourseDataBox.add(updateCourseSiteButton, 3, 5);
         topCourseDataBox.add(exportDirLabel, 0, 6);
         topCourseDataBox.add(exportDirTextView, 1, 6);
         topCourseDataBox.add(changeExportDirButton, 2, 6);
@@ -413,11 +439,16 @@ public class CSGWorkspace extends AppWorkspaceComponent {
             }
         });
 
+        updateCourseSiteButton.setOnAction(e -> {
+            controller.handleUpdateCourseSiteInformation();
+        });
+
         topCourseDataBox.setStyle("-fx-background-color: bisque;-fx-border: 5px; -fx-border-color: black;");
 
         //Middle box content, the Site Template
         courseDataMiddleBox = new VBox();
         siteTemplateLabel = new Label(props.getProperty(CSGProp.COURSE_SITE_TEMPLATE_LABEL));
+        siteTemplateLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold");
         siteTemplateDescriptionLabel = new Label(props.getProperty(CSGProp.COURSE_SITE_TEMPLATE_NOTE_LABEL).toString());
         templateDir = new Label();
         selectTemplateDirButton = new Button(props.getProperty(CSGProp.COURSE_SELECT_TEMPLATE_DIRECTORY_BUTTON_LABEL.toString()));
@@ -437,8 +468,14 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         fileNameColumn = new TableColumn(filenameLabelText);
         scriptColumn = new TableColumn(scriptLabelText);
 
+        CourseSitePage homePage = courseSite.getHomePage();
+        CourseSitePage syllabusPage = courseSite.getSyllabusPage();
+        CourseSitePage schedulePage = courseSite.getSchedulePage();
+        CourseSitePage hwPage = courseSite.getHwPage();
+        CourseSitePage projectsPage = courseSite.getProjectsPage();
+
         useColumn.setCellValueFactory(
-                new PropertyValueFactory<CourseSitePage, CheckBox>("exists")
+                new PropertyValueFactory<CourseSitePage, Boolean>("exists")
         );
         useColumn.setCellFactory(column -> new CheckBoxTableCell());
         navbarTitleColumn.setCellValueFactory(
@@ -450,12 +487,6 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         scriptColumn.setCellValueFactory(
                 new PropertyValueFactory<CourseSitePage, String>("script")
         );
-
-        CourseSitePage homePage = courseSite.getHomePage();
-        CourseSitePage syllabusPage = courseSite.getSyllabusPage();
-        CourseSitePage schedulePage = courseSite.getSchedulePage();
-        CourseSitePage hwPage = courseSite.getHwPage();
-        CourseSitePage projectsPage = courseSite.getProjectsPage();
 
         ObservableList courseSitePages = FXCollections.observableArrayList();
         courseSitePages.addAll(homePage, syllabusPage, schedulePage, hwPage, projectsPage);
@@ -482,6 +513,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         //pageStyleDataBox, the Page Style component of the Course Details Pane
         pageStyleDataBox = new GridPane();
         pageStyleLabel = new Label(props.getProperty(CSGProp.COURSE_PAGE_STYLE_LABEL).toString());
+        pageStyleLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold");
         bannerSchoolLabel = new Label(props.getProperty(CSGProp.COURSE_BANNER_SCHOOL_IMAGE_LABEL).toString());
         leftFooterLabel = new Label(props.getProperty(CSGProp.COURSE_LEFT_FOOTER_LABEL).toString());
         rightFooterLabel = new Label(props.getProperty(CSGProp.COURSE_RIGHT_FOOTER_LABEL).toString());
@@ -495,6 +527,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         ObservableList stylesheetOptions = FXCollections.observableArrayList(props.getProperty(CSGProp.CSG_SEA_WOLF_CSS.toString()), props.getProperty(CSGProp.COURSE_HOMEPAGE_LAYOUT.toString()));
         stylesheetSelect = new ComboBox(stylesheetOptions);
         stylesheetNote = new Label(props.getProperty(CSGProp.COURSE_STYLESHEET_NOTE_LABEL).toString());
+        stylesheetNote.setStyle("-fx-font-weight: bold");
 
         // EVENT HANDLERS FOR THE INDIVIDUAL COMPONENTS - PAGE STYLE PORTION
         changeBannerSchoolImageButton.setOnAction(e -> {
@@ -517,7 +550,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
         changeRightFooterImageButton.setOnAction(e -> {
             try {
-                changeLeftFooterImage();
+                changeRightFooterImage();
             } catch (IOException ioe) {
                 AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
                 dialog.show(props.getProperty(LOAD_ERROR_TITLE), props.getProperty(LOAD_ERROR_MESSAGE));
@@ -545,7 +578,11 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         courseDataTabVBox.getChildren().add(courseDataMiddleBox);
         courseDataTabVBox.getChildren().add(pageStyleDataBox);
         courseDataTabVBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
-        courseDataTab.setContent(courseDataTabVBox);
+        courseDataTabScroll = new ScrollPane();
+        courseDataTabScroll.setContent(courseDataTabVBox);
+        courseDataTabScroll.setFitToHeight(true);
+        courseDataTabScroll.setFitToWidth(true);
+        courseDataTab.setContent(courseDataTabScroll);
 
         /*taDataTab = new Tab();
         taDataTab.setText(CSGProp.TA_DATA_TAB.toString());*/
@@ -556,6 +593,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         taDataTATableViewVBox = new VBox();
         taDataTableViewTopPane = new HBox();
         teachingAssistantsLabel = new Label(props.getProperty(CSGProp.TEACHING_ASSISTANTS_LABEL).toString());
+        teachingAssistantsLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold");
         deleteTAButton = new Button(props.getProperty(CSGProp.DELETE_SYMBOL).toString());
         taDataTableViewTopPane.getChildren().addAll(teachingAssistantsLabel, deleteTAButton);
 
@@ -573,9 +611,12 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         taNameColumn = new TableColumn(nameColumnText);
         taEmailColumn = new TableColumn(emailColumnText);
         taIsUndergradColumn.setCellValueFactory(
-                new PropertyValueFactory<TeachingAssistant, CheckBox>("isUndergrad")
+                new PropertyValueFactory<TeachingAssistant, Boolean>("isUndergrad")
         );
         taIsUndergradColumn.setCellFactory(column -> new CheckBoxTableCell());
+        taIsUndergradColumn.setOnEditStart(e -> {
+            controller.handleCheckBoxChange();
+        });
         taInformation.setEditable(true);
         taNameColumn.setCellValueFactory(
                 new PropertyValueFactory<TeachingAssistant, String>("name")
@@ -593,7 +634,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         clearTAButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL).toString());
         taDataTextFieldPane.getChildren().addAll(taNameTextField, taEmailTextField, addTAButton, clearTAButton);
         taDataTATableViewVBox.getChildren().addAll(taDataTableViewTopPane, taInformation, taDataTextFieldPane);
-
+        taDataTATableViewVBox.setPrefWidth(750);
         taDataTATableViewVBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
 
         //Assembling the right VBox
@@ -627,6 +668,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         taDataGridPaneVBox = new VBox();
         taOfficeHoursTopBox = new HBox();
         officeHoursLabel = new Label(props.getProperty(CSGProp.OFFICE_HOURS_LABEL.toString()));
+        officeHoursLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold");
         officeHoursStartLabel = new Label(props.getProperty(CSGProp.OFFICE_HOURS_START_LABEL.toString()));
         officeHoursStartBox = new ComboBox(time_options);
         officeHoursEndLabel = new Label(props.getProperty(CSGProp.OFFICE_HOURS_END_LABEL.toString()));
@@ -645,6 +687,8 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         taDataOfficeHoursGridTACellLabels = new HashMap<String, Label>();
         taDataGridPaneVBox.getChildren().addAll(taOfficeHoursTopBox, taDataOfficeHoursGridPane);
         taDataGridScrollPane.setContent(taDataGridPaneVBox);
+        taDataGridScrollPane.setFitToHeight(true);
+        taDataGridScrollPane.setFitToWidth(true);
 
         // NOW LET'S SETUP THE EVENT HANDLING - for the TA DATA TAB ONLY
         controller = new CSGController(app);
@@ -732,6 +776,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         recitationDataVBox = new VBox();
         recitationTopBox = new HBox();
         recitationsLabel = new Label(props.getProperty(CSGProp.RECITATIONS_LABEL.toString()));
+        recitationsLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold");
         deleteRecitationButton = new Button(props.getProperty(CSGProp.DELETE_SYMBOL.toString()));
         recitationTopBox.getChildren().addAll(recitationsLabel, deleteRecitationButton);
         recitationData = new TableView<Recitation>();
@@ -855,7 +900,8 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
         //Assembling the VBox to be displayed in the Tab
         scheduleDataVBox = new VBox();
-        scheduleLabel = new Label();
+        scheduleLabel = new Label(props.getProperty(CSGProp.COURSE_SCHEDULE_PAGE_LABEL));
+        scheduleLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold");
         startEndGridPane = new GridPane();
         // Format for the DatePickers, to set their default Date
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -1003,14 +1049,14 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         scheduleItems.setOnMouseClicked(e -> {
             addUpdateScheduleItemButton.setText(props.getProperty(CSGProp.EDIT_BUTTON_LABEL.toString()));
             addScheduleItem = false;
-            //controller.loadScheduleItemtotext();
+            controller.loadScheduleItemToText();
         });
 
         // For DELETING a ScheduleItem
         deleteScheduleItemButton.setOnAction(e -> {
             controller.handleRemoveScheduleItem();
         });
-        
+
         // HANDLING FOR THE DATEPICKERS
         startingMondayPicker.setOnAction(e -> {
             controller.handleStartEndDatePickerChange();
@@ -1041,7 +1087,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         scheduleItemsVBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
 
         //Now assemble the entire scheduleDataVBox
-        scheduleDataVBox.getChildren().addAll(startEndGridPane, scheduleItemsVBox);
+        scheduleDataVBox.getChildren().addAll(scheduleLabel, startEndGridPane, scheduleItemsVBox);
 
         scheduleDataTab.setContent(scheduleDataVBox);
 
@@ -1154,7 +1200,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
                 controller.handleAddProjectTeam();
             }
         });
-        teamColorPicker.setOnAction(e -> {
+        /*teamColorPicker.setOnAction(e -> {
             if (!addProjectTeam) {
                 controller.handleEditProjectTeam();
             } else {
@@ -1167,7 +1213,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
             } else {
                 controller.handleAddProjectTeam();
             }
-        });
+        });*/
         teamLinkTextField.setOnAction(e -> {
             if (!addProjectTeam) {
                 controller.handleEditProjectTeam();
@@ -1175,7 +1221,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
                 controller.handleAddProjectTeam();
             }
         });
-        addEditTeamButton.setOnAction(e ->{
+        addEditTeamButton.setOnAction(e -> {
             if (!addProjectTeam) {
                 controller.handleEditProjectTeam();
             } else {
@@ -1258,7 +1304,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
             addStudent = false;
             //controller.loadStudenttotext();
         });
-        
+
         addEditStudentsPane.add(firstNameLabel, 0, 0);
         addEditStudentsPane.add(firstNameTextField, 1, 0);
         addEditStudentsPane.add(lastNameLabel, 2, 0);
@@ -1291,6 +1337,30 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         });
 
         workspace.setStyle("-fx-background-color: bisque;");
+    }
+
+    public Label getTitleValueLabel() {
+        return titleValueLabel;
+    }
+
+    public void setTitleValueLabel(Label titleValueLabel) {
+        this.titleValueLabel = titleValueLabel;
+    }
+
+    public Label getInstructorNameValueLabel() {
+        return instructorNameValueLabel;
+    }
+
+    public void setInstructorNameValueLabel(Label instructorNameValueLabel) {
+        this.instructorNameValueLabel = instructorNameValueLabel;
+    }
+
+    public Label getInstructorHomeValueLabel() {
+        return instructorHomeValueLabel;
+    }
+
+    public void setInstructorHomeValueLabel(Label instructorHomeValueLabel) {
+        this.instructorHomeValueLabel = instructorHomeValueLabel;
     }
 
     public CourseSiteGeneratorApp getApp() {
@@ -1505,7 +1575,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         return taInformation;
     }
 
-    public TableColumn<TeachingAssistant, CheckBox> getTaIsUndergradColumn() {
+    public TableColumn<TeachingAssistant, Boolean> getTaIsUndergradColumn() {
         return taIsUndergradColumn;
     }
 
@@ -2153,7 +2223,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
          */
         File selectedFile = dc.showDialog(app.getGUI().getWindow()); //wrong dialog?
         templateDir.setText(selectedFile.getPath());
-        
+
     }
 
     public void changeBannerSchoolImage() throws IOException {
@@ -2196,9 +2266,9 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate localDate = LocalDate.parse("02-01-2017", formatter);
         startingMondayPicker.setValue(localDate);
-        
+
     }
-    
+
     public void initEndingFridayDatePicker() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate localDate = LocalDate.parse("26-05-2017", formatter);
@@ -2263,9 +2333,8 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         taDataOfficeHoursGridTimeCellLabels.clear();
         taDataOfficeHoursGridTACellPanes.clear();
         taDataOfficeHoursGridTACellLabels.clear();
-        
+
         // RECITATION DATA TAB
-        
     }
 
     @Override
@@ -2362,12 +2431,12 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         // SO IT CAN MANAGE ALL CHANGES
         dataComponent.setCellProperty(col, row, cellLabel.textProperty());
     }
-    
+
     @Override
     public void handleUndoRequest() {
         controller.Undo();
     }
-    
+
     @Override
     public void handleRedoRequest() {
         controller.Redo();

@@ -6,14 +6,14 @@
     "endingFridayDay":"25",
     "holidays":[
         {
-            "month":"1",
+            "month":"0",
             "day":"5",
-            "title":"Sample Holiday",
+            "title":"",
             "link":""
         },
         {
-            "month":"5",
-            "day":"15",
+            "month":"0",
+            "day":"5",
             "title":"Memorial Day",
             "link":""
         }

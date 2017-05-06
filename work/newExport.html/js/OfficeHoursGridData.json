@@ -4,10 +4,6 @@
     "endHour":"23",
     "undergrad_tas":[
         {
-            "name":"Jacob Evans",
-            "email":"jacob.evans@stonybrook.edu"
-        },
-        {
             "name":"James Hoffman",
             "email":"james.hoffman@stonybrook.edu"
         }
