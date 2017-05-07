@@ -40,7 +40,7 @@ public class ScheduleItemAdderUR implements jTPS_Transaction {
         // Minor fixes needed for getting the Date portion?
         LocalDate ld = workspace.getDatePicker().getValue();
         Calendar c = Calendar.getInstance();
-        c.set(ld.getYear(), ld.getMonthValue(), ld.getDayOfMonth());
+        c.set(ld.getYear(), ld.getMonthValue() - 1, ld.getDayOfMonth());
         this.date = c.getTime();
         this.time = workspace.getTimeTextField().getText();
         this.title = workspace.getScheduleItemTitleTextField().getText();

@@ -1,16 +1,14 @@
 
 {
-    "course_subject":"CSE",
-    "course_number":"219",
-    "course_semester":"Spring",
-    "course_year":"2017",
-    "course_title":"Object Oriented Programming",
+    "course_subject":"",
+    "course_number":"",
+    "course_semester":"",
+    "course_year":"0",
+    "course_title":"",
     "course_instructor_name":"",
     "course_instructor_home":"",
     "course_export_dir":"",
-    "course_has_home":"false",
-    "course_has_syllabus":"false",
-    "course_has_schedule":"false",
-    "course_has_hw":"false",
-    "course_has_project":"false"
+    "banner_image":"file:./public_html//images/SBUDarkRedShieldLogo.png",
+    "left_footer":"file:./public_html//images/SBUWhiteShieldLogo.jpg",
+    "right_footer":"file:./public_html//images/CSLogo.png"
 }

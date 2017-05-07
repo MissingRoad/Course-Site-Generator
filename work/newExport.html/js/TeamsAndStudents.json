@@ -1,6 +1,6 @@
 
 {
-    "project_teams":[
+    "teams":[
         {
             "name":"Team 1",
             "red":"0",
@@ -14,7 +14,25 @@
             "lastName":"Li",
             "firstName":"David",
             "team":"Team 1",
-            "role":"Lead Developer"
+            "role":"Lead Programmer"
+        },
+        {
+            "lastName":"Licht",
+            "firstName":"Aaron",
+            "team":"Team 1",
+            "role":"Project Manager"
+        },
+        {
+            "lastName":"Flam",
+            "firstName":"Itai",
+            "team":"Team 1",
+            "role":"Lead Designer"
+        },
+        {
+            "lastName":"Winters",
+            "firstName":"John",
+            "team":"Team 1",
+            "role":"Data Designer"
         }
     ]
 }

@@ -5,7 +5,8 @@
  */
 package csgsandbox;
 
-import java.util.Calendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Date;
  */
 public class DateTestClass {
     public static void main(String[] args) {
-        Calendar c1 = Calendar.getInstance();
+        /*Calendar c1 = Calendar.getInstance();
         Calendar c2 = Calendar.getInstance();
         
         c1.set(2016, 0, 5);
@@ -24,6 +25,16 @@ public class DateTestClass {
         Date endFridayDate = c1.getTime();
         
         int i = startMondayDate.compareTo(endFridayDate);
-        System.out.println(i);
+        System.out.println(i);*/
+        
+        String dateString = "Wed Jan 18 23:22:18 EST 2017";
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd hh:mm:ss zzz YYYY");
+        try {
+            Date scheduleItemDate = sdf.parse(dateString);
+            System.out.println(scheduleItemDate.toString());
+        }
+        catch (ParseException e) {
+            System.out.println("Exception");
+        }
     }
 }

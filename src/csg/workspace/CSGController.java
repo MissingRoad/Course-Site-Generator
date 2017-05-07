@@ -62,16 +62,22 @@ import csg.jtps.ScheduleItemAdderUR;
 import csg.jtps.ScheduleItemDeleteUR;
 import csg.jtps.ScheduleItemEditUR;
 import csg.jtps.StudentAdderUR;
+import csg.jtps.StudentDeleteUR;
+import csg.jtps.StudentEditUR;
 import static csg.style.CSGStyle.CLASS_HIGHLIGHTED_GRID_CELL;
 import static csg.style.CSGStyle.CLASS_HIGHLIGHTED_GRID_ROW_OR_COLUMN;
 import static csg.style.CSGStyle.CLASS_OFFICE_HOURS_GRID_TA_CELL_PANE;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.DatePicker;
 import javafx.scene.paint.Color;
+import static jdk.nashorn.tools.ShellFunctions.input;
 
 /**
  *
@@ -277,9 +283,9 @@ public class CSGController {
     public void handleEditStudent() {
         CSGWorkspace workspace = (CSGWorkspace) app.getWorkspaceComponent();
 
-        TableView projectTeams = workspace.getProjectTeams();
-        Object selectProjectTeam = projectTeams.getSelectionModel().getSelectedItem();
-        ProjectTeam projectTeam = (ProjectTeam) selectProjectTeam;
+        TableView teamMembers = workspace.getTeamMembers();
+        Object selectStudent = teamMembers.getSelectionModel().getSelectedItem();
+        Student projectTeam = (Student) selectStudent;
 
         TextField firstNameTextField = workspace.getFirstNameTextField();
         TextField lastNameTextField = workspace.getLastNameTextField();
@@ -291,9 +297,11 @@ public class CSGController {
         ProjectTeam team = (ProjectTeam) teamBox.getSelectionModel().getSelectedItem();
         String role = roleTextField.getText();
 
-        jTPS_Transaction addStudentUR = new StudentAdderUR(app);
+        jTPS_Transaction addStudentUR = new StudentEditUR(app);
         jTPS.addTransaction(addStudentUR);
+        teamMembers.refresh();
         markWorkAsEdited();
+
     }
 
     public void handleAddScheduleItem() {
@@ -310,7 +318,7 @@ public class CSGController {
         String type = typeBox.getSelectionModel().getSelectedItem().toString();
         LocalDate scheduleItemDate = scheduleItemDatePicker.getValue();
         Calendar c = Calendar.getInstance();
-        c.set(scheduleItemDate.getYear(), scheduleItemDate.getMonthValue(), scheduleItemDate.getDayOfMonth());
+        c.set(scheduleItemDate.getYear(), scheduleItemDate.getMonthValue() - 1, scheduleItemDate.getDayOfMonth());
         Date date = c.getTime();
         String time = timeTextField.getText();
         String title = titleTextField.getText();
@@ -344,7 +352,7 @@ public class CSGController {
         String topic = topicTextField.getText();
         String link = linkTextField.getText();
         String criteria = criteriaTextField.getText();
-        
+
         jTPS_Transaction editScheduleItemUR = new ScheduleItemEditUR(app);
         jTPS.addTransaction(editScheduleItemUR);
         workspace.getScheduleItems().refresh();
@@ -354,11 +362,11 @@ public class CSGController {
     public void handleRemoveScheduleItem() {
         CSGWorkspace workspace = (CSGWorkspace) app.getWorkspaceComponent();
         CSGData data = (CSGData) app.getDataComponent();
-        
+
         TableView scheduleItems = workspace.getScheduleItems();
         Object selectedItem = scheduleItems.getSelectionModel().getSelectedItem();
-        ScheduleItem scheduleItemToRemove = (ScheduleItem)selectedItem;
-        
+        ScheduleItem scheduleItemToRemove = (ScheduleItem) selectedItem;
+
         jTPS_Transaction deleteScheduleItemUR = new ScheduleItemDeleteUR(app, scheduleItemToRemove);
         jTPS.addTransaction(deleteScheduleItemUR);
         markWorkAsEdited();
@@ -522,7 +530,7 @@ public class CSGController {
             String lastName = s.getLastName();
             CSGData data = (CSGData) app.getDataComponent();
 
-            jTPS_Transaction deletUR = new RecitationDeleteUR(app, firstName, lastName);
+            jTPS_Transaction deletUR = new StudentDeleteUR(app, s);
             jTPS.addTransaction(deletUR);
 
             // AND BE SURE TO REMOVE ALL THE TA'S OFFICE HOURS
@@ -661,13 +669,13 @@ public class CSGController {
             workspace.getTAEmailTextField().setText(email);
         }
     }
-    
+
     public void loadScheduleItemToText() {
-        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        CSGWorkspace workspace = (CSGWorkspace) app.getWorkspaceComponent();
         TableView scheduleItems = workspace.getScheduleItems();
         Object selectedItem = scheduleItems.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
-            ScheduleItem s = (ScheduleItem)selectedItem;
+            ScheduleItem s = (ScheduleItem) selectedItem;
             String type = s.getType();
             Date date = s.getDate();
             LocalDate ld = new java.sql.Date(date.getTime()).toLocalDate();
@@ -676,7 +684,7 @@ public class CSGController {
             String topic = s.getTopic();
             String link = s.getLink();
             String criteria = s.getCriteria();
-            
+
             workspace.getTypeBox().getSelectionModel().select(type);
             workspace.getDatePicker().setValue(ld);
             workspace.getTimeTextField().setText(time);
@@ -736,6 +744,53 @@ public class CSGController {
         jTPS_Transaction deleteRecitationUR = new RecitationDeleteUR(app, section, instructor);
         jTPS.addTransaction(deleteRecitationUR);
         markWorkAsEdited();
+    }
+
+    public void loadProjectTeamToText() {
+        CSGWorkspace workspace = (CSGWorkspace) app.getWorkspaceComponent();
+        TableView projectTeams = workspace.getProjectTeams();
+        Object selectedItem = projectTeams.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            ProjectTeam p = (ProjectTeam) selectedItem;
+            String teamName = p.getName();
+            Color teamColor = p.getColor();
+            Color teamTextColor = p.getTextColor();
+            String teamLink = p.getLink();
+
+            TextField teamNameTextField = workspace.getTeamNameTextField();
+            ColorPicker teamColorPicker = workspace.getTeamColorPicker();
+            ColorPicker teamTextColorPicker = workspace.getTeamTextColorPicker();
+            TextField teamLinkTextField = workspace.getTeamLinkTextField();
+
+            teamNameTextField.setText(teamName);
+            teamColorPicker.setValue(teamColor);
+            teamTextColorPicker.setValue(teamTextColor);
+            teamLinkTextField.setText(teamLink);
+        }
+
+    }
+
+    public void loadStudentToText() {
+        CSGWorkspace workspace = (CSGWorkspace) app.getWorkspaceComponent();
+        TableView teamMembers = workspace.getTeamMembers();
+        Object selectedItem = teamMembers.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            Student s = (Student) selectedItem;
+            String firstName = s.getFirstName();
+            String lastName = s.getLastName();
+            String teamName = s.getTeamName();
+            String role = s.getRole();
+
+            TextField firstNameTextField = workspace.getFirstNameTextField();
+            TextField lastNameTextField = workspace.getLastNameTextField();
+            ComboBox teamBox = workspace.getTeamBox();
+            TextField roleTextField = workspace.getRoleTextField();
+
+            firstNameTextField.setText(firstName);
+            lastNameTextField.setText(lastName);
+            teamBox.getSelectionModel().select(teamName);
+            roleTextField.setText(role);
+        }
     }
 
     public void Undo() {
@@ -802,54 +857,84 @@ public class CSGController {
 
         markWorkAsEdited();
     }
-    
+
     public void handleStartEndDatePickerChange() {
-        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
-        CSGData data = (CSGData)app.getDataComponent();
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        CSGWorkspace workspace = (CSGWorkspace) app.getWorkspaceComponent();
+        CSGData data = (CSGData) app.getDataComponent();
         TableView scheduleItems = workspace.getScheduleItems();
-        
+
         DatePicker startMondayPicker = workspace.getStartingMondayPicker();
         DatePicker endFridayPicker = workspace.getEndingFridayPicker();
-        
+
         LocalDate ldMonday = startMondayPicker.getValue();
         LocalDate ldFriday = endFridayPicker.getValue();
-        
+
         Calendar c1 = Calendar.getInstance();
         Calendar c2 = Calendar.getInstance();
-        
+
         c1.set(ldMonday.getYear(), ldMonday.getMonthValue() - 1, ldMonday.getDayOfMonth());
         c2.set(ldFriday.getYear(), ldFriday.getMonthValue() - 1, ldFriday.getDayOfMonth());
-        
+
         Date startMondayDate = c1.getTime();
         Date endFridayDate = c2.getTime();
-        
-        data.setStartDate(startMondayDate);
-        data.setEndDate(endFridayDate);
-        
-        data.clearObservableScheduleItemsList();
-        
-        ObservableList<ScheduleItem> scheduleItemsList = data.getScheduleItems();
-        
-        for (ScheduleItem s: scheduleItemsList) {
-            int a = s.compareTo(startMondayDate);
-            int b = s.compareTo(endFridayDate);
-            if (a >= 0 && b <= 0)
-                data.addObservableScheduleItem(s);
+        if (validateDatePickerChange(startMondayDate, endFridayDate)) {
+            data.setStartDate(startMondayDate);
+            data.setEndDate(endFridayDate);
+
+            data.clearObservableScheduleItemsList();
+
+            ObservableList<ScheduleItem> scheduleItemsList = data.getScheduleItems();
+
+            for (ScheduleItem s : scheduleItemsList) {
+                int a = s.compareTo(startMondayDate);
+                int b = s.compareTo(endFridayDate);
+                if (a >= 0 && b <= 0) {
+                    data.addObservableScheduleItem(s);
+                }
+            }
+
+            scheduleItems.refresh();
+        } else {
+            AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+            dialog.show(props.getProperty(MISSING_RECITATION_SECTION_TITLE), props.getProperty(MISSING_RECITATION_SECTION_MESSAGE));
+            Date oldStart = data.getStartDate();
+            Date oldEnd = data.getEndDate();
+
+            Instant instant1 = oldStart.toInstant();
+            ZonedDateTime zdt1 = instant1.atZone(ZoneId.systemDefault());
+            LocalDate oldld1 = zdt1.toLocalDate();
+
+            Instant instant2 = oldEnd.toInstant();
+            ZonedDateTime zdt2 = instant2.atZone(ZoneId.systemDefault());
+            LocalDate oldld2 = zdt2.toLocalDate();
+
+            startMondayPicker.setValue(oldld1);
+            endFridayPicker.setValue(oldld2);
         }
-        
-        scheduleItems.refresh();
     }
-    
+
+    public boolean validateDatePickerChange(Date newStartDate, Date newEndDate) {
+        if (newStartDate.compareTo(newEndDate) >= 0) {
+            return false;
+        }
+        return true;
+    }
+
     public void handleCheckBoxChange() {
         markWorkAsEdited();
     }
-    
+
     public void handleUpdateCourseSiteInformation() {
-        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
-        
+        CSGWorkspace workspace = (CSGWorkspace) app.getWorkspaceComponent();
+
         jTPS_Transaction courseEditUR = new CourseSiteEditUR(app);
         jTPS.addTransaction(courseEditUR);
-        
+
+        markWorkAsEdited();
+    }
+
+    public void handleDirectoryChange() {
         markWorkAsEdited();
     }
 }

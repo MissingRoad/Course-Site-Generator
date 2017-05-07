@@ -71,7 +71,7 @@ public class ScheduleItemEditUR implements jTPS_Transaction {
         this.newType = typeTextField.getSelectionModel().getSelectedItem().toString();
         LocalDate ld = datePicker.getValue();
         Calendar c = Calendar.getInstance();
-        c.set(ld.getYear(), ld.getMonthValue(), ld.getDayOfMonth());
+        c.set(ld.getYear(), ld.getMonthValue() - 1, ld.getDayOfMonth());
         this.newDate = c.getTime();
         this.newTime = timeTextField.getText();
         this.newTitle = titleTextField.getText();

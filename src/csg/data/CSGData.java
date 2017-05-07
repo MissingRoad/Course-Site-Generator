@@ -6,10 +6,15 @@
 package csg.data;
 
 import csg.CSGProp;
+import static csg.CSGProp.DEFAULT_BANNER_SCHOOL_IMAGE;
+import static csg.CSGProp.DEFAULT_LEFT_FOOTER_IMAGE;
+import static csg.CSGProp.DEFAULT_RIGHT_FOOTER_IMAGE;
 import csg.CourseSiteGeneratorApp;
 import csg.file.TimeSlot;
 import csg.workspace.CSGWorkspace;
 import djf.components.AppDataComponent;
+import static djf.settings.AppStartupConstants.FILE_PROTOCOL;
+import static djf.settings.AppStartupConstants.PATH_DEFAULT_IMAGES;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javafx.scene.paint.Color;
@@ -30,7 +35,7 @@ import properties_manager.PropertiesManager;
  * @author dsli
  */
 public class CSGData implements AppDataComponent {
-
+    
     // WE'LL NEED ACCESS TO THE APP TO NOTIFY THE GUI WHEN DATA CHANGES
     CourseSiteGeneratorApp app;
 
@@ -84,7 +89,21 @@ public class CSGData implements AppDataComponent {
     // DEFAULT VALUE STRINGS FOR START AND END DATES
     public static final String MIN_START_DATE = "02-01-2017";
     public static final String MAX_END_DATE = "25-05-2017";
+    
+    // DEFAULT PATHS FOR IMAGES ...
+    public static final String DEFAULT_BANNER_PATH = FILE_PROTOCOL + PATH_DEFAULT_IMAGES + PropertiesManager.getPropertiesManager().getProperty(DEFAULT_BANNER_SCHOOL_IMAGE.toString());
+    public static final String DEFAULT_LEFT_FOOTER_PATH = FILE_PROTOCOL + PATH_DEFAULT_IMAGES + PropertiesManager.getPropertiesManager().getProperty(DEFAULT_LEFT_FOOTER_IMAGE.toString());
+    public static final String DEFAULT_RIGHT_FOOTER_PATH = FILE_PROTOCOL + PATH_DEFAULT_IMAGES + PropertiesManager.getPropertiesManager().getProperty(DEFAULT_RIGHT_FOOTER_IMAGE.toString());
 
+    // WEBSITE IMAGE FILEPATHS
+    String bannerFilepath;
+    String leftFooterFilepath;
+    String rightFooterFilepath;
+    
+    // EXPORT DIRECTORIES
+    String exportDir;
+    String templateDir;
+    
     // THESE ARE THE VALUES FOR THE CALENDAR BOUNDARY DATEPICKERS
     Date startDate;
     Date endDate;
@@ -126,6 +145,15 @@ public class CSGData implements AppDataComponent {
         // THESE ARE THE DEFAULT OFFICE HOURS
         startHour = MIN_START_HOUR;
         endHour = MAX_END_HOUR;
+        
+        // THESE ARE THE DEFAULT IMAGE FILEPATHS
+        bannerFilepath = DEFAULT_BANNER_PATH;
+        leftFooterFilepath = DEFAULT_LEFT_FOOTER_PATH;
+        rightFooterFilepath = DEFAULT_RIGHT_FOOTER_PATH;
+        
+        // DIRECTORIES
+        exportDir = "";
+        templateDir = "";
 
         //THIS WILL STORE OUR OFFICE HOURS
         officeHours = new HashMap();
@@ -137,6 +165,26 @@ public class CSGData implements AppDataComponent {
         gridHeaders = new ArrayList();
         gridHeaders.addAll(timeHeaders);
         gridHeaders.addAll(dowHeaders);
+    }
+
+    public String getExportDir() {
+        return exportDir;
+    }
+
+    public void setExportDir(String exportDir) {
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        this.exportDir = exportDir;
+        workspace.getExportDirTextView().setText(exportDir);
+        app.getGUI().changeExportDir(exportDir);
+        courseSiteInfo.setExportDir(exportDir);
+    }
+
+    public String getTemplateDir() {
+        return templateDir;
+    }
+
+    public void setTemplateDir(String templateDir) {
+        this.templateDir = templateDir;
     }
 
     /**
@@ -662,5 +710,35 @@ public class CSGData implements AppDataComponent {
             }
         }
         return null;
+    }
+    
+    public String getBannerFilepath() {
+        return bannerFilepath;
+    }
+
+    public void setBannerFilepath(String bannerFilepath) {
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        this.bannerFilepath = bannerFilepath;
+        
+    }
+
+    public String getLeftFooterFilepath() {
+        return leftFooterFilepath;
+    }
+
+    public void setLeftFooterFilepath(String leftFooterFilepath) {
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        this.leftFooterFilepath = leftFooterFilepath;
+        
+    }
+
+    public String getRightFooterFilepath() {
+        return rightFooterFilepath;
+    }
+
+    public void setRightFooterFilepath(String rightFooterFilepath) {
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        this.rightFooterFilepath = rightFooterFilepath;
+        
     }
 }

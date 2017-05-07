@@ -1241,7 +1241,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         });
         projectTeams.setFocusTraversable(true);
         projectTeams.setOnKeyPressed(e -> {
-            //controller.handleKeyPress(e.getCode()); //MUST FIX TO DELETE FROM RECITATION TABLE
+            controller.handleKeyPressProjectTeams(e.getCode()); //MUST FIX TO DELETE FROM RECITATION TABLE
         });
         projectTeams.setOnMouseClicked(e -> {
             addEditTeamButton.setText(props.getProperty(CSGProp.EDIT_BUTTON_LABEL.toString()));
@@ -1250,7 +1250,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
             /*if (currentTeam != null) {
                 teamMembers.setItems(currentTeam.getTeamMembers());
             }*/
-            //controller.loadProjectTeamtotext();
+            controller.loadProjectTeamToText();
         });
 
         // EVENT HANDLING, ADD/EDIT STUDENTS PANE
@@ -1297,12 +1297,12 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
         teamMembers.setFocusTraversable(true);
         teamMembers.setOnKeyPressed(e -> {
-            controller.handleKeyPressRecitationData(e.getCode()); //MUST FIX TO DELETE FROM RECITATION TABLE
+            controller.handleKeyPressStudents(e.getCode()); //MUST FIX TO DELETE FROM RECITATION TABLE
         });
         teamMembers.setOnMouseClicked(e -> {
             addUpdateStudentsButton.setText(props.getProperty(CSGProp.EDIT_BUTTON_LABEL.toString()));
             addStudent = false;
-            //controller.loadStudenttotext();
+            controller.loadStudentToText();
         });
 
         addEditStudentsPane.add(firstNameLabel, 0, 0);
@@ -2196,9 +2196,9 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     }
 
     public void changeExportDir() throws IOException {
+        CSGData dataManager = (CSGData)app.getDataComponent();
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         AppFileComponent fileComponent = app.getFileComponent();
-
         DirectoryChooser dc = new DirectoryChooser();
         dc.setInitialDirectory(new File(PATH_WORK));
         dc.setTitle(props.getProperty(AppPropertyType.EXPORT_WORK_TITLE));
@@ -2207,8 +2207,8 @@ public class CSGWorkspace extends AppWorkspaceComponent {
          */
         File selectedFile = dc.showDialog(app.getGUI().getWindow()); //wrong dialog?
         String exportDir = selectedFile.getPath();
-        exportDirTextView.setText(exportDir);
-        app.getGUI().changeExportDir(exportDir);
+        dataManager.setExportDir(exportDir);
+        controller.handleDirectoryChange();
     }
 
     public void changeTemplateDir() throws IOException {
@@ -2228,7 +2228,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
     public void changeBannerSchoolImage() throws IOException {
         PropertiesManager props = PropertiesManager.getPropertiesManager();
-
+        CSGData dataManager = (CSGData) app.getDataComponent();
         // AND NOW ASK THE USER FOR THE FILE TO OPEN
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(PATH_WORK));
@@ -2236,11 +2236,12 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         File selectedFile = fc.showOpenDialog(app.getGUI().getWindow());
         Image newBannerSchoolImage = new Image(selectedFile.toURI().toURL().toString());
         bannerSchoolImage.setImage(newBannerSchoolImage);
+        dataManager.setBannerFilepath(selectedFile.getPath());
     }
 
     public void changeLeftFooterImage() throws IOException {
         PropertiesManager props = PropertiesManager.getPropertiesManager();
-
+        CSGData dataManager = (CSGData) app.getDataComponent();
         // AND NOW ASK THE USER FOR THE FILE TO OPEN
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(PATH_WORK));
@@ -2248,11 +2249,12 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         File selectedFile = fc.showOpenDialog(app.getGUI().getWindow());
         Image newLeftFooter = new Image(selectedFile.toURI().toURL().toString());
         leftFooterImage.setImage(newLeftFooter);
+        dataManager.setLeftFooterFilepath(selectedFile.getPath());
     }
 
     public void changeRightFooterImage() throws IOException {
         PropertiesManager props = PropertiesManager.getPropertiesManager();
-
+        CSGData dataManager = (CSGData) app.getDataComponent();
         // AND NOW ASK THE USER FOR THE FILE TO OPEN
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(PATH_WORK));
@@ -2260,6 +2262,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         File selectedFile = fc.showOpenDialog(app.getGUI().getWindow());
         Image newRightFooter = new Image(selectedFile.toURI().toURL().toString());
         rightFooterImage.setImage(newRightFooter);
+        dataManager.setRightFooterFilepath(selectedFile.getPath());
     }
 
     public void initStartingMondayDatePicker() {
@@ -2441,5 +2444,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
     public void handleRedoRequest() {
         controller.Redo();
     }
+    
+    
 
 }

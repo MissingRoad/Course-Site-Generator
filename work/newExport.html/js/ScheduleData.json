@@ -7,23 +7,39 @@
     "holidays":[
         {
             "month":"0",
-            "day":"5",
+            "day":"2",
             "title":"",
             "link":""
         },
         {
             "month":"0",
-            "day":"5",
+            "day":"1",
             "title":"Memorial Day",
             "link":""
         }
     ],
     "lectures":[
+        {
+            "month":"0",
+            "day":"4",
+            "title":"Event Programming",
+            "schedule_item_topic":"",
+            "link":""
+        }
     ],
     "references":[
     ],
     "recitations":[
     ],
     "hws":[
+        {
+            "month":"0",
+            "day":"2",
+            "title":"Homework 1 Due",
+            "schedule_item_topic":"",
+            "link":"",
+            "time":"",
+            "criteria":""
+        }
     ]
 }

@@ -35,6 +35,7 @@ import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
 import csg.data.TeachingAssistant;
+import csg.workspace.CSGWorkspace;
 import static djf.settings.AppStartupConstants.PATH_PUBLIC_HTML;
 import javafx.scene.paint.Color;
 import java.io.File;
@@ -162,6 +163,7 @@ public class CSGFiles implements AppFileComponent {
     static final String JSON_SCHEDULE_ITEM_TIME_EXPORT = "time";
     static final String JSON_SCHEDULE_ITEM_TITLE_EXPORT = "title";
     static final String JSON_SCHEDULE_ITEM_LINK_EXPORT = "link";
+    static final String JSON_SCHEDULE_ITEM_CRITERIA_EXPORT = "criteria";
     static final String JSON_SCHEDULE_ITEM_TOPIC_EXPORT = "schedule_item_topic";
     static final String JSON_PROJECT_TEAM_NAME_EXPORT = "name";
     static final String JSON_PROJECT_TEAM_RED_COLOR_EXPORT = "red";
@@ -188,7 +190,7 @@ public class CSGFiles implements AppFileComponent {
     static final String JSON_LECTURES_EXPORT = "lectures";
     static final String JSON_REFERENCES_EXPORT = "references";
     static final String JSON_HOMEWORKS_EXPORT = "hws";
-    static final String JSON_PROJECT_TEAMS_EXPORT = "project_teams";
+    static final String JSON_PROJECT_TEAMS_EXPORT = "teams";
     static final String JSON_STUDENTS_EXPORT = "students";
 
     public CSGFiles(CourseSiteGeneratorApp initApp) {
@@ -210,6 +212,53 @@ public class CSGFiles implements AppFileComponent {
 
         // NOW RELOAD THE WORKSPACE WITH THE LOADED DATA
         app.getWorkspaceComponent().reloadWorkspace(app.getDataComponent());
+
+        // NOW LOAD THE COURSE INFORMATION
+        JsonObject csInfo = json.getJsonObject(JSON_COURSE_INFO);
+        String courseSubject = csInfo.getString(JSON_COURSE_SUBJECT);
+        String courseNumber = csInfo.getString(JSON_COURSE_NUMBER);
+        String courseSemester = csInfo.getString(JSON_COURSE_SEMESTER);
+        String courseYear = csInfo.getString(JSON_COURSE_YEAR);
+        String courseTitle = csInfo.getString(JSON_COURSE_TITLE);
+        String instructorName = csInfo.getString(JSON_INSTRUCTOR_NAME);
+        String instructorHome = csInfo.getString(JSON_INSTRUCTOR_HOME);
+        String exportDir = csInfo.getString(JSON_EXPORT_DIR);
+        String hasHome = csInfo.getString(JSON_HAS_HOME);
+        String hasSyllabus = csInfo.getString(JSON_HAS_SYLLABUS);
+        String hasSchedule = csInfo.getString(JSON_HAS_SCHEDULE);
+        String hasHW = csInfo.getString(JSON_HAS_HW);
+        String hasProject = csInfo.getString(JSON_HAS_PROJECT);
+        
+        boolean hasHomeValue = Boolean.valueOf(hasHome);
+        boolean hasSyllabusValue = Boolean.valueOf(hasSyllabus);
+        boolean hasScheduleValue = Boolean.valueOf(hasSchedule);
+        boolean hasHWValue = Boolean.valueOf(hasHW);
+        boolean hasProjectValue = Boolean.valueOf(hasProject);
+
+        CourseSite cs = dataManager.getCourseSiteInfo();
+        cs.setCourseSubject(courseSubject);
+        cs.setCourseNumber(courseNumber);
+        cs.setCourseSemester(courseSemester);
+        cs.setCourseYear((Integer.parseInt(courseYear)));
+        cs.setCourseTitle(courseTitle);
+        cs.setInstName(instructorName);
+        cs.setInstHome(instructorHome);
+        cs.setExportDir(exportDir);
+        cs.setHasHomePage(hasHomeValue);
+        cs.setHasSyllabusPage(hasSyllabusValue);
+        cs.setHasSchedulePage(hasScheduleValue);
+        cs.setHasHWPage(hasHWValue);
+        cs.setHasProjectPage(hasProjectValue);
+        
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        workspace.getSubjectComboBox().getSelectionModel().select(courseSubject);
+        workspace.getNumberComboBox().getSelectionModel().select(courseNumber);
+        workspace.getSemesterComboBox().getSelectionModel().select(courseSemester);
+        workspace.getYearComboBox().getSelectionModel().select((Integer.parseInt(courseYear)));
+        workspace.getTitleValueLabel().setText(courseTitle);
+        workspace.getInstructorNameValueLabel().setText(instructorName);
+        workspace.getInstructorHomeValueLabel().setText(instructorHome);
+        workspace.getExportDirTextView().setText(exportDir);
 
         // NOW LOAD ALL THE UNDERGRAD TAs
         JsonArray jsonTAArray = json.getJsonArray(JSON_UNDERGRAD_TAS);
@@ -496,9 +545,11 @@ public class CSGFiles implements AppFileComponent {
                 .add(JSON_INSTRUCTOR_NAME, cs.getInstName())
                 .add(JSON_INSTRUCTOR_HOME, cs.getInstHome())
                 .add(JSON_EXPORT_DIR, cs.getExportDir())
-                
+                .add(JSON_BANNER_IMAGE_EXPORT, dataManager.getBannerFilepath())
+                .add(JSON_LEFT_FOOTER_IMAGE_EXPORT, dataManager.getLeftFooterFilepath())
+                .add(JSON_RIGHT_FOOTER_IMAGE_EXPORT, dataManager.getRightFooterFilepath())
                 .build();
-        
+
         Map<String, Object> propertiesCS = new HashMap<>(1);
         propertiesCS.put(JsonGenerator.PRETTY_PRINTING, true);
         JsonWriterFactory writerFactoryCS = Json.createWriterFactory(propertiesCS);
@@ -516,17 +567,17 @@ public class CSGFiles implements AppFileComponent {
         PrintWriter pwCS = new PrintWriter(courseInfoDirectory);
         pwCS.write(prettyPrintedCS);
         pwCS.close();
-        
+
         // Building TA Array to Save
         JsonArrayBuilder taArrayBuilder = Json.createArrayBuilder();
         ObservableList<TeachingAssistant> tas = dataManager.getTeachingAssistants();
         for (TeachingAssistant ta : tas) {
             if (ta.isUndergrad()) {
-            JsonObject taJson = Json.createObjectBuilder()
-                    .add(JSON_NAME_EXPORT, ta.getName())
-                    .add(JSON_EMAIL_EXPORT, ta.getEmail())
-                    .build(); // What will this line print for a String?
-            taArrayBuilder.add(taJson);
+                JsonObject taJson = Json.createObjectBuilder()
+                        .add(JSON_NAME_EXPORT, ta.getName())
+                        .add(JSON_EMAIL_EXPORT, ta.getEmail())
+                        .build(); // What will this line print for a String?
+                taArrayBuilder.add(taJson);
             }
         }
         JsonArray undergradTAsArray = taArrayBuilder.build();
@@ -609,18 +660,18 @@ public class CSGFiles implements AppFileComponent {
         // Get the start and ending Dates for Schedule
         Date startMondayDate = dataManager.getStartDate();
         Date endFridayDate = dataManager.getEndDate();
-        
+
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal1.setTime(startMondayDate);
         cal2.setTime(endFridayDate);
-        
+
         int startMonth = cal1.get(Calendar.MONTH);
         int startDay = cal1.get(Calendar.DAY_OF_MONTH);
         int endMonth = cal2.get(Calendar.MONTH);
         int endDay = cal2.get(Calendar.DAY_OF_MONTH);
         // Now the Schedule Item Objects
-        
+
         // Starting with the Holidays
         JsonArrayBuilder holidayArrayBuilder = Json.createArrayBuilder();
         ObservableList<ScheduleItem> scheduleItems = dataManager.getScheduleItems();
@@ -641,12 +692,12 @@ public class CSGFiles implements AppFileComponent {
             }
         }
         JsonArray holidayItemsArray = holidayArrayBuilder.build();
-        
+
         // Now the lectures
         JsonArrayBuilder lectureArrayBuilder = Json.createArrayBuilder();
-        
+
         for (ScheduleItem s : scheduleItems) {
-            if (s.getType().equalsIgnoreCase(CSGProp.LECTURE_EVENT.toString())) {
+            if (s.getType().equalsIgnoreCase(props.getProperty(CSGProp.LECTURE_EVENT.toString()))) {
                 Date scheduleItemDate = s.getDate();
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(scheduleItemDate);
@@ -663,11 +714,11 @@ public class CSGFiles implements AppFileComponent {
             }
         }
         JsonArray lectureItemsArray = lectureArrayBuilder.build();
-        
+
         // Now the REFERENCE ITEMS
         JsonArrayBuilder referenceArrayBuilder = Json.createArrayBuilder();
         for (ScheduleItem s : scheduleItems) {
-            if (s.getType().equalsIgnoreCase(CSGProp.REFERENCE_EVENT.toString())) {
+            if (s.getType().equalsIgnoreCase(props.getProperty(CSGProp.REFERENCE_EVENT.toString()))) {
                 Date scheduleItemDate = s.getDate();
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(scheduleItemDate);
@@ -684,12 +735,11 @@ public class CSGFiles implements AppFileComponent {
             }
         }
         JsonArray referenceItemsArray = referenceArrayBuilder.build();
-        
+
         // Now the RECITATION Items
-        
         JsonArrayBuilder recitationItemsArrayBuilder = Json.createArrayBuilder();
         for (ScheduleItem s : scheduleItems) {
-            if (s.getType().equalsIgnoreCase(CSGProp.RECITATION_EVENT.toString())) {
+            if (s.getType().equalsIgnoreCase(props.getProperty(CSGProp.RECITATION_EVENT.toString()))) {
                 Date scheduleItemDate = s.getDate();
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(scheduleItemDate);
@@ -700,17 +750,16 @@ public class CSGFiles implements AppFileComponent {
                         .add(JSON_SCHEDULE_ITEM_DAY_EXPORT, day + "")
                         .add(JSON_SCHEDULE_ITEM_TITLE_EXPORT, s.getTitle())
                         .add(JSON_SCHEDULE_ITEM_TOPIC_EXPORT, s.getTopic())
-                        
                         .build();
                 recitationItemsArrayBuilder.add(scheduleItem);
             }
         }
         JsonArray recitationItemsArray = recitationItemsArrayBuilder.build();
-        
+
         // Now the HOMEWORK items
         JsonArrayBuilder homeworkArrayBuilder = Json.createArrayBuilder();
         for (ScheduleItem s : scheduleItems) {
-            if (s.getType().equalsIgnoreCase(CSGProp.HOMEWORK_EVENT.toString())) {
+            if (s.getType().equalsIgnoreCase(props.getProperty(CSGProp.HOMEWORK_EVENT.toString()))) {
                 Date scheduleItemDate = s.getDate();
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(scheduleItemDate);
@@ -721,14 +770,15 @@ public class CSGFiles implements AppFileComponent {
                         .add(JSON_SCHEDULE_ITEM_DAY_EXPORT, day + "")
                         .add(JSON_SCHEDULE_ITEM_TITLE_EXPORT, s.getTitle())
                         .add(JSON_SCHEDULE_ITEM_TOPIC_EXPORT, s.getTopic())
-                        .add(JSON_SCHEDULE_ITEM_TIME_EXPORT, s.getTime())
                         .add(JSON_SCHEDULE_ITEM_LINK_EXPORT, s.getLink())
+                        .add(JSON_SCHEDULE_ITEM_TIME_EXPORT, s.getTime())
+                        .add(JSON_SCHEDULE_ITEM_CRITERIA_EXPORT, s.getCriteria())
                         .build();
                 homeworkArrayBuilder.add(scheduleItem);
             }
         }
-        JsonArray homeworkItemsArray = referenceArrayBuilder.build();
-        
+        JsonArray homeworkItemsArray = homeworkArrayBuilder.build();
+
         // Saving the ScheduleItem JSON
         JsonObject scheduleItemJSO = Json.createObjectBuilder()
                 .add(JSON_STARTING_MONDAY_MONTH, startMonth + "")
@@ -766,9 +816,9 @@ public class CSGFiles implements AppFileComponent {
         JsonArrayBuilder projectTeamArrayBuilder = Json.createArrayBuilder();
         ObservableList<ProjectTeam> projectTeams = dataManager.getProjectTeams();
         for (ProjectTeam p : projectTeams) {
-            int newRed = (int)(p.getColor().getRed() * 256);
-            int newGreen = (int)(p.getColor().getGreen() * 256);
-            int newBlue = (int)(p.getColor().getBlue() * 256);
+            int newRed = (int) (p.getColor().getRed() * 256);
+            int newGreen = (int) (p.getColor().getGreen() * 256);
+            int newBlue = (int) (p.getColor().getBlue() * 256);
             String textColor = p.getTextColor().toString();
             JsonObject projectTeamJson = Json.createObjectBuilder()
                     .add(JSON_PROJECT_TEAM_NAME_EXPORT, p.getName())
@@ -781,11 +831,11 @@ public class CSGFiles implements AppFileComponent {
             projectTeamArrayBuilder.add(projectTeamJson);
         }
         JsonArray projectTeamsArray = projectTeamArrayBuilder.build();
-        
+
         // Students Array
         JsonArrayBuilder studentArrayBuilder = Json.createArrayBuilder();
         ObservableList<Student> students = dataManager.getStudents();
-        for (Student s: students) {
+        for (Student s : students) {
             JsonObject studentJson = Json.createObjectBuilder()
                     .add(JSON_STUDENT_LAST_NAME_EXPORT, s.getLastName())
                     .add(JSON_STUDENT_FIRST_NAME_EXPORT, s.getFirstName())
@@ -795,11 +845,11 @@ public class CSGFiles implements AppFileComponent {
             studentArrayBuilder.add(studentJson);
         }
         JsonArray studentArray = studentArrayBuilder.build();
-        
+
         // Saving the ProjectTeam JSON
         JsonObject projectTeamJSO = Json.createObjectBuilder()
-                .add(JSON_PROJECT_TEAMS, projectTeamsArray)
-                .add(JSON_STUDENTS, studentArray).build();
+                .add(JSON_PROJECT_TEAMS_EXPORT, projectTeamsArray)
+                .add(JSON_STUDENTS_EXPORT, studentArray).build();
 
         // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
         Map<String, Object> propertiesPT = new HashMap<>(1);
