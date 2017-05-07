@@ -1,6 +1,28 @@
 function buildRecitations() {   
+    initBanner();
     var dataFile = "./js/RecitationsData.json";
     loadData(dataFile, addRecitations);
+}
+
+function initBanner() {
+    var banner = $("#banner");
+    var courseDataFile = "./js/CourseInformationData.json";
+    $.getJSON(courseDataFile, function (json) {
+	/*loadJSONData(json);
+        buildScheduleTable();
+        addHolidays();
+        addLectures();
+        addReferences();
+        addRecitations();
+        addHWs();
+        initBanner();*/
+        var subject = json.course_subject;
+        var number = json.course_number;
+        var semester = json.course_semester;
+        var year = json.course_year;
+        var title = json.course_title;
+        banner.append(subject + " "+ number + " - " + semester + " " + year + "\n" + title);
+    });
 }
 
 function addRecitations(data) {

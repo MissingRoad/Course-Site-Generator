@@ -24,6 +24,42 @@
     "recitations":[
     ],
     "schedule_items":[
+        {
+            "type":"Holiday",
+            "schedule_item_date":"Mon May 22 23:54:17 EDT 2017",
+            "schedule_item_time":"",
+            "schedule_item_title":"Memorial Day",
+            "schedule_item_topic":"",
+            "schedule_item_link":"",
+            "schedule_item_criteria":""
+        },
+        {
+            "type":"HW",
+            "schedule_item_date":"Mon Mar 20 23:54:46 EDT 2017",
+            "schedule_item_time":"",
+            "schedule_item_title":"Homework 2 Due",
+            "schedule_item_topic":"",
+            "schedule_item_link":"",
+            "schedule_item_criteria":""
+        },
+        {
+            "type":"Reference",
+            "schedule_item_date":"Thu Mar 23 23:55:13 EDT 2017",
+            "schedule_item_time":"",
+            "schedule_item_title":"Midterm Exam",
+            "schedule_item_topic":"",
+            "schedule_item_link":"",
+            "schedule_item_criteria":""
+        },
+        {
+            "type":"Lecture",
+            "schedule_item_date":"Tue Mar 21 23:55:24 EDT 2017",
+            "schedule_item_time":"",
+            "schedule_item_title":"Midterm Review",
+            "schedule_item_topic":"",
+            "schedule_item_link":"",
+            "schedule_item_criteria":""
+        }
     ],
     "project_teams":[
         {

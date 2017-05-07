@@ -15,6 +15,7 @@ function Project(hName, hStudents, hLink) {
     this.link = hLink;
 }
 function initProjects() {
+    initBanner();
     var dataFile = "./js/ProjectsData.json";
     loadData(dataFile);
 }
@@ -82,4 +83,26 @@ function getProjectCell(project) {
     }
     text += "<br /><br /></td>";
     return text;
+}
+
+function initBanner() {
+    var banner = $("#banner");
+    banner.append("test");
+    var courseDataFile = "./js/CourseInformationData.json";
+    $.getJSON(courseDataFile, function (json) {
+	/*loadJSONData(json);
+        buildScheduleTable();
+        addHolidays();
+        addLectures();
+        addReferences();
+        addRecitations();
+        addHWs();
+        initBanner();*/
+        var subject = json.course_subject;
+        var number = json.course_number;
+        var semester = json.course_semester;
+        var year = json.course_year;
+        var title = json.course_title;
+        banner.append(subject + " "+ number + " - " + semester + " " + year + "\n" + title);
+    });
 }

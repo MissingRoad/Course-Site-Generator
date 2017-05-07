@@ -904,10 +904,12 @@ public class CSGController {
             Instant instant1 = oldStart.toInstant();
             ZonedDateTime zdt1 = instant1.atZone(ZoneId.systemDefault());
             LocalDate oldld1 = zdt1.toLocalDate();
+            //oldld1 = oldld1.minusMonths(1);
 
             Instant instant2 = oldEnd.toInstant();
             ZonedDateTime zdt2 = instant2.atZone(ZoneId.systemDefault());
             LocalDate oldld2 = zdt2.toLocalDate();
+            //oldld2 = oldld2.minusMonths(1);
 
             startMondayPicker.setValue(oldld1);
             endFridayPicker.setValue(oldld2);

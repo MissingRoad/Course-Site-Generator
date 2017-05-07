@@ -1,0 +1,10 @@
+{
+    "work": [
+        {
+            "semester": "Spring 2017",
+            "projects": [
+                { "name": "Team 1",      "students": ["David Li", "Aaron Licht", "Itai Flam", "John Winters"],        "link": "http://www.team1.com/"}
+            ]
+        }
+    ]
+}

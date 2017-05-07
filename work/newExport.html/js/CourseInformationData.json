@@ -1,13 +1,13 @@
 
 {
-    "course_subject":"",
-    "course_number":"",
-    "course_semester":"",
-    "course_year":"0",
-    "course_title":"",
-    "course_instructor_name":"",
-    "course_instructor_home":"",
-    "course_export_dir":"",
+    "course_subject":"CSE",
+    "course_number":"219",
+    "course_semester":"Fall",
+    "course_year":"2017",
+    "course_title":"Computer Science III",
+    "course_instructor_name":"McKenna",
+    "course_instructor_home":"www.mckillagorilla.com",
+    "course_export_dir":"C:\\Users\\dsli\\Documents\\CSE 219 Projects\\CSE219Project\\CourseSiteGenerator\\work",
     "banner_image":"file:./public_html//images/SBUDarkRedShieldLogo.png",
     "left_footer":"file:./public_html//images/SBUWhiteShieldLogo.jpg",
     "right_footer":"file:./public_html//images/CSLogo.png"

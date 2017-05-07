@@ -32,6 +32,7 @@ function Student(initLastName, initFirstName, initTeam, initRole) {
 }
 
 function initTeamsAndStudents() {
+    initBanner();
     IMG_PATH = "./images/students/";
     LEAD_ROLE = "Lead Programmer";
     PM_ROLE = "Project Manager";
@@ -81,6 +82,8 @@ function loadStudents(data) {
 }
 
 function initPage() {
+    // FIRST ADD THE BANNER
+    initBanner();
     // FIRST ADD THE TEAM TABLES
     for (var i = 0; i < teamNames.length; i++) {
 	var team = teams[teamNames[i]];
@@ -146,4 +149,25 @@ function addStudentToTeam(student, text_color) {
 
 function cleanText(text) {
     return text.replace("-", "").replace(" ", "");
+}
+
+function initBanner() {
+    var banner = $("#banner");
+    var courseDataFile = "./js/CourseInformationData.json";
+    $.getJSON(courseDataFile, function (json) {
+	/*loadJSONData(json);
+        buildScheduleTable();
+        addHolidays();
+        addLectures();
+        addReferences();
+        addRecitations();
+        addHWs();
+        initBanner();*/
+        var subject = json.course_subject;
+        var number = json.course_number;
+        var semester = json.course_semester;
+        var year = json.course_year;
+        var title = json.course_title;
+        banner.append(subject + " "+ number + " - " + semester + " " + year + "\n" + title);
+    });
 }

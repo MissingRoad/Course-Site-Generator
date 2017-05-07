@@ -6,6 +6,7 @@ var officeHours;
 var undergradTAs;
 
 function buildOfficeHoursGrid() {
+    initBanner();
     var dataFile = "./js/OfficeHoursGridData.json";
     loadData(dataFile, loadOfficeHours);
 }
@@ -133,4 +134,25 @@ function getAMorPM(testTime) {
         return "pm";
     else
         return "am";
+}
+
+function initBanner() {
+    var banner = $("#banner");
+    var courseDataFile = "./js/CourseInformationData.json";
+    $.getJSON(courseDataFile, function (json) {
+	/*loadJSONData(json);
+        buildScheduleTable();
+        addHolidays();
+        addLectures();
+        addReferences();
+        addRecitations();
+        addHWs();
+        initBanner();*/
+        var subject = json.course_subject;
+        var number = json.course_number;
+        var semester = json.course_semester;
+        var year = json.course_year;
+        var title = json.course_title;
+        banner.append(subject + " "+ number + " - " + semester + " " + year + "\n" + title);
+    });
 }

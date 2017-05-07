@@ -9,11 +9,11 @@
         "course_instructor_name":"McKenna",
         "course_instructor_home":"www.mckillagorilla.com",
         "course_export_dir":"C:\\Users\\dsli\\Documents\\CSE 219 Projects\\CSE219Project\\CourseSiteGenerator\\work",
-        "course_has_home":"true",
+        "course_has_home":"false",
         "course_has_syllabus":"false",
-        "course_has_schedule":"true",
+        "course_has_schedule":"false",
         "course_has_hw":"false",
-        "course_has_project":"true"
+        "course_has_project":"false"
     },
     "startHour":"0",
     "endHour":"23",
@@ -53,7 +53,7 @@
         },
         {
             "type":"Lecture",
-            "schedule_item_date":"Wed Jan 04 18:50:35 EST 2017",
+            "schedule_item_date":"Wed Jan 25 00:04:02 EST 2017",
             "schedule_item_time":"Lecture 3",
             "schedule_item_title":"Event Programming",
             "schedule_item_topic":"",

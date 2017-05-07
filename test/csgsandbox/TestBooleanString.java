@@ -5,12 +5,17 @@
  */
 package csgsandbox;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+
 /**
  *
  * @author dsli
  */
 public class TestBooleanString {
-    static boolean bool = false;
+    /*static boolean bool = false;
     
     public static void printBool() {
         String s = bool + "";
@@ -19,6 +24,20 @@ public class TestBooleanString {
     
     public static void main(String[] args) {
         printBool();
+    }*/
+    
+    public static void main(String[] args) {
+        JsonArrayBuilder json = Json.createArrayBuilder();
+        json.add("Yes");
+        json.add("No");
+        
+        JsonArray arr = json.build();
+        
+        JsonObject jsonObject = Json.createObjectBuilder()
+                .add("Array", arr).build();
+        
+        
+        System.out.println();
     }
     
 }

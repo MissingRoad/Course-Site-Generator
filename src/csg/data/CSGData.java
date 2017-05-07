@@ -136,7 +136,7 @@ public class CSGData implements AppDataComponent {
         this.startDate = d1;
         
         DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate localDate2 = LocalDate.parse("25-05-2017", formatter2);
+        LocalDate localDate2 = LocalDate.parse("25-04-2017", formatter2);
         Calendar c2 = Calendar.getInstance();
         c2.set(localDate2.getYear(), localDate2.getMonthValue(), localDate2.getDayOfMonth());
         Date d2 = c2.getTime();

@@ -1,0 +1,20 @@
+
+{
+    "work":[
+        {
+            "semester":"Fall",
+            "projects":[
+                {
+                    "name":"Team 1",
+                    "students":[
+                        "DavidLi",
+                        "AaronLicht",
+                        "ItaiFlam",
+                        "JohnWinters"
+                    ],
+                    "link":"www.team1.com"
+                }
+            ]
+        }
+    ]
+}

@@ -2,17 +2,17 @@
 {
     "startingMondayMonth":"1",
     "startingMondayDay":"2",
-    "endingFridayMonth":"5",
+    "endingFridayMonth":"4",
     "endingFridayDay":"25",
     "holidays":[
         {
-            "month":"0",
+            "month":"1",
             "day":"2",
             "title":"",
             "link":""
         },
         {
-            "month":"0",
+            "month":"1",
             "day":"1",
             "title":"Memorial Day",
             "link":""
@@ -20,8 +20,8 @@
     ],
     "lectures":[
         {
-            "month":"0",
-            "day":"4",
+            "month":"1",
+            "day":"25",
             "title":"Event Programming",
             "schedule_item_topic":"",
             "link":""
@@ -33,7 +33,7 @@
     ],
     "hws":[
         {
-            "month":"0",
+            "month":"1",
             "day":"2",
             "title":"Homework 1 Due",
             "schedule_item_topic":"",

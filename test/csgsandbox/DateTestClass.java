@@ -28,7 +28,7 @@ public class DateTestClass {
         System.out.println(i);*/
         
         String dateString = "Wed Jan 18 23:22:18 EST 2017";
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd hh:mm:ss zzz YYYY");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
         try {
             Date scheduleItemDate = sdf.parse(dateString);
             System.out.println(scheduleItemDate.toString());
