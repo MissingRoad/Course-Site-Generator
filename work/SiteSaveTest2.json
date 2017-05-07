@@ -4,8 +4,8 @@
         "course_subject":"CSE",
         "course_number":"219",
         "course_semester":"Fall",
-        "course_year":"2017",
-        "course_title":"Computer Science III",
+        "course_year":"2018",
+        "course_title":"Object Oriented Programming",
         "course_instructor_name":"McKenna",
         "course_instructor_home":"www.mckillagorilla.com",
         "course_export_dir":"C:\\Users\\dsli\\Documents\\CSE 219 Projects\\CSE219Project\\CourseSiteGenerator\\work",
@@ -13,7 +13,10 @@
         "course_has_syllabus":"false",
         "course_has_schedule":"false",
         "course_has_hw":"false",
-        "course_has_project":"false"
+        "course_has_project":"false",
+        "banner_image":"file:./public_html//images/SBUDarkRedShieldLogo.png",
+        "left_footer":"file:./public_html//images/SBUWhiteShieldLogo.jpg",
+        "right_footer":"file:./public_html//images/CSLogo.png"
     },
     "startHour":"0",
     "endHour":"23",
@@ -21,7 +24,7 @@
         {
             "name":"Jacob Evans",
             "email":"jacob.evans@stonybrook.edu",
-            "is_undergrad_ta":"false"
+            "is_undergrad_ta":"true"
         },
         {
             "name":"James Hoffman",
@@ -30,6 +33,26 @@
         }
     ],
     "officeHours":[
+        {
+            "day":"TUESDAY",
+            "time":"2_30am",
+            "name":"Jacob Evans"
+        },
+        {
+            "day":"THURSDAY",
+            "time":"2_30am",
+            "name":"Jacob Evans"
+        },
+        {
+            "day":"TUESDAY",
+            "time":"6_30am",
+            "name":"James Hoffman"
+        },
+        {
+            "day":"THURSDAY",
+            "time":"6_30am",
+            "name":"James Hoffman"
+        }
     ],
     "recitations":[
         {
@@ -44,9 +67,9 @@
     "schedule_items":[
         {
             "type":"Holiday",
-            "schedule_item_date":"Mon Jan 02 18:50:00 EST 2017",
-            "schedule_item_time":"Snow Day",
-            "schedule_item_title":"",
+            "schedule_item_date":"Tue Jan 17 11:06:16 EST 2017",
+            "schedule_item_time":"",
+            "schedule_item_title":"Snow Day",
             "schedule_item_topic":"",
             "schedule_item_link":"",
             "schedule_item_criteria":""
@@ -71,7 +94,7 @@
         },
         {
             "type":"HW",
-            "schedule_item_date":"Mon Jan 02 18:48:55 EST 2017",
+            "schedule_item_date":"Mon Jan 16 11:00:58 EST 2017",
             "schedule_item_time":"",
             "schedule_item_title":"Homework 1 Due",
             "schedule_item_topic":"",

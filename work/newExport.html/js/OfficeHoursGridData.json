@@ -4,10 +4,34 @@
     "endHour":"23",
     "undergrad_tas":[
         {
+            "name":"Jacob Evans",
+            "email":"jacob.evans@stonybrook.edu"
+        },
+        {
             "name":"James Hoffman",
             "email":"james.hoffman@stonybrook.edu"
         }
     ],
     "officeHours":[
+        {
+            "day":"TUESDAY",
+            "time":"2_30am",
+            "name":"Jacob Evans"
+        },
+        {
+            "day":"THURSDAY",
+            "time":"2_30am",
+            "name":"Jacob Evans"
+        },
+        {
+            "day":"TUESDAY",
+            "time":"6_30am",
+            "name":"James Hoffman"
+        },
+        {
+            "day":"THURSDAY",
+            "time":"6_30am",
+            "name":"James Hoffman"
+        }
     ]
 }

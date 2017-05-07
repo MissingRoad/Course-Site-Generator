@@ -37,12 +37,16 @@ import javax.json.stream.JsonGenerator;
 import csg.data.TeachingAssistant;
 import csg.workspace.CSGWorkspace;
 import static djf.settings.AppStartupConstants.PATH_PUBLIC_HTML;
+import java.awt.image.BufferedImage;
 import javafx.scene.paint.Color;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+import javax.imageio.ImageIO;
 import org.apache.commons.io.FileUtils;
 import properties_manager.PropertiesManager;
 
@@ -206,6 +210,9 @@ public class CSGFiles implements AppFileComponent {
     public void loadData(AppDataComponent data, String filePath) throws IOException, ParseException {
         // CLEAR THE OLD DATA OUT
         CSGData dataManager = (CSGData) data;
+        
+        // Workspace Component for reference
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
 
         // LOAD THE JSON FILE WITH ALL THE DATA
         JsonObject json = loadJSONFile(filePath);
@@ -255,7 +262,6 @@ public class CSGFiles implements AppFileComponent {
         cs.setHasHWPage(hasHWValue);
         cs.setHasProjectPage(hasProjectValue);
         
-        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
         workspace.getSubjectComboBox().getSelectionModel().select(courseSubject);
         workspace.getNumberComboBox().getSelectionModel().select(courseNumber);
         workspace.getSemesterComboBox().getSelectionModel().select(courseSemester);
@@ -264,7 +270,8 @@ public class CSGFiles implements AppFileComponent {
         workspace.getInstructorNameValueLabel().setText(instructorName);
         workspace.getInstructorHomeValueLabel().setText(instructorHome);
         workspace.getExportDirTextView().setText(exportDir);
-
+        app.getGUI().changeExportDir(exportDir);
+        
         // NOW LOAD ALL THE UNDERGRAD TAs
         JsonArray jsonTAArray = json.getJsonArray(JSON_UNDERGRAD_TAS);
         for (int i = 0; i < jsonTAArray.size(); i++) {
@@ -299,7 +306,7 @@ public class CSGFiles implements AppFileComponent {
             String ta2Name = jsonRecitation.getString(JSON_RECITATION_TA2);
             TeachingAssistant ta1 = dataManager.findTeachingAssistant(ta1Name);
             TeachingAssistant ta2 = dataManager.findTeachingAssistant(ta2Name);
-            dataManager.addRecitation(section, instructor, recDayTime, section, ta1, ta2);
+            dataManager.addRecitation(section, instructor, recDayTime, recitationLocation, ta1, ta2);
         }
 
         //Schedule Items
@@ -358,6 +365,13 @@ public class CSGFiles implements AppFileComponent {
             projectTeam.addStudent(s);
             dataManager.addStudent(s);
         }
+        
+        /*// Lastly, load in the Export images
+        String bannerImageDirectory = csInfo.getString(JSON_BANNER_IMAGE_EXPORT);
+        String leftFooterDirectory = csInfo.getString(JSON_LEFT_FOOTER_IMAGE_EXPORT);
+        String rightFooterDirectory = csInfo.getString(JSON_RIGHT_FOOTER_IMAGE_EXPORT);*/
+        
+        
     }
 
     // HELPER METHOD FOR LOADING DATA FROM A JSON FORMAT
@@ -391,7 +405,11 @@ public class CSGFiles implements AppFileComponent {
                 .add(JSON_HAS_SYLLABUS, cs.getSyllabusPage().getExists() + "")
                 .add(JSON_HAS_SCHEDULE, cs.getSchedulePage().getExists() + "")
                 .add(JSON_HAS_HW, cs.getHwPage().getExists() + "")
-                .add(JSON_HAS_PROJECT, cs.getProjectsPage().getExists() + "").build();
+                .add(JSON_HAS_PROJECT, cs.getProjectsPage().getExists() + "")
+                .add(JSON_BANNER_IMAGE_EXPORT, dataManager.getBannerFilepath())
+                .add(JSON_LEFT_FOOTER_IMAGE_EXPORT, dataManager.getLeftFooterFilepath())
+                .add(JSON_RIGHT_FOOTER_IMAGE_EXPORT, dataManager.getRightFooterFilepath())
+                .build();
 
         // NOW BUILD THE TA JSON OBJCTS TO SAVE
         JsonArrayBuilder taArrayBuilder = Json.createArrayBuilder();
@@ -523,6 +541,7 @@ public class CSGFiles implements AppFileComponent {
     @Override
     public void exportData(AppDataComponent data, String filePath) throws IOException {
         CSGData dataManager = (CSGData) data;
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         File fileToImport = new File(PATH_PUBLIC_HTML);
 
@@ -539,7 +558,10 @@ public class CSGFiles implements AppFileComponent {
         String scheduleBuilderDirectory = filePath + "/newExport.html/" + "js/ScheduleData.json";
         String projectTeamsBuilderDirectory = filePath + "/newExport.html/" + "js/TeamsAndStudents.json";
         String projectsBuilderDirectory = filePath + "/newExport.html/" + "js/ProjectsData.json";
-
+        String bannerImageDirectory = filePath + "/newExport.html/" + "images/SBUDarkRedShieldLogo.png";
+        String leftFooterDirectory = filePath + "/newExport.html/" + "images/CSLogo.png";
+        String rightFooterDirectory = filePath + "/newExport.html/" + "images/SBUWhiteShieldLogo.jpg";
+        
         // Building Course Information to Save
         CourseSite cs = dataManager.getCourseSiteInfo();
         JsonObject csInfo = Json.createObjectBuilder()
@@ -573,8 +595,9 @@ public class CSGFiles implements AppFileComponent {
         PrintWriter pwCS = new PrintWriter(courseInfoDirectory);
         pwCS.write(prettyPrintedCS);
         pwCS.close();
-
+        
         // Building TA Array to Save
+        
         JsonArrayBuilder taArrayBuilder = Json.createArrayBuilder();
         ObservableList<TeachingAssistant> tas = dataManager.getTeachingAssistants();
         for (TeachingAssistant ta : tas) {
@@ -878,16 +901,6 @@ public class CSGFiles implements AppFileComponent {
 
         // Finally, construct the PROJECTS
         
-        JsonArrayBuilder json = Json.createArrayBuilder();
-        json.add("Yes");
-        json.add("No");
-        
-        JsonArray arr = json.build();
-        
-        JsonObject jsonObject = Json.createObjectBuilder()
-                .add("Array", arr).build();
-        JsonArrayBuilder jsonWork = Json.createArrayBuilder();
-        
         JsonArrayBuilder projectArrayBuilder = Json.createArrayBuilder();
         ObservableList<ProjectTeam> teams = dataManager.getProjectTeams();
         
@@ -942,5 +955,22 @@ public class CSGFiles implements AppFileComponent {
         PrintWriter pwPS = new PrintWriter(projectsBuilderDirectory);
         pwPS.write(prettyPrintedPS);
         pwPS.close();
+        
+        // Lastly, save the IMAGES to the correct file directories
+        Image bannerSchoolImage = workspace.getBannerSchoolImage().getImage();
+        Image leftFooterImage = workspace.getLeftFooterImage().getImage();
+        Image rightFooterImage = workspace.getRightFooterImage().getImage();
+        
+        BufferedImage bufferedBannerSchoolImage = SwingFXUtils.fromFXImage(bannerSchoolImage, null);
+        BufferedImage bufferedLeftFooterImage = SwingFXUtils.fromFXImage(leftFooterImage, null);
+        BufferedImage bufferedRightFooterImage = SwingFXUtils.fromFXImage(rightFooterImage, null);
+        
+        File outputBannerImage = new File(bannerImageDirectory);
+        File outputLeftFooterImage = new File(leftFooterDirectory);
+        File outputRightFooterImage = new File(rightFooterDirectory);
+        
+        ImageIO.write(bufferedBannerSchoolImage, "png", outputBannerImage);
+        ImageIO.write(bufferedLeftFooterImage, "png", outputLeftFooterImage);
+        ImageIO.write(bufferedRightFooterImage, "png", outputRightFooterImage);
     }
 }

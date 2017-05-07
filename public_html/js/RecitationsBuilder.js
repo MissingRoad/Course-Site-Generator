@@ -1,11 +1,11 @@
 function buildRecitations() {   
-    initBanner();
+    initBannerOfSyllabus();
     var dataFile = "./js/RecitationsData.json";
     loadData(dataFile, addRecitations);
 }
 
-function initBanner() {
-    var banner = $("#banner");
+function initBannerOfSyllabus() {
+    
     var courseDataFile = "./js/CourseInformationData.json";
     $.getJSON(courseDataFile, function (json) {
 	/*loadJSONData(json);
@@ -16,6 +16,7 @@ function initBanner() {
         addRecitations();
         addHWs();
         initBanner();*/
+        var banner = $("#banner");
         var subject = json.course_subject;
         var number = json.course_number;
         var semester = json.course_semester;

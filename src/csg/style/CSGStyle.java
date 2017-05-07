@@ -88,7 +88,7 @@ public class CSGStyle extends AppStyleComponent{
         //workspaceComponent.getTAsHeaderLabel().getStyleClass().add(CLASS_HEADER_LABEL);
 
         // LEFT SIDE - THE TABLE
-        TableView<TeachingAssistant> taTable = workspaceComponent.getTAInformationTable();
+        /*TableView<TeachingAssistant> taTable = workspaceComponent.getTAInformationTable();
         taTable.getStyleClass().add(CLASS_TA_TABLE);
         for (TableColumn tableColumn : taTable.getColumns()) {
             tableColumn.getStyleClass().add(CLASS_TA_TABLE_COLUMN_HEADER);
@@ -99,7 +99,7 @@ public class CSGStyle extends AppStyleComponent{
         workspaceComponent.getTANameTextField().getStyleClass().add(CLASS_ADD_TA_TEXT_FIELD);
         workspaceComponent.getTAEmailTextField().getStyleClass().add(CLASS_ADD_TA_TEXT_FIELD);
         workspaceComponent.getAddTAButton().getStyleClass().add(CLASS_ADD_TA_BUTTON);
-        workspaceComponent.getClearTAButton().getStyleClass().add(CLASS_ADD_TA_BUTTON);
+        workspaceComponent.getClearTAButton().getStyleClass().add(CLASS_ADD_TA_BUTTON);*/
 
         // RIGHT SIDE - THE HEADER
         //workspaceComponent.getOfficeHoursSubheaderBox().getStyleClass().add(CLASS_HEADER_PANE);

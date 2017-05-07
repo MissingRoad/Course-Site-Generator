@@ -50,9 +50,9 @@ function addProjects() {
     for (var i = 0; i < work.length; i++) {
         var wWork = work[i];
         var text = "<h3>" + wWork.semester + " Projects</h3>"
-                + "<table><tbody>";        
+                + "<table><tbody>";
         var projects = wWork.projects;
-        for (var j = 0; j < projects.length; j+=2) {
+        for (var j = 0; j < projects.length; j += 2) {
             var project = projects[j];
             text += "<tr>";
             text += getProjectCell(project);
@@ -60,7 +60,7 @@ function addProjects() {
                 project = projects[j + 1];
                 text += getProjectCell(project);
             }
-            text += "</tr>";        
+            text += "</tr>";
         }
         text += "</tbody></table><br /><br />";
         div.append(text);
@@ -86,23 +86,27 @@ function getProjectCell(project) {
 }
 
 function initBanner() {
-    var banner = $("#banner");
-    banner.append("test");
+
     var courseDataFile = "./js/CourseInformationData.json";
     $.getJSON(courseDataFile, function (json) {
-	/*loadJSONData(json);
-        buildScheduleTable();
-        addHolidays();
-        addLectures();
-        addReferences();
-        addRecitations();
-        addHWs();
-        initBanner();*/
-        var subject = json.course_subject;
-        var number = json.course_number;
-        var semester = json.course_semester;
-        var year = json.course_year;
-        var title = json.course_title;
-        banner.append(subject + " "+ number + " - " + semester + " " + year + "\n" + title);
+        extractCourseDetailsJSON(json);
+        /*buildScheduleTable();
+         addHolidays();
+         addLectures();
+         addReferences();
+         addRecitations();
+         addHWs();
+         initBanner();*/
+
     });
+}
+
+function extractCourseDetailsJSON(data) {
+    var banner = $("#banner");
+    var subject = data.course_subject;
+    var number = data.course_number;
+    var semester = data.course_semester;
+    var year = data.course_year;
+    var title = data.course_title;
+    banner.append(subject + " " + number + " - " + semester + " " + year + "\n" + title);
 }
