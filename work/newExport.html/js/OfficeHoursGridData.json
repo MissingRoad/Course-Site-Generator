@@ -4,6 +4,10 @@
     "endHour":"23",
     "undergrad_tas":[
         {
+            "name":"David Li",
+            "email":"david.li@stonybrook.edu"
+        },
+        {
             "name":"Jacob Evans",
             "email":"jacob.evans@stonybrook.edu"
         },
@@ -22,6 +26,21 @@
             "day":"THURSDAY",
             "time":"2_30am",
             "name":"Jacob Evans"
+        },
+        {
+            "day":"TUESDAY",
+            "time":"4_00am",
+            "name":"David Li"
+        },
+        {
+            "day":"WEDNESDAY",
+            "time":"4_00am",
+            "name":"David Li"
+        },
+        {
+            "day":"THURSDAY",
+            "time":"4_00am",
+            "name":"David Li"
         },
         {
             "day":"TUESDAY",

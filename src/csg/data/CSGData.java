@@ -496,6 +496,28 @@ public class CSGData implements AppDataComponent {
         //Collections.sort(scheduleItems);
         //Collections.sort(observableScheduleItems);
     }
+    
+    public void addScheduleItem(ScheduleItem s) {
+        if (!scheduleItems.contains(s)) {
+            scheduleItems.add(s);
+            CSGWorkspace workspace = (CSGWorkspace) app.getWorkspaceComponent();
+            DatePicker startMondayDatePicker = workspace.getStartingMondayPicker();
+            LocalDate ldStartMonday = startMondayDatePicker.getValue();
+            Calendar c1 = Calendar.getInstance();
+            c1.set(ldStartMonday.getYear(), ldStartMonday.getMonthValue() - 1, ldStartMonday.getDayOfMonth());
+            Date startingMondayDate = c1.getTime();
+
+            DatePicker endingFridayDatePicker = workspace.getEndingFridayPicker();
+            LocalDate ldEndFriday = endingFridayDatePicker.getValue();
+            Calendar c2 = Calendar.getInstance();
+            c2.set(ldEndFriday.getYear(), ldEndFriday.getMonthValue() - 1, ldEndFriday.getDayOfMonth());
+            Date endingFridayDate = c2.getTime();
+
+            if (s.compareTo(startingMondayDate) >= 0 && s.compareTo(endingFridayDate) <= 0) {
+                observableScheduleItems.add(s);
+            }
+        }
+    }
 
     public void removeScheduleItem(String title, Date date) {
         if (containsScheduleItem(title, date)) {

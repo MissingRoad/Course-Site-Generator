@@ -10,9 +10,9 @@
         "course_instructor_home":"www.mckillagorilla.com",
         "course_export_dir":"C:\\Users\\dsli\\Documents\\CSE 219 Projects\\CSE219Project\\CourseSiteGenerator\\work",
         "course_has_home":"true",
-        "course_has_syllabus":"false",
+        "course_has_syllabus":"true",
         "course_has_schedule":"true",
-        "course_has_hw":"false",
+        "course_has_hw":"true",
         "course_has_project":"true",
         "banner_image":"file:./public_html//images/SBUDarkRedShieldLogo.png",
         "left_footer":"file:./public_html//images/SBUWhiteShieldLogo.jpg",
@@ -21,6 +21,11 @@
     "startHour":"0",
     "endHour":"23",
     "undergrad_tas":[
+        {
+            "name":"David Li",
+            "email":"david.li@stonybrook.edu",
+            "is_undergrad_ta":"true"
+        },
         {
             "name":"Jacob Evans",
             "email":"jacob.evans@stonybrook.edu",
@@ -45,6 +50,21 @@
         },
         {
             "day":"TUESDAY",
+            "time":"4_00am",
+            "name":"David Li"
+        },
+        {
+            "day":"WEDNESDAY",
+            "time":"4_00am",
+            "name":"David Li"
+        },
+        {
+            "day":"THURSDAY",
+            "time":"4_00am",
+            "name":"David Li"
+        },
+        {
+            "day":"TUESDAY",
             "time":"6_30am",
             "name":"James Hoffman"
         },
@@ -62,6 +82,14 @@
             "recitation_location":"Computer Science 2114",
             "recitation_ta1":"Jacob Evans",
             "recitation_ta2":"James Hoffman"
+        },
+        {
+            "recitation_section":"R02",
+            "recitation_instructor":"McKenna",
+            "recitation_day_time":"Wednesday 3:30 - 4:23 PM",
+            "recitation_location":"Computer Science 2114",
+            "recitation_ta1":"David Li",
+            "recitation_ta2":"Jacob Evans"
         }
     ],
     "schedule_items":[
@@ -98,6 +126,15 @@
             "schedule_item_time":"",
             "schedule_item_title":"Homework 1 Due",
             "schedule_item_topic":"",
+            "schedule_item_link":"",
+            "schedule_item_criteria":""
+        },
+        {
+            "type":"Reference",
+            "schedule_item_date":"Wed Mar 01 22:30:59 EST 2017",
+            "schedule_item_time":"",
+            "schedule_item_title":"Reference Event",
+            "schedule_item_topic":"Reference Topic",
             "schedule_item_link":"",
             "schedule_item_criteria":""
         }

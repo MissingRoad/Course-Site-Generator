@@ -18,6 +18,7 @@ import jtps.jTPS_Transaction;
 public class ScheduleItemDeleteUR implements jTPS_Transaction {
     private CourseSiteGeneratorApp app;
     private CSGData data;
+    private ScheduleItem s;
     
     private String type;
     private Date date;
@@ -30,7 +31,7 @@ public class ScheduleItemDeleteUR implements jTPS_Transaction {
     public ScheduleItemDeleteUR(CourseSiteGeneratorApp app, ScheduleItem s) {
         this.app = app;
         this.data = (CSGData)app.getDataComponent();
-        
+        this.s = s;
         this.type = s.getType();
         this.date = s.getDate();
         this.time = s.getTime();
@@ -48,5 +49,6 @@ public class ScheduleItemDeleteUR implements jTPS_Transaction {
     @Override
     public void undoTransaction() {
         data.addScheduleItem(type, date, time, title, topic, link, criteria);
+        //data.addScheduleItem(this.s);
     }
 }

@@ -4,9 +4,16 @@
         {
             "section":"R01",
             "day_time":"Monday 5:30 - 6:23 PM",
-            "location":"R01",
+            "location":"Computer Science 2114",
             "ta_1":"Jacob Evans",
             "ta_2":"James Hoffman"
+        },
+        {
+            "section":"R02",
+            "day_time":"Wednesday 3:30 - 4:23 PM",
+            "location":"Computer Science 2114",
+            "ta_1":"David Li",
+            "ta_2":"Jacob Evans"
         }
     ]
 }

@@ -51,10 +51,7 @@ public class ScheduleItemAdderUR implements jTPS_Transaction {
     
     @Override
     public void doTransaction() {
-        data.addScheduleItem(type, date, time, title, topic, link, criteria);
-        
-        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
-        
+        data.addScheduleItem(type, date, time, title, topic, link, criteria);        
     }
     
     @Override

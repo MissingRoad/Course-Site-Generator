@@ -700,9 +700,9 @@ public class CSGFiles implements AppFileComponent {
         cal1.setTime(startMondayDate);
         cal2.setTime(endFridayDate);
 
-        int startMonth = cal1.get(Calendar.MONTH);
+        int startMonth = cal1.get(Calendar.MONTH) + 1;
         int startDay = cal1.get(Calendar.DAY_OF_MONTH);
-        int endMonth = cal2.get(Calendar.MONTH);
+        int endMonth = cal2.get(Calendar.MONTH) + 1;
         int endDay = cal2.get(Calendar.DAY_OF_MONTH);
         // Now the Schedule Item Objects
 

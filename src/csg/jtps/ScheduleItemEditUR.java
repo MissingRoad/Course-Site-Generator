@@ -82,6 +82,8 @@ public class ScheduleItemEditUR implements jTPS_Transaction {
     
     @Override
     public void doTransaction() {
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        TableView scheduleItems = workspace.getScheduleItems();
         this.s.setType(newType);
         this.s.setDate(newDate);
         this.s.setTime(newTime);
@@ -89,10 +91,13 @@ public class ScheduleItemEditUR implements jTPS_Transaction {
         this.s.setTopic(newTopic);
         this.s.setLink(newLink);
         this.s.setCriteria(newCriteria);
+        scheduleItems.refresh();
     }
     
     @Override
     public void undoTransaction() {
+        CSGWorkspace workspace = (CSGWorkspace)app.getWorkspaceComponent();
+        TableView scheduleItems = workspace.getScheduleItems();
         this.s.setType(type);
         this.s.setDate(date);
         this.s.setTime(time);
@@ -100,5 +105,6 @@ public class ScheduleItemEditUR implements jTPS_Transaction {
         this.s.setTopic(topic);
         this.s.setLink(link);
         this.s.setCriteria(criteria);
+        scheduleItems.refresh();
     }
 }

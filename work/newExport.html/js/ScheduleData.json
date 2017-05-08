@@ -1,8 +1,8 @@
 
 {
-    "startingMondayMonth":"0",
+    "startingMondayMonth":"1",
     "startingMondayDay":"2",
-    "endingFridayMonth":"4",
+    "endingFridayMonth":"5",
     "endingFridayDay":"25",
     "holidays":[
         {
@@ -28,6 +28,13 @@
         }
     ],
     "references":[
+        {
+            "month":"3",
+            "day":"1",
+            "title":"Reference Event",
+            "schedule_item_topic":"Reference Topic",
+            "link":""
+        }
     ],
     "recitations":[
     ],
