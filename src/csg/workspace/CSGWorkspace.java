@@ -367,13 +367,21 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         courseInfoLabel = new Label(props.getProperty(CSGProp.COURSE_INFO_LABEL).toString());
         courseInfoLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold");
         subjectLabel = new Label(props.getProperty(CSGProp.COURSE_SUBJECT_LABEL).toString());
+        subjectLabel.setStyle("-fx-font-weight: bold");
         numberLabel = new Label(props.getProperty(CSGProp.COURSE_NUMBER_LABEL).toString());
+        numberLabel.setStyle("-fx-font-weight: bold");
         semesterLabel = new Label(props.getProperty(CSGProp.COURSE_SEMESTER_LABEL).toString());
+        semesterLabel.setStyle("-fx-font-weight: bold");
         yearLabel = new Label(props.getProperty(CSGProp.COURSE_YEAR_LABEL.toString()));
+        yearLabel.setStyle("-fx-font-weight: bold");
         titleLabel = new Label(props.getProperty(CSGProp.COURSE_TITLE_LABEL).toString());
+        titleLabel.setStyle("-fx-font-weight: bold");
         instructorNameLabel = new Label(props.getProperty(CSGProp.COURSE_INSTRUCTOR_NAME_LABEL).toString());
+        instructorNameLabel.setStyle("-fx-font-weight: bold");
         instructorHomeLabel = new Label(props.getProperty(CSGProp.COURSE_INSTRUCTOR_HOME_LABEL).toString());
+        instructorHomeLabel.setStyle("-fx-font-weight: bold");
         exportDirLabel = new Label(props.getProperty(CSGProp.COURSE_EXPORT_DIR_LABEL).toString());
+        exportDirLabel.setStyle("-fx-font-weight: bold");
         Button updateCourseSiteButton = new Button(props.getProperty(CSGProp.ADD_UPDATE_BUTTON_LABEL).toString());
 
         titleTextField = new TextField();
@@ -452,6 +460,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         siteTemplateLabel = new Label(props.getProperty(CSGProp.COURSE_SITE_TEMPLATE_LABEL));
         siteTemplateLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold");
         siteTemplateDescriptionLabel = new Label(props.getProperty(CSGProp.COURSE_SITE_TEMPLATE_NOTE_LABEL).toString());
+        siteTemplateDescriptionLabel.setStyle("-fx-font-weight: bold");
         templateDir = new Label(PATH_PUBLIC_HTML);
         selectTemplateDirButton = new Button(props.getProperty(CSGProp.COURSE_SELECT_TEMPLATE_DIRECTORY_BUTTON_LABEL.toString()));
         sitePagesLabel = new Label(props.getProperty(CSGProp.COURSE_SITE_PAGES_LABEL).toString());
@@ -517,9 +526,13 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         pageStyleLabel = new Label(props.getProperty(CSGProp.COURSE_PAGE_STYLE_LABEL).toString());
         pageStyleLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold");
         bannerSchoolLabel = new Label(props.getProperty(CSGProp.COURSE_BANNER_SCHOOL_IMAGE_LABEL).toString());
+        bannerSchoolLabel.setStyle("-fx-font-weight: bold");
         leftFooterLabel = new Label(props.getProperty(CSGProp.COURSE_LEFT_FOOTER_LABEL).toString());
+        leftFooterLabel.setStyle("-fx-font-weight: bold");
         rightFooterLabel = new Label(props.getProperty(CSGProp.COURSE_RIGHT_FOOTER_LABEL).toString());
+        rightFooterLabel.setStyle("-fx-font-weight: bold");
         stylesheetLabel = new Label(props.getProperty(CSGProp.COURSE_STYLESHEET_LABEL).toString());
+        stylesheetLabel.setStyle("-fx-font-weight: bold");
         bannerSchoolImage = new ImageView(FILE_PROTOCOL + PATH_DEFAULT_IMAGES + props.getProperty(DEFAULT_BANNER_SCHOOL_IMAGE.toString()));
         leftFooterImage = new ImageView(FILE_PROTOCOL + PATH_DEFAULT_IMAGES + props.getProperty(DEFAULT_LEFT_FOOTER_IMAGE.toString()));
         rightFooterImage = new ImageView(FILE_PROTOCOL + PATH_DEFAULT_IMAGES + props.getProperty(DEFAULT_RIGHT_FOOTER_IMAGE.toString()));
@@ -635,6 +648,8 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         taDataTextFieldPane = new HBox();
         taNameTextField = new TextField();
         taEmailTextField = new TextField();
+        taNameTextField.setPromptText(props.getProperty(CSGProp.NAME_PROMPT_TEXT.toString()));
+        taEmailTextField.setPromptText(props.getProperty(CSGProp.EMAIL_PROMPT_TEXT.toString()));
         addTAButton = new Button(props.getProperty(CSGProp.ADD_BUTTON_LABEL).toString());
         clearTAButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL).toString());
         taDataTextFieldPane.getChildren().addAll(taNameTextField, taEmailTextField, addTAButton, clearTAButton);
@@ -817,17 +832,27 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
         addEditGridPane = new GridPane();
         sectionLabel = new Label(props.getProperty(CSGProp.REC_SECTION_LABEL.toString()));
+        sectionLabel.setStyle("-fx-font-weight: bold");
         sectionTextField = new TextField();
+        sectionTextField.setPromptText(props.getProperty(CSGProp.REC_SECTION_LABEL.toString()));
         instructorLabel = new Label(props.getProperty(CSGProp.REC_INSTRUCTOR_LABEL.toString()));
+        instructorLabel.setStyle("-fx-font-weight: bold");
         instructorTextField = new TextField();
+        instructorTextField.setPromptText(props.getProperty(CSGProp.REC_INSTRUCTOR_LABEL.toString()));
         dayTimeLabel = new Label(props.getProperty(CSGProp.REC_DAY_TIME_LABEL.toString()));
+        dayTimeLabel.setStyle("-fx-font-weight: bold");
         dayTimeTextField = new TextField();
+        dayTimeTextField.setPromptText(props.getProperty(CSGProp.REC_DAY_TIME_LABEL.toString()));
         locationLabel = new Label(props.getProperty(CSGProp.REC_LOCATION_LABEL.toString()));
+        locationLabel.setStyle("-fx-font-weight: bold");
         locationTextField = new TextField();
+        locationTextField.setPromptText(props.getProperty(CSGProp.REC_LOCATION_LABEL.toString()));
         supervisingTa1Label = new Label(props.getProperty(CSGProp.REC_TA1_LABEL.toString()));
+        supervisingTa1Label.setStyle("-fx-font-weight: bold");
         supervisingTa1Box = new ComboBox<TeachingAssistant>();
         supervisingTa1Box.setItems(data.getTeachingAssistants());
         supervisingTa2Label = new Label(props.getProperty(CSGProp.REC_TA1_LABEL.toString()));
+        supervisingTa2Label.setStyle("-fx-font-weight: bold");
         supervisingTa2Box = new ComboBox<TeachingAssistant>();
         supervisingTa2Box.setItems(data.getTeachingAssistants());
         addUpdateButton = new Button(props.getProperty(CSGProp.ADD_BUTTON_LABEL.toString()));
@@ -913,6 +938,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
         calendarBoundariesLabel = new Label(props.getProperty(CSGProp.CALENDAR_BOUNDARIES_LABEL.toString()));
         startingMondayLabel = new Label(props.getProperty(CSGProp.STARTING_MONDAY_LABEL.toString()));
+        startingMondayLabel.setStyle("-fx-font-weight: bold");
         //LocalDate defaultMonday = formatter.
         //startingMondayPicker.setValue(LocalDate.MAX);
         startingMondayPicker = new DatePicker();
@@ -921,6 +947,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
             
         });*/
         endingFridayLabel = new Label(props.getProperty(CSGProp.ENDING_FRIDAY_LABEL.toString()));
+        endingFridayLabel.setStyle("-fx-font-weight: bold");
         endingFridayPicker = new DatePicker();
         initEndingFridayDatePicker();
         //Constructing the top box ("Calendar Boundaries")
@@ -935,6 +962,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         scheduleItemsVBox = new VBox();
         topScheduleItemsBox = new HBox();
         scheduleItemsLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEMS_LABEL.toString()));
+        scheduleItemsLabel.setStyle("-fx-font-size: 18; -fx-font-weight: bold");
         deleteScheduleItemButton = new Button(props.getProperty(CSGProp.DELETE_SYMBOL.toString()));
         topScheduleItemsBox.getChildren().addAll(scheduleItemsLabel, deleteScheduleItemButton);
         scheduleItems = new TableView<ScheduleItem>();
@@ -959,22 +987,34 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         scheduleItems.getColumns().addAll(scheduleItemType, scheduleItemDate, scheduleItemTitle, scheduleItemTopic);
         addEditSchedulePane = new GridPane();
         typeLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEM_TYPE_LABEL.toString()));
+        typeLabel.setStyle("-fx-font-weight: bold");
         ObservableList scheduleItemTypes = FXCollections.observableArrayList(
                 props.getProperty(CSGProp.HOLIDAY_EVENT), props.getProperty(CSGProp.LECTURE_EVENT), props.getProperty(CSGProp.REFERENCE_EVENT), props.getProperty(CSGProp.HOMEWORK_EVENT)
         );
         typeBox = new ComboBox(scheduleItemTypes);
         dateLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEM_DATE_LABEL.toString()));
+        dateLabel.setStyle("-fx-font-weight: bold");
         datePicker = new DatePicker();
         timeLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEM_TIME_LABEL.toString()));
+        timeLabel.setStyle("-fx-font-weight: bold");
         timeTextField = new TextField();
+        timeTextField.setPromptText(props.getProperty(CSGProp.SCHEDULE_ITEM_TIME_LABEL.toString()));
         scheduleItemTitleLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEM_TITLE_LABEL.toString()));
+        scheduleItemTitleLabel.setStyle("-fx-font-weight: bold");
         scheduleItemTitleTextField = new TextField();
+        scheduleItemTitleTextField.setPromptText(props.getProperty(CSGProp.SCHEDULE_ITEM_TITLE_LABEL.toString()));
         topicLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEM_TOPIC_LABEL.toString()));
+        topicLabel.setStyle("-fx-font-weight: bold");
         topicTextField = new TextField();
+        topicTextField.setPromptText(props.getProperty(CSGProp.SCHEDULE_ITEM_TOPIC_LABEL.toString()));
         linkLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEM_LINK_LABEL.toString()));
+        linkLabel.setStyle("-fx-font-weight: bold");
         linkTextField = new TextField();
+        linkTextField.setPromptText(props.getProperty(CSGProp.SCHEDULE_ITEM_LINK_LABEL.toString()));
         criteriaLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEM_CRITERIA_LABEL.toString()));
+        criteriaLabel.setStyle("-fx-font-weight: bold");
         criteriaTextField = new TextField();
+        criteriaTextField.setPromptText(props.getProperty(CSGProp.SCHEDULE_ITEM_CRITERIA_LABEL.toString()));
         addUpdateScheduleItemButton = new Button(props.getProperty(CSGProp.ADD_BUTTON_LABEL.toString()));
         clearScheduleItemButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL.toString()));
 
@@ -1104,6 +1144,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         projectTeamsVBox = new VBox();
         projectTeamsTopHBox = new HBox();
         teamsLabel = new Label(props.getProperty(CSGProp.TEAMS_LABEL.toString()));
+        teamsLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold");
         deleteProjectButton = new Button(props.getProperty(CSGProp.DELETE_SYMBOL.toString()));
         projectTeamsTopHBox.getChildren().addAll(teamsLabel, deleteProjectButton);
         projectTeams = new TableView<ProjectTeam>();
@@ -1129,15 +1170,21 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         addEditProjectGridPane = new GridPane();
         addEditProjectLabel = new Label(props.getProperty(CSGProp.ADD_EDIT_LABEL.toString()));
         teamNameLabel = new Label(props.getProperty(CSGProp.TEAM_NAME_LABEL.toString()));
+        teamNameLabel.setStyle("-fx-font-weight: bold");
         teamNameTextField = new TextField();
+        teamNameTextField.setPromptText(props.getProperty(CSGProp.TEAM_NAME_LABEL.toString()));
         teamColorLabel = new Label(props.getProperty(CSGProp.TEAM_COLOR_LABEL.toString()));
+        teamColorLabel.setStyle("-fx-font-weight: bold");
         teamColorPicker = new ColorPicker();
         teamColorPicker.setPrefHeight(85);
         teamTextColorLabel = new Label(props.getProperty(CSGProp.TEXT_COLOR_LABEL.toString()));
+        teamTextColorLabel.setStyle("-fx-font-weight: bold");
         teamTextColorPicker = new ColorPicker();
         teamTextColorPicker.setPrefHeight(85);
         teamLinkLabel = new Label(props.getProperty(CSGProp.TEAM_LINK_LABEL.toString()));
+        teamLinkLabel.setStyle("-fx-font-weight: bold");
         teamLinkTextField = new TextField();
+        teamLinkTextField.setPromptText(props.getProperty(CSGProp.TEAM_LINK_LABEL.toString()));
         addEditTeamButton = new Button(props.getProperty(CSGProp.ADD_EDIT_LABEL.toString()));
         clearTeamButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL.toString()));
 
@@ -1158,6 +1205,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         projectTeamStudentsVBox = new VBox();
         projectTeamStudentsTopBox = new HBox();
         studentsLabel = new Label(props.getProperty(CSGProp.TEAM_STUDENTS_LABEL.toString()));
+        studentsLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold");
         deleteStudentsButton = new Button(props.getProperty(CSGProp.DELETE_SYMBOL.toString()));
         projectTeamStudentsTopBox.getChildren().addAll(studentsLabel, deleteStudentsButton);
 
@@ -1187,14 +1235,21 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
         addEditStudentsPane = new GridPane();
         firstNameLabel = new Label(props.getProperty(CSGProp.STUDENT_FIRST_NAME_LABEL.toString()));
+        firstNameLabel.setStyle("-fx-font-weight: bold");
         firstNameTextField = new TextField();
+        firstNameTextField.setPromptText(props.getProperty(CSGProp.STUDENT_FIRST_NAME_LABEL.toString()));
         lastNameLabel = new Label(props.getProperty(CSGProp.STUDENT_LAST_NAME_LABEL.toString()));
+        lastNameLabel.setStyle("-fx-font-weight: bold");
         lastNameTextField = new TextField();
+        lastNameTextField.setPromptText(props.getProperty(CSGProp.STUDENT_LAST_NAME_LABEL.toString()));
         teamLabel = new Label(props.getProperty(CSGProp.STUDENT_TEAM_LABEL.toString()));
+        teamLabel.setStyle("-fx-font-weight: bold");
         teamBox = new ComboBox<ProjectTeam>();
         teamBox.setItems(data.getProjectTeams());
         roleLabel = new Label(props.getProperty(CSGProp.STUDENT_ROLE_LABEL.toString()));
+        roleLabel.setStyle("-fx-font-weight: bold");
         roleTextField = new TextField();
+        roleTextField.setPromptText(props.getProperty(CSGProp.STUDENT_ROLE_LABEL.toString()));
         addUpdateStudentsButton = new Button(props.getProperty(CSGProp.ADD_BUTTON_LABEL.toString()));
         clearStudentsButton = new Button(props.getProperty(CSGProp.CLEAR_BUTTON_LABEL.toString()));
 
