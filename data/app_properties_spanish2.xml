@@ -244,19 +244,21 @@
         <property name="MISSING_TA_EMAIL_TITLE"         value="Missing TA Email"></property>
         <property name="MISSING_TA_EMAIL_MESSAGE"       value="Necesita Email para TA"></property>
         <property name="TA_NAME_AND_EMAIL_NOT_UNIQUE_TITLE"     value="TA Name and Email Not Unique"></property>
-        <property name="TA_NAME_AND_EMAIL_NOT_UNIQUE_MESSAGE"   value="You must provide a unique TA Name and Email"></property>
-	<property name = "MISSING_RECITATION_SECTION_TITLE" value = "Missing Recitation Section"></property>
-	<property name = "MISSING_RECITATION_SECTION_MESSAGE" value = "You must provide a recitation section"></property>
-	<property name = "MISSING_RECITATION_INSTRUCTOR_TITLE" value = "Missing Recitation Instructor"></property>
-	<property name = "MISSING_RECITATION_INSTRUCTOR_MESSAGE" value = "You must provide a recitation instructor"></property>
-	<property name = "MISSING_RECITATION_DAY_TIME_TITLE" value = "Missing Recitation Day/Time"></property>
-	<property name = "MISSING_RECITATION_DAY_TIME_MESSAGE" value = "You must provide a Day and Time for this recitation"></property>
-	<property name = "MISSING_RECITATION_LOCATION_TITLE" value = "Missing recitation location"></property>
-	<property name = "MISSING_RECITATION_LOCATION_MESSAGE" value = "You must provide a Location for this recitation"></property>
-	<property name = "MISSING_TA_TITLE" value = "Missing Teaching Assistant"></property>
-	<property name = "MISSING_TA_MESSAGE" value = "You must provide two Teaching Assistants for this recitation"></property>
-	<property name = "SAME_TA_TITLE" value = "Same Teaching Assistant"> </property>
-	<property name = "SAME_TA_MESSAGE" value = "You cannot duplicate the same Teaching Assistant in the same recitation"></property>
+        <property name="TA_NAME_AND_EMAIL_NOT_UNIQUE_MESSAGE"   value="Solo uno nombre y email"></property>
+	<property name = "MISSING_RECITATION_SECTION_TITLE" value = "No tiene seccion de recitation"></property>
+	<property name = "MISSING_RECITATION_SECTION_MESSAGE" value = "Necesita seccion de recitation"></property>
+	<property name = "MISSING_RECITATION_INSTRUCTOR_TITLE" value = "No tiene instructor de recitation"></property>
+	<property name = "MISSING_RECITATION_INSTRUCTOR_MESSAGE" value = "Necesita instructor de recitation"></property>
+	<property name = "MISSING_RECITATION_DAY_TIME_TITLE" value = "No tiene hora de recitation"></property>
+	<property name = "MISSING_RECITATION_DAY_TIME_MESSAGE" value = "Necesita una hora para ese recitation"></property>
+	<property name = "MISSING_RECITATION_LOCATION_TITLE" value = "No tiene lugar de recitation"></property>
+	<property name = "MISSING_RECITATION_LOCATION_MESSAGE" value = "Necesita lugar para ese recitation"></property>
+	<property name = "MISSING_TA_TITLE" value = "No tiene asistente de ensenanza"></property>
+	<property name = "MISSING_TA_MESSAGE" value = "Necesita dos asistentes de ensenanza para ese recitation"></property>
+	<property name = "SAME_TA_TITLE" value = "Solo un asistente de ensenanza"> </property>
+	<property name = "SAME_TA_MESSAGE" value = "Necesita dos asistentes de ensenanza para ese recitation"></property>
+<property name = "BAD_START_END_DATES_TITLE" value = "Bad Start/End Dates"> </property>
+	<property name = "BAD_START_END_DATES_MESSAGE" value = "Start date must come before the end date"> </property>
 
 	
     </property_list>

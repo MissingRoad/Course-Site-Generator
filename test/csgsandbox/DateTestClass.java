@@ -7,6 +7,8 @@ package csgsandbox;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -27,7 +29,7 @@ public class DateTestClass {
         int i = startMondayDate.compareTo(endFridayDate);
         System.out.println(i);*/
         
-        String dateString = "Wed Jan 18 23:22:18 EST 2017";
+        /*String dateString = "Wed Jan 18 23:22:18 EST 2017";
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
         try {
             Date scheduleItemDate = sdf.parse(dateString);
@@ -35,6 +37,10 @@ public class DateTestClass {
         }
         catch (ParseException e) {
             System.out.println("Exception");
-        }
+        }*/
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate localDate = LocalDate.parse("02-01-2017", formatter);
+        System.out.println(localDate.toString());
     }
 }

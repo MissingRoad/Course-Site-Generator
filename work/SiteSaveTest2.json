@@ -9,11 +9,11 @@
         "course_instructor_name":"McKenna",
         "course_instructor_home":"www.mckillagorilla.com",
         "course_export_dir":"C:\\Users\\dsli\\Documents\\CSE 219 Projects\\CSE219Project\\CourseSiteGenerator\\work",
-        "course_has_home":"false",
+        "course_has_home":"true",
         "course_has_syllabus":"false",
-        "course_has_schedule":"false",
+        "course_has_schedule":"true",
         "course_has_hw":"false",
-        "course_has_project":"false",
+        "course_has_project":"true",
         "banner_image":"file:./public_html//images/SBUDarkRedShieldLogo.png",
         "left_footer":"file:./public_html//images/SBUWhiteShieldLogo.jpg",
         "right_footer":"file:./public_html//images/CSLogo.png"
@@ -59,7 +59,7 @@
             "recitation_section":"R01",
             "recitation_instructor":"McKenna",
             "recitation_day_time":"Monday 5:30 - 6:23 PM",
-            "recitation_location":"R01",
+            "recitation_location":"Computer Science 2114",
             "recitation_ta1":"Jacob Evans",
             "recitation_ta2":"James Hoffman"
         }
@@ -105,12 +105,12 @@
     "project_teams":[
         {
             "project_team_name":"Team 1",
-            "project_team_red_color":"0.0",
-            "project_team_green_color":"0.0",
-            "project_team_blue_color":"1.0",
+            "project_team_red_color":"1.0",
+            "project_team_green_color":"1.0",
+            "project_team_blue_color":"0.4000000059604645",
             "project_team_color_opacity":"1.0",
-            "project_team_text_red_color":"0.0",
-            "project_team_text_green_color":"0.0",
+            "project_team_text_red_color":"1.0",
+            "project_team_text_green_color":"1.0",
             "project_team_text_blue_color":"1.0",
             "project_team_text_color_opacity":"1.0",
             "project_team_link":"www.team1.com"

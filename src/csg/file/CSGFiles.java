@@ -630,6 +630,7 @@ public class CSGFiles implements AppFileComponent {
                 .add(JSON_UNDERGRAD_TAS_EXPORT, undergradTAsArray)
                 .add(JSON_OFFICE_HOURS_EXPORT, timeSlotsArray).build();
 
+        if (cs.getHasSyllabusPage()) {
         // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
         Map<String, Object> properties = new HashMap<>(1);
         properties.put(JsonGenerator.PRETTY_PRINTING, true);
@@ -648,7 +649,8 @@ public class CSGFiles implements AppFileComponent {
         PrintWriter pw = new PrintWriter(officeHoursGridDataDirectory);
         pw.write(prettyPrinted);
         pw.close();
-
+        
+        }
         // RECITATIONS JSON
         JsonArrayBuilder recitationArrayBuilder = Json.createArrayBuilder();
         ObservableList<Recitation> recitations = dataManager.getRecitations();
@@ -667,6 +669,7 @@ public class CSGFiles implements AppFileComponent {
         JsonObject recitationJSO = Json.createObjectBuilder()
                 .add(JSON_RECITATIONS, recitationsArray).build();
 
+        if (cs.getHasSyllabusPage()) {
         // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
         Map<String, Object> propertiesR = new HashMap<>(1);
         propertiesR.put(JsonGenerator.PRETTY_PRINTING, true);
@@ -686,6 +689,8 @@ public class CSGFiles implements AppFileComponent {
         pwR.write(prettyPrintedR);
         pwR.close();
 
+        }
+        
         // Get the start and ending Dates for Schedule
         Date startMondayDate = dataManager.getStartDate();
         Date endFridayDate = dataManager.getEndDate();
@@ -807,7 +812,8 @@ public class CSGFiles implements AppFileComponent {
             }
         }
         JsonArray homeworkItemsArray = homeworkArrayBuilder.build();
-
+        
+        
         // Saving the ScheduleItem JSON
         JsonObject scheduleItemJSO = Json.createObjectBuilder()
                 .add(JSON_STARTING_MONDAY_MONTH, startMonth + "")
@@ -821,7 +827,10 @@ public class CSGFiles implements AppFileComponent {
                 .add(JSON_HOMEWORKS_EXPORT, homeworkItemsArray)
                 .build();
 
+        
         // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
+        
+        if (cs.getHasSchedulePage() || cs.getHasHomePage()) {
         Map<String, Object> propertiesS = new HashMap<>(1);
         propertiesS.put(JsonGenerator.PRETTY_PRINTING, true);
         JsonWriterFactory writerFactoryS = Json.createWriterFactory(propertiesS);
@@ -840,6 +849,7 @@ public class CSGFiles implements AppFileComponent {
         pwS.write(prettyPrintedS);
         pwS.close();
 
+        }
         // ProjectTeams JSON
         // And now the ProjectTeam JSON Objects
         JsonArrayBuilder projectTeamArrayBuilder = Json.createArrayBuilder();
@@ -880,6 +890,7 @@ public class CSGFiles implements AppFileComponent {
                 .add(JSON_PROJECT_TEAMS_EXPORT, projectTeamsArray)
                 .add(JSON_STUDENTS_EXPORT, studentArray).build();
 
+        if (cs.getHasProjectPage()) {
         // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
         Map<String, Object> propertiesPT = new HashMap<>(1);
         propertiesPT.put(JsonGenerator.PRETTY_PRINTING, true);
@@ -898,7 +909,7 @@ public class CSGFiles implements AppFileComponent {
         PrintWriter pwPT = new PrintWriter(projectTeamsBuilderDirectory);
         pwPT.write(prettyPrintedPT);
         pwPT.close();
-
+        }
         // Finally, construct the PROJECTS
         
         JsonArrayBuilder projectArrayBuilder = Json.createArrayBuilder();
@@ -909,7 +920,7 @@ public class CSGFiles implements AppFileComponent {
             ObservableList<Student> teamMembers = p.getTeamMembers();
             JsonArrayBuilder teamMemberArrayBuilder = Json.createArrayBuilder();
             for (Student s: teamMembers) {
-                teamMemberArrayBuilder.add(s.getFirstName() + s.getLastName());
+                teamMemberArrayBuilder.add(s.getFirstName() + " " + s.getLastName());
             }
             JsonArray teamMemberList = teamMemberArrayBuilder.build();
             
@@ -937,6 +948,7 @@ public class CSGFiles implements AppFileComponent {
                 .add(JSON_PROJECT_WORK_EXPORT, jsonWorkArray)
                 .build();
         
+        if (cs.getHasProjectPage()) {
         // AND NOW OUTPUT IT TO A JSON FILE WITH PRETTY PRINTING
         Map<String, Object> propertiesPS = new HashMap<>(1);
         propertiesPS.put(JsonGenerator.PRETTY_PRINTING, true);
@@ -956,6 +968,7 @@ public class CSGFiles implements AppFileComponent {
         pwPS.write(prettyPrintedPS);
         pwPS.close();
         
+        }
         // Lastly, save the IMAGES to the correct file directories
         Image bannerSchoolImage = workspace.getBannerSchoolImage().getImage();
         Image leftFooterImage = workspace.getLeftFooterImage().getImage();

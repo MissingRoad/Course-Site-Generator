@@ -131,14 +131,14 @@ public class CSGData implements AppDataComponent {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate localDate = LocalDate.parse("02-01-2017", formatter);
         Calendar c1 = Calendar.getInstance();
-        c1.set(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth());
+        c1.set(localDate.getYear(), localDate.getMonthValue() - 1, localDate.getDayOfMonth());
         Date d1 = c1.getTime();
         this.startDate = d1;
         
         DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate localDate2 = LocalDate.parse("25-04-2017", formatter2);
+        LocalDate localDate2 = LocalDate.parse("25-05-2017", formatter2);
         Calendar c2 = Calendar.getInstance();
-        c2.set(localDate2.getYear(), localDate2.getMonthValue(), localDate2.getDayOfMonth());
+        c2.set(localDate2.getYear(), localDate2.getMonthValue() - 1, localDate2.getDayOfMonth());
         Date d2 = c2.getTime();
         this.endDate = d2;
 
@@ -493,6 +493,8 @@ public class CSGData implements AppDataComponent {
                 observableScheduleItems.add(s);
             }
         }
+        //Collections.sort(scheduleItems);
+        //Collections.sort(observableScheduleItems);
     }
 
     public void removeScheduleItem(String title, Date date) {

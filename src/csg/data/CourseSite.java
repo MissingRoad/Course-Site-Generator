@@ -47,16 +47,17 @@ public class CourseSite {
         this.instName = new SimpleStringProperty("");
         this.instHome = new SimpleStringProperty("");
         this.exportDir = new SimpleStringProperty("");
-        this.hasHomePage = new SimpleBooleanProperty(false);
-        this.hasSyllabusPage = new SimpleBooleanProperty(false);
-        this.hasSchedulePage = new SimpleBooleanProperty(false);
-        this.hasHWPage = new SimpleBooleanProperty(false);
-        this.hasProjectPage = new SimpleBooleanProperty(false);
-        this.homePage = new CourseSitePage(false, "Home", "index.html", "HomeBuilder.js");
-        this.syllabusPage = new CourseSitePage(false, "Syllabus", "syllabus.html", "SyllabusBuilder.js");
-        this.schedulePage = new CourseSitePage(false, "Schedule", "schedule.html", "ScheduleBuilder.js");
-        this.hwPage = new CourseSitePage(false, "HWs", "hws.html", "HWsBuilder.js");
-        this.projectsPage = new CourseSitePage(false, "Projects", "projects.html", "ProjectsBuilder.js");
+        
+        this.homePage = new CourseSitePage(true, "Home", "index.html", "HomeBuilder.js");
+        this.syllabusPage = new CourseSitePage(true, "Syllabus", "syllabus.html", "SyllabusBuilder.js");
+        this.schedulePage = new CourseSitePage(true, "Schedule", "schedule.html", "ScheduleBuilder.js");
+        this.hwPage = new CourseSitePage(true, "HWs", "hws.html", "HWsBuilder.js");
+        this.projectsPage = new CourseSitePage(true, "Projects", "projects.html", "ProjectsBuilder.js");
+        this.hasHomePage = homePage.existsProperty();
+        this.hasSyllabusPage = syllabusPage.existsProperty();
+        this.hasSchedulePage = schedulePage.existsProperty();
+        this.hasHWPage = hwPage.existsProperty();
+        this.hasProjectPage = projectsPage.existsProperty();
         //this.app = app;
         //this.workspace = (CSGWorkspace)app.getWorkspaceComponent();
     }

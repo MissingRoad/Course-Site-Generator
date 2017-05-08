@@ -22,7 +22,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -54,6 +53,7 @@ import static djf.settings.AppPropertyType.LOAD_ERROR_TITLE;
 import static djf.settings.AppPropertyType.LOAD_WORK_TITLE;
 import static djf.settings.AppStartupConstants.FILE_PROTOCOL;
 import static djf.settings.AppStartupConstants.PATH_DEFAULT_IMAGES;
+import static djf.settings.AppStartupConstants.PATH_PUBLIC_HTML;
 import static djf.settings.AppStartupConstants.PATH_WORK;
 import djf.ui.AppMessageDialogSingleton;
 import java.io.File;
@@ -225,6 +225,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
     //Components for scheduleDataTab
     boolean addScheduleItem;
+    boolean datePickerTriggered;
     VBox scheduleDataVBox;
     Label scheduleLabel;
     GridPane startEndGridPane;
@@ -378,6 +379,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         titleTextField = new TextField();
         titleValueLabel = new Label(courseSite.getCourseTitle());
         titleValueLabel.setPrefWidth(500);
+        titleTextField.setPromptText(props.getProperty(CSGProp.COURSE_TITLE_LABEL).toString());
         instructorNameTextField = new TextField();
         instructorNameTextField.setPromptText(props.getProperty(CSGProp.NAME_PROMPT_TEXT.toString()));
         instructorNameTextField.setPrefWidth(500);
@@ -450,7 +452,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         siteTemplateLabel = new Label(props.getProperty(CSGProp.COURSE_SITE_TEMPLATE_LABEL));
         siteTemplateLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold");
         siteTemplateDescriptionLabel = new Label(props.getProperty(CSGProp.COURSE_SITE_TEMPLATE_NOTE_LABEL).toString());
-        templateDir = new Label();
+        templateDir = new Label(PATH_PUBLIC_HTML);
         selectTemplateDirButton = new Button(props.getProperty(CSGProp.COURSE_SELECT_TEMPLATE_DIRECTORY_BUTTON_LABEL.toString()));
         sitePagesLabel = new Label(props.getProperty(CSGProp.COURSE_SITE_PAGES_LABEL).toString());
         sitePages = new TableView<CourseSitePage>();
@@ -524,8 +526,9 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         changeBannerSchoolImageButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
         changeLeftFooterImageButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
         changeRightFooterImageButton = new Button(props.getProperty(CSGProp.CHANGE_BUTTON_LABEL).toString());
-        ObservableList stylesheetOptions = FXCollections.observableArrayList(props.getProperty(CSGProp.CSG_SEA_WOLF_CSS.toString()), props.getProperty(CSGProp.COURSE_HOMEPAGE_LAYOUT.toString()));
+        ObservableList stylesheetOptions = FXCollections.observableArrayList(props.getProperty(CSGProp.CSG_SEA_WOLF_CSS.toString()));
         stylesheetSelect = new ComboBox(stylesheetOptions);
+        stylesheetSelect.getSelectionModel().selectFirst();
         stylesheetNote = new Label(props.getProperty(CSGProp.COURSE_STYLESHEET_NOTE_LABEL).toString());
         stylesheetNote.setStyle("-fx-font-weight: bold");
 
@@ -578,10 +581,12 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         courseDataTabVBox.getChildren().add(courseDataMiddleBox);
         courseDataTabVBox.getChildren().add(pageStyleDataBox);
         courseDataTabVBox.setStyle("-fx-background-color: bisque;-fx-border: 5px;-fx-border-color: black;");
+        courseDataTabVBox.setPrefWidth(750);
         courseDataTabScroll = new ScrollPane();
         courseDataTabScroll.setContent(courseDataTabVBox);
         courseDataTabScroll.setFitToHeight(true);
         courseDataTabScroll.setFitToWidth(true);
+        courseDataTabScroll.setPrefWidth(750);
         courseDataTab.setContent(courseDataTabScroll);
 
         /*taDataTab = new Tab();
@@ -926,6 +931,7 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         startEndGridPane.add(endingFridayPicker, 3, 1);
         //The bottom box ("Schedule Items")
         addScheduleItem = true;
+        datePickerTriggered = true;
         scheduleItemsVBox = new VBox();
         topScheduleItemsBox = new HBox();
         scheduleItemsLabel = new Label(props.getProperty(CSGProp.SCHEDULE_ITEMS_LABEL.toString()));
@@ -1059,10 +1065,10 @@ public class CSGWorkspace extends AppWorkspaceComponent {
 
         // HANDLING FOR THE DATEPICKERS
         startingMondayPicker.setOnAction(e -> {
-            controller.handleStartEndDatePickerChange();
+            controller.handleStartEndDatePickerChange(datePickerTriggered);
         });
         endingFridayPicker.setOnAction(e -> {
-            controller.handleStartEndDatePickerChange();
+            controller.handleStartEndDatePickerChange(datePickerTriggered);
         });
 
         //add the components to addEditSchedulePane
@@ -2445,6 +2451,13 @@ public class CSGWorkspace extends AppWorkspaceComponent {
         controller.Redo();
     }
     
-    
+    public void maskDatePickerTriggered() {
+        if (datePickerTriggered) {
+            datePickerTriggered = false;
+        }
+        else {
+            datePickerTriggered = true;
+        }
+    }
 
 }

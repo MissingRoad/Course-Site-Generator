@@ -252,6 +252,8 @@
 	<property name = "MISSING_TA_MESSAGE" value = "You must provide two Teaching Assistants for this recitation"></property>
 	<property name = "SAME_TA_TITLE" value = "Same Teaching Assistant"> </property>
 	<property name = "SAME_TA_MESSAGE" value = "You cannot duplicate the same Teaching Assistant in the same recitation"></property>
+	<property name = "BAD_START_END_DATES_TITLE" value = "Bad Start/End Dates"> </property>
+	<property name = "BAD_START_END_DATES_MESSAGE" value = "Start date must come before the end date"> </property>
     </property_list>
     <property_options_list>
         <property_options name="OFFICE_HOURS_TABLE_HEADERS">

@@ -21,6 +21,8 @@ import jtps.jTPS_Transaction;
 import properties_manager.PropertiesManager;
 //import csg.data.TAData;
 import csg.CSGProp;
+import static csg.CSGProp.BAD_START_END_DATES_MESSAGE;
+import static csg.CSGProp.BAD_START_END_DATES_TITLE;
 import static csg.CSGProp.MISSING_RECITATION_DAY_TIME_MESSAGE;
 import static csg.CSGProp.MISSING_RECITATION_DAY_TIME_TITLE;
 import static csg.CSGProp.MISSING_RECITATION_INSTRUCTOR_MESSAGE;
@@ -52,6 +54,7 @@ import csg.data.ScheduleItem;
 import csg.data.Student;
 import csg.file.TimeSlot;
 import csg.jtps.CourseSiteEditUR;
+import csg.jtps.DatePickerChangeUR;
 import csg.jtps.ProjectTeamAdderUR;
 import csg.jtps.ProjectTeamDeleteUR;
 import csg.jtps.ProjectTeamReplaceUR;
@@ -73,11 +76,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.DatePicker;
 import javafx.scene.paint.Color;
-import static jdk.nashorn.tools.ShellFunctions.input;
 
 /**
  *
@@ -696,6 +697,7 @@ public class CSGController {
     }
 
     public void handleEditRecitation() {
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
         CSGWorkspace workspace = (CSGWorkspace) app.getWorkspaceComponent();
         CSGData data = (CSGData) app.getDataComponent();
         TableView recitationTable = workspace.getRecitationData();
@@ -707,10 +709,19 @@ public class CSGController {
         String location = recitation.getLocation();
         TeachingAssistant ta1 = recitation.getSupervisingTA1();
         TeachingAssistant ta2 = recitation.getSupervisingTA2();
-
+        
+        String newTA1 = workspace.getSupervisingTa1Box().getSelectionModel().getSelectedItem().toString();
+        String newTA2 = workspace.getSupervisingTa2Box().getSelectionModel().getSelectedItem().toString();
+        if (!(newTA1.equals(newTA2))) {
         jTPS_Transaction editRecitationUR = new RecitationReplaceUR(app);
         jTPS.addTransaction(editRecitationUR);
         markWorkAsEdited();
+        //recitationTable.refresh();
+        }
+        else {
+            AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+            dialog.show(props.getProperty(CSGProp.SAME_TA_TITLE.toString()), props.getProperty(CSGProp.SAME_TA_MESSAGE.toString()));
+        }
     }
 
     public void loadRecitationtotext() {
@@ -858,61 +869,55 @@ public class CSGController {
         markWorkAsEdited();
     }
 
-    public void handleStartEndDatePickerChange() {
-        PropertiesManager props = PropertiesManager.getPropertiesManager();
-        CSGWorkspace workspace = (CSGWorkspace) app.getWorkspaceComponent();
-        CSGData data = (CSGData) app.getDataComponent();
-        TableView scheduleItems = workspace.getScheduleItems();
+    public void handleStartEndDatePickerChange(boolean triggered) {
+        if (triggered) {
+            PropertiesManager props = PropertiesManager.getPropertiesManager();
+            CSGWorkspace workspace = (CSGWorkspace) app.getWorkspaceComponent();
+            CSGData data = (CSGData) app.getDataComponent();
+            TableView scheduleItems = workspace.getScheduleItems();
 
-        DatePicker startMondayPicker = workspace.getStartingMondayPicker();
-        DatePicker endFridayPicker = workspace.getEndingFridayPicker();
+            DatePicker startMondayPicker = workspace.getStartingMondayPicker();
+            DatePicker endFridayPicker = workspace.getEndingFridayPicker();
 
-        LocalDate ldMonday = startMondayPicker.getValue();
-        LocalDate ldFriday = endFridayPicker.getValue();
+            LocalDate ldMonday = startMondayPicker.getValue();
+            LocalDate ldFriday = endFridayPicker.getValue();
 
-        Calendar c1 = Calendar.getInstance();
-        Calendar c2 = Calendar.getInstance();
+            Calendar c1 = Calendar.getInstance();
+            Calendar c2 = Calendar.getInstance();
 
-        c1.set(ldMonday.getYear(), ldMonday.getMonthValue() - 1, ldMonday.getDayOfMonth());
-        c2.set(ldFriday.getYear(), ldFriday.getMonthValue() - 1, ldFriday.getDayOfMonth());
+            c1.set(ldMonday.getYear(), ldMonday.getMonthValue() - 1, ldMonday.getDayOfMonth());
+            c2.set(ldFriday.getYear(), ldFriday.getMonthValue() - 1, ldFriday.getDayOfMonth());
 
-        Date startMondayDate = c1.getTime();
-        Date endFridayDate = c2.getTime();
-        if (validateDatePickerChange(startMondayDate, endFridayDate)) {
-            data.setStartDate(startMondayDate);
-            data.setEndDate(endFridayDate);
+            Date startMondayDate = c1.getTime();
+            Date endFridayDate = c2.getTime();
+            if (validateDatePickerChange(startMondayDate, endFridayDate)) {
+                jTPS_Transaction datePickerEditUR = new DatePickerChangeUR(app);
+                jTPS.addTransaction(datePickerEditUR);
 
-            data.clearObservableScheduleItemsList();
+                scheduleItems.refresh();
+                markWorkAsEdited();
+            } else {
+                AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+                dialog.show(props.getProperty(BAD_START_END_DATES_TITLE), props.getProperty(BAD_START_END_DATES_MESSAGE));
+                Date oldStart = data.getStartDate();
+                Date oldEnd = data.getEndDate();
 
-            ObservableList<ScheduleItem> scheduleItemsList = data.getScheduleItems();
+                Instant instant1 = oldStart.toInstant();
+                ZonedDateTime zdt1 = instant1.atZone(ZoneId.systemDefault());
+                LocalDate oldld1 = zdt1.toLocalDate();
+                //oldld1 = oldld1.minusMonths(1);
 
-            for (ScheduleItem s : scheduleItemsList) {
-                int a = s.compareTo(startMondayDate);
-                int b = s.compareTo(endFridayDate);
-                if (a >= 0 && b <= 0) {
-                    data.addObservableScheduleItem(s);
-                }
+                Instant instant2 = oldEnd.toInstant();
+                ZonedDateTime zdt2 = instant2.atZone(ZoneId.systemDefault());
+                LocalDate oldld2 = zdt2.toLocalDate();
+                //oldld2 = oldld2.minusMonths(1);
+
+                startMondayPicker.setValue(oldld1);
+                endFridayPicker.setValue(oldld2);
             }
-
-            scheduleItems.refresh();
-        } else {
-            AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
-            dialog.show(props.getProperty(MISSING_RECITATION_SECTION_TITLE), props.getProperty(MISSING_RECITATION_SECTION_MESSAGE));
-            Date oldStart = data.getStartDate();
-            Date oldEnd = data.getEndDate();
-
-            Instant instant1 = oldStart.toInstant();
-            ZonedDateTime zdt1 = instant1.atZone(ZoneId.systemDefault());
-            LocalDate oldld1 = zdt1.toLocalDate();
-            //oldld1 = oldld1.minusMonths(1);
-
-            Instant instant2 = oldEnd.toInstant();
-            ZonedDateTime zdt2 = instant2.atZone(ZoneId.systemDefault());
-            LocalDate oldld2 = zdt2.toLocalDate();
-            //oldld2 = oldld2.minusMonths(1);
-
-            startMondayPicker.setValue(oldld1);
-            endFridayPicker.setValue(oldld2);
+        }
+        else {
+            
         }
     }
 

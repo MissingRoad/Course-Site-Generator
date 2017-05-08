@@ -63,21 +63,25 @@ public class RecitationReplaceUR implements jTPS_Transaction {
     
     @Override
     public void doTransaction() {
+        TableView recitationTable = workspace.getRecitationData();
         recitation.setInstructor(newInstructor);
         recitation.setSection(newSection);
         recitation.setDayTime(newDayTime);
         recitation.setLocation(newLocation);
         recitation.setSupervisingTA1(newTA1);
         recitation.setSupervisingTA2(newTA2);
+        recitationTable.refresh();
     }
     
     @Override
     public void undoTransaction() {
+        TableView recitationTable = workspace.getRecitationData();
         recitation.setInstructor(instructor);
         recitation.setSection(section);
         recitation.setDayTime(dayTime);
         recitation.setLocation(location);
         recitation.setSupervisingTA1(ta1);
         recitation.setSupervisingTA2(ta2);
+        recitationTable.refresh();
     }
 }

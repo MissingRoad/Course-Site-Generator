@@ -27,7 +27,7 @@ public class CourseSitePage {
         this.script = new SimpleStringProperty(script);
         
         this.exists.addListener(e -> {
-            System.out.println(this.navbarTitle.get() + this.exists.get());
+            //System.out.println(this.navbarTitle.get() + this.exists.get());
         });
     }
     
